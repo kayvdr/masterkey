@@ -1,0 +1,52 @@
+.form {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.field {
+  background-color: white;
+  display: flex;
+  border-radius: 2em;
+  padding: 0.25em;
+}
+
+.searchIcon {
+  fill: grey;
+  margin: 0 0.2em 0 1em;
+  width: 1.5em;
+}
+
+.inputField {
+  width: 100%;
+}
+
+.input {
+  background: #fff;
+  border: 1px solid var(--ci-light-grey);
+  padding: 0.5em 0.75em;
+  outline: none;
+  width: 100%;
+  border: 0;
+  color: grey;
+}
+
+.input::placeholder {
+  color: hsl(206, 5%, 60%);
+}
+
+.input[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.input[type="text"],
+.input[type="search"],
+.input[type="time"] {
+  width: 100%;
+}
+
+.invalid {
+  border: 1px solid var(--red-53);
+  box-shadow: 0 0 0 4px var(--red-97);
+}

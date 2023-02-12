@@ -1,0 +1,19 @@
+.btn {
+  padding: 0.5em 2em;
+  background-color: #429e51;
+  border-radius: 2em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.5s;
+  color: var(--ci-light-grey);
+}
+
+.btn:hover,
+.btn:active {
+  background-color: #67b974;
+}
+
+.icon {
+  margin-right: 0.2em;
+}

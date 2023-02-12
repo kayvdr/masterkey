@@ -1,0 +1,67 @@
+.footer {
+  background-color: var(--ci-darker-grey);
+  color: var(--ci-light-grey);
+}
+
+.wrapper {
+  display: grid;
+  grid-template-columns: 30% 1fr 1fr 1fr;
+  column-gap: 3em;
+  padding-top: 2em;
+  padding-bottom: 2em;
+}
+
+.companyTitle {
+  font-size: 1.5em;
+  display: flex;
+  align-items: center;
+}
+
+.companyTitle::before {
+  content: "";
+  display: inline-block;
+  width: 0.6em;
+  height: 0.6em;
+  border-radius: 1em;
+  background-color: var(--ci-green);
+  margin-right: 0.5em;
+}
+
+.title {
+  font-size: 1.15em;
+}
+
+.list {
+  padding-left: 0;
+}
+
+.listItem {
+  list-style-type: none;
+  margin: 0.3em 0;
+  color: var(--ci-grey);
+}
+
+.listLink {
+  display: flex;
+  align-items: center;
+}
+
+.listLink:hover {
+  color: var(--ci-light-grey);
+}
+
+.icon {
+  width: 1em;
+  height: 1em;
+  margin-right: 0.5em;
+  fill: var(--ci-grey);
+}
+
+.listLink:hover .icon {
+  fill: var(--ci-light-grey);
+}
+
+.copyright {
+  font-size: 0.8em;
+  color: var(--ci-grey);
+}

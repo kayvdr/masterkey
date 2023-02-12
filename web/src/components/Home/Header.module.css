@@ -1,0 +1,25 @@
+.header {
+  position: fixed;
+  z-index: 5;
+  width: 100%;
+  padding: 0.5em 2em;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.logo {
+  width: 2.5em;
+  height: 2.5em;
+  fill: white;
+}
+
+.navItem {
+  padding: 0 1em;
+  color: white;
+}
+
+.navItem:hover {
+  color: rgba(255, 255, 255, 0.8);
+}

@@ -1,0 +1,6 @@
+.boxes {
+  display: grid;
+  gap: 2em 4em;
+  grid-template-columns: repeat(4, 1fr);
+  padding-bottom: 5em;
+}

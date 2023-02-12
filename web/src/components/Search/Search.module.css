@@ -1,0 +1,102 @@
+.searchRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.filter {
+  display: flex;
+}
+
+.sortSelect {
+  background-color: var(--ci-light-grey);
+  border-radius: 5em;
+  padding: 0.2em 0.8em;
+  border: 0;
+  font-size: 0.9em;
+}
+
+.sortSelect option:disabled {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.selectActive {
+  background-color: var(--ci-grey);
+  color: white;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 0.5em;
+  padding: 0.5em;
+}
+
+.row:hover {
+  background-color: var(--ci-light-grey);
+}
+
+.socialIcon {
+  width: 2em;
+  height: auto;
+}
+
+.data {
+  display: flex;
+  align-items: center;
+  width: 15em;
+}
+
+.platformIcon {
+  width: 2em;
+}
+
+.copyBtn {
+  background-color: transparent;
+  border: 0;
+  display: flex;
+}
+
+.votes {
+  display: flex;
+  align-items: center;
+}
+
+.vote {
+  display: flex;
+  padding: 0 0.5em;
+}
+
+.voteText {
+  width: 2em;
+}
+
+.icon {
+  width: 1.5em;
+  height: auto;
+  margin-right: 0.5em;
+}
+
+.iconGreen,
+.iconRed {
+  width: 0.8em;
+  margin-right: 0.3em;
+}
+
+.iconGreen {
+  fill: #228b22;
+}
+
+.iconRed {
+  fill: #ff3131;
+}
+
+.text {
+  margin: 0;
+}
+
+.textSmall {
+  margin: 0;
+  font-size: 0.8em;
+}

@@ -1,0 +1,108 @@
+openapi: "3.0.3"
+info:
+  title: Shac API
+  contact:
+    email: on3k.dev@gmail.com
+  version: 0.0.1
+paths:
+  /users:
+    get:
+      operationId: GetUsers
+      description: Returns all Users
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - users
+                properties:
+                  users:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                          example: "e0476273-83cd-4772-a4f9-f0280e3bb2af"
+                        username:
+                          type: string
+                          example: "jondoe"
+                        passord:
+                          type: string
+                          example: "password"
+                        votes_up:
+                          type: integer
+                          example: 10
+                        votes_down:
+                          type: integer
+                          example: 5
+                        platform_id:
+                          type: string
+                          format: uuid
+                          example: "e0476273-83cd-4772-a4f9-f0280e3bb2af"
+  /users/{id}:
+    get:
+      operationId: GetUsers
+      description: Returns single User by id
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: "e0476273-83cd-4772-a4f9-f0280e3bb2af"
+                  username:
+                    type: string
+                    example: "jondoe"
+                  passord:
+                    type: string
+                    example: "password"
+                  votes_up:
+                    type: integer
+                    example: 10
+                  votes_down:
+                    type: integer
+                    example: 5
+                  platform_id:
+                    type: string
+                    format: uuid
+                    example: "e0476273-83cd-4772-a4f9-f0280e3bb2af"
+        "404":
+          description: Returns an error if the provided user ID was not found.
+
+    delete:
+      operationId: DeleteUser
+      description: Remove a user
+      parameters:
+        - $ref: "#/components/parameters/userId"
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "204":
+          description: Successful operation
+        "400":
+          description: Invalid request body. The message will vary depending on the cause.
+        "404":
+          description: User not found
+
+components:
+  parameters:
+    userId:
+      name: userId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid

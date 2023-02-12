@@ -1,0 +1,57 @@
+.intro {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  color: white;
+  position: relative;
+}
+
+.imgContainer {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.imgContainer::before {
+  content: "";
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.content {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.title {
+  font-size: 4em;
+}
+
+.title span {
+  text-transform: uppercase;
+}
+
+.subtitle {
+  font-size: 1.2em;
+  max-width: 50em;
+}
+
+.searchWrapper {
+  margin-top: 2em;
+}

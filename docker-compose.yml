@@ -1,0 +1,38 @@
+services:
+  service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    volumes:
+      - .:/app
+    ports:
+      - 60001:8080
+      - 60002:12345
+    env_file: .env
+    depends_on:
+      - db
+    networks:
+      - default
+
+  db:
+    image: postgres:14-alpine
+    environment:
+      POSTGRES_PASSWORD: postgres
+      PGUSER: postgres
+    ports:
+      - 60003:5432
+    volumes:
+      - ./initdb:/docker-entrypoint-initdb.d
+    command: ["postgres", "-c", "log_statement=all"]
+    healthcheck:
+      test: ["CMD", "pg_isready"]
+      interval: 1s
+      timeout: 10s
+      retries: 10
+
+  adminer:
+    image: adminer:latest
+    restart: always
+    ports:
+      - 60004:8080
