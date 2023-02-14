@@ -16,16 +16,16 @@ export const getUsers = async (pagination?: Pagination) => {
 
   if (pagination) {
     const searchParams = new URLSearchParams();
-    searchParams.set("q", pagination.q);
+    pagination.q && searchParams.set("q", pagination.q);
     searchParams.set("limit", String(pagination.limit));
     searchParams.set("page", String(pagination.page));
-    searchParams.set("sort", String(pagination.sort));
-    searchParams.set("order", String(pagination.order));
+    pagination.sort && searchParams.set("sort", String(pagination.sort));
+    pagination.sort && searchParams.set("order", String(pagination.order));
 
     url = `${url}?${searchParams.toString()}`;
   }
 
-  return await fetchData<User[]>(url, {
+  return await fetchData<{ count: number; items: User[] }>(url, {
     method: "GET",
   });
 };

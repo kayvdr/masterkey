@@ -1,4 +1,5 @@
-import { useNavigate } from "react-router-dom";
+import classNames from "classnames";
+import { NavLink, useNavigate } from "react-router-dom";
 import Icon from "../../ui/Icon";
 import styles from "../Home/Header.module.css";
 import SvgLogo from "../icons/Logo";
@@ -12,15 +13,30 @@ const Header = () => {
         <Icon glyph={SvgLogo} className={styles.logo} />
       </button>
       <div className={styles.nav}>
-        <button onClick={() => navigate("/")} className={styles.navItem}>
+        <NavLink
+          className={({ isActive }) =>
+            classNames(styles.navItem, { [styles.navActive]: isActive })
+          }
+          to={"/"}
+        >
           Home
-        </button>
-        <button onClick={() => navigate("/")} className={styles.navItem}>
+        </NavLink>
+        <NavLink
+          className={({ isActive }) =>
+            classNames(styles.navItem, { [styles.navActive]: isActive })
+          }
+          to={"/search"}
+        >
           Search
-        </button>
-        <button onClick={() => navigate("/")} className={styles.navItem}>
+        </NavLink>
+        <NavLink
+          className={({ isActive }) =>
+            classNames(styles.navItem, { [styles.navActive]: isActive })
+          }
+          to={"/imprint"}
+        >
           Imprint
-        </button>
+        </NavLink>
       </div>
     </header>
   );

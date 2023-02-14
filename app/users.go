@@ -33,11 +33,20 @@ func (app Application) GetUsers(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	res, err := app.Repositories.User.GetAllUsers(ctx, pagination)
+	users, err := app.Repositories.User.GetAllUsers(ctx, pagination)
 	if err != nil {
 		render.Render(w, r, httperr.ErrInternalServer(err.Error()))
 		return
 	}
+
+	all, _ := app.Repositories.User.GetUsersCount(ctx, pagination)
+
+	type Response struct {
+		Count int                 `json:"count"`
+		Items     []*repositories.User `json:"items"`
+	}
+
+	res := Response{Count: *all, Items: users}
 
 	render.JSON(w, r, res)
 }

@@ -12,7 +12,10 @@ const Box = ({ glyph, label }: Props) => {
   const navigate = useNavigate();
 
   return (
-    <button onClick={() => navigate("/search")} className={styles.box}>
+    <button
+      onClick={() => navigate(`/search?q=${label.toLowerCase()}`)}
+      className={styles.box}
+    >
       <div className={styles.boxLogo}>
         <Icon glyph={glyph} className={styles.boxIcon} />
         <h3 className={styles.boxTitle}>{label}</h3>

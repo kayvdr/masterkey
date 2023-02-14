@@ -1,12 +1,14 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Home from "./Home/Home";
+import HomePage from "./Home/HomePage";
+import ImprintPage from "./Imprint/ImprintPage";
 import SearchPage from "./Search/SearchPage";
 
 const AppRouter = () => (
   <BrowserRouter>
     <Routes>
+      <Route path="/imprint" element={<ImprintPage />} />
       <Route path="/search" element={<SearchPage />} />
-      <Route path="/" element={<Home />} />
+      <Route path="/" element={<HomePage />} />
     </Routes>
   </BrowserRouter>
 );

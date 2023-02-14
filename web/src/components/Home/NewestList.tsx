@@ -8,9 +8,12 @@ const NewestList = () => {
 
   return (
     <section className="container">
-      <div className={styles.search}>
-        <Search title="Just added" searchTerm={""} />
-      </div>
+      <Search
+        title="Just added"
+        searchTerm={""}
+        isPagination={false}
+        sort="created_at"
+      />
       <div className={styles.wrapper}>
         <Button onClick={() => navigate("/search")}>Show All</Button>
       </div>

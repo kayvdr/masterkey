@@ -28,6 +28,8 @@ type User struct {
 	VotesDown *int    `json:"votes_down"`
 	CreatedAt time.Time    `json:"created_at"`
 	PlatformId uuid.UUID    `json:"platform_id"`
+	Name string    `json:"name"`
+	Domain string    `json:"domain"`
 }
 
 func (r UserRepository) GetUser(ctx context.Context, id uuid.UUID) (*User, error) {
@@ -47,7 +49,7 @@ func (r UserRepository) GetUser(ctx context.Context, id uuid.UUID) (*User, error
 func (r UserRepository) GetAllUsers(ctx context.Context, pagination common.Pagination) ([]*User, error) {
 	params := fmt.Sprintf("ORDER BY %s LIMIT %s OFFSET %s", pagination.Sort() + " " + pagination.Order(), strconv.FormatInt(int64(pagination.Limit()), 10), strconv.FormatInt(int64(pagination.Offset()), 10))
 	rows, err := r.pool.Query(ctx, `
-		SELECT u.id, u.username, u.password, u.votes_up, u.votes_down, u.created_at, u.platform_id
+		SELECT u.id, u.username, u.password, u.votes_up, u.votes_down, u.created_at, u.platform_id, p.name, p.domain
 		FROM users AS u 
 		INNER JOIN platforms AS p ON u.platform_id = p.id
 		WHERE ($1 = '' OR p.name ILIKE $1)
@@ -69,6 +71,8 @@ func (r UserRepository) GetAllUsers(ctx context.Context, pagination common.Pagin
 			&user.VotesDown,
 			&user.CreatedAt,
 			&user.PlatformId,
+			&user.Name,
+			&user.Domain,
 		)
 		users = append(users, user)
 	}
@@ -78,6 +82,17 @@ func (r UserRepository) GetAllUsers(ctx context.Context, pagination common.Pagin
 	}
 
 	return users, nil
+}
+
+func (r UserRepository) GetUsersCount(ctx context.Context, pagination common.Pagination) (*int, error) {
+	var count int
+	err := r.pool.QueryRow(ctx, `SELECT count(*)
+	FROM users AS u 
+	INNER JOIN platforms AS p ON u.platform_id = p.id
+	WHERE ($1 = '' OR p.name ILIKE $1)`, pg.ILIKE(pagination.SearchTerm())).Scan(
+		&count,
+	)
+	return &count, err
 }
 
 func (r UserRepository) CreateUser(ctx context.Context, user *User) (*User, error) {

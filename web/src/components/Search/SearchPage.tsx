@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Searchfield from "../../ui/Searchfield";
+import Footer from "../Home/Footer";
 import Header from "../Home/Header";
 import styles from "../Search/SearchPage.module.css";
 import Search from "./Search";
@@ -18,6 +19,7 @@ const SearchPage = () => {
       <section className="container">
         <Search title="&nbsp;" searchTerm={value} />
       </section>
+      <Footer />
     </>
   );
 };

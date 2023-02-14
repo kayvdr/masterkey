@@ -1,13 +1,13 @@
 INSERT INTO platforms (id, name, domain)VALUES 
-('d6fbba90-4e07-4d2a-906c-9229610c95c4', 'Instagram', 'www.instgram.com'),
-('a8f71f23-8e04-42e5-ab69-5baf7b78aea0', 'Facebook', 'www.facebook.com'),
-('7389c780-86b1-42b7-a118-7f0830109464', 'Snapchat', 'www.snapchat.com'),
-('4e1a32db-9e0b-492d-bc8c-232359292fd9', 'Google', 'www.google.com'),
-('ea191b37-8878-40c8-9a21-01c7722be456', 'Tinder', 'www.tinder.com'),
-('6056b64e-c72c-4e15-a422-99f4af4f564b', 'Evernote', 'www.evernote.com'),
-('fc4d2d2f-31ae-4f99-b4d2-0c9322ebfdc5', 'Twitter', 'www.twitter.com'),
-('16f32e1b-cb87-4922-b44c-b8b2ddede3fc', 'Dropbox', 'www.dropbox.com'),
-('4e0852cc-7aba-4f32-b3be-c4e7c598ea84', 'Tiktok', 'www.tiktok.com');
+('d6fbba90-4e07-4d2a-906c-9229610c95c4', 'Instagram', 'https://www.instagram.com'),
+('a8f71f23-8e04-42e5-ab69-5baf7b78aea0', 'Facebook', 'https://www.facebook.com'),
+('7389c780-86b1-42b7-a118-7f0830109464', 'Snapchat', 'https://www.snapchat.com'),
+('4e1a32db-9e0b-492d-bc8c-232359292fd9', 'Google', 'https://www.google.com'),
+('ea191b37-8878-40c8-9a21-01c7722be456', 'Tinder', 'https://www.tinder.com'),
+('6056b64e-c72c-4e15-a422-99f4af4f564b', 'Evernote', 'https://www.evernote.com'),
+('fc4d2d2f-31ae-4f99-b4d2-0c9322ebfdc5', 'Twitter', 'https://www.twitter.com'),
+('16f32e1b-cb87-4922-b44c-b8b2ddede3fc', 'Dropbox', 'https://www.dropbox.com'),
+('4e0852cc-7aba-4f32-b3be-c4e7c598ea84', 'Tiktok', 'https://www.tiktok.com');
 
 INSERT INTO users (id, username, password, votes_up, votes_down, platform_id) VALUES 
 ('0b64e75d-1ff6-4396-9b70-531b4eee8e54', 'sam', 'JdnSk5d1D2', 50, 36, '4e1a32db-9e0b-492d-bc8c-232359292fd9'),

@@ -1,12 +1,11 @@
 .header {
-  position: fixed;
+  position: absolute;
   z-index: 5;
   width: 100%;
   padding: 0.5em 2em;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: rgba(0, 0, 0, 0.6);
 }
 
 .logo {
@@ -16,10 +15,22 @@
 }
 
 .navItem {
-  padding: 0 1em;
+  margin: 0 1em;
   color: white;
 }
 
-.navItem:hover {
-  color: rgba(255, 255, 255, 0.8);
+.navActive {
+  color: var(--ci-green);
+  font-weight: 600;
+  position: relative;
+}
+
+.navActive::before {
+  content: "";
+  position: absolute;
+  bottom: -0.25em;
+  left: 0;
+  width: 100%;
+  height: 0.15em;
+  background-color: var(--ci-green);
 }
