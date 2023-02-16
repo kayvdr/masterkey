@@ -31,7 +31,6 @@ export const getUsers = async (pagination?: Pagination) => {
 };
 
 export const setUser = async (user: User) => {
-  console.log(user);
   return await fetchData<User>(`${baseUrl}/v1/users`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
