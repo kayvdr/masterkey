@@ -1,0 +1,51 @@
+.subtitle {
+  margin-bottom: 1.5em;
+}
+
+.formWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.form {
+  width: 100%;
+  max-width: 32em;
+}
+
+.field {
+  width: 100%;
+  margin-bottom: 1em;
+}
+
+.input[type="text"],
+.select {
+  width: 100%;
+  border: 0;
+  padding: 0.5em 1em;
+  height: 2.75em;
+  background-color: var(--ci-light-grey);
+  border-radius: 0.5em;
+}
+
+.label {
+  margin-left: 0.25em;
+}
+
+.notvisible {
+  visibility: hidden;
+  height: 0;
+  width: 0;
+  position: absolute;
+}
+
+.success {
+  background-color: var(--ci-green);
+  width: 100%;
+  padding: 0.5em;
+  text-align: center;
+  color: white;
+  border-radius: 0.5em;
+  margin-bottom: 1em;
+}

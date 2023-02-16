@@ -1,8 +1,14 @@
 import classNames from "classnames";
-import { differenceInHours, differenceInMinutes } from "date-fns";
+import {
+  differenceInDays,
+  differenceInHours,
+  differenceInMinutes,
+  differenceInMonths,
+  differenceInYears,
+} from "date-fns";
 import { useEffect, useState } from "react";
-import { getUsers } from "../../http/api";
-import { Glyph, Pagination, User, UsersResponse } from "../../types";
+import { getPlatforms, getUsers } from "../../http/api";
+import { Glyph, Pagination, Platform, User, UsersResponse } from "../../types";
 import Icon from "../../ui/Icon";
 import SvgArrowDown from "../icons/ArrowDown";
 import SvgArrowLeft from "../icons/ArrowLeft";
@@ -24,15 +30,33 @@ import SvgUser from "../icons/User";
 import styles from "../Search/Search.module.css";
 
 const logoMapping: { [key in string]: Glyph } = {
-  "d6fbba90-4e07-4d2a-906c-9229610c95c4": SvgInstagram,
-  "a8f71f23-8e04-42e5-ab69-5baf7b78aea0": SvgFacebook,
-  "7389c780-86b1-42b7-a118-7f0830109464": SvgSnapchat,
-  "4e1a32db-9e0b-492d-bc8c-232359292fd9": SvgGoogle,
-  "ea191b37-8878-40c8-9a21-01c7722be456": SvgTinder,
-  "6056b64e-c72c-4e15-a422-99f4af4f564b": SvgEvernote,
-  "4e0852cc-7aba-4f32-b3be-c4e7c598ea84": SvgTikTok,
-  "fc4d2d2f-31ae-4f99-b4d2-0c9322ebfdc5": SvgTwitter,
-  "16f32e1b-cb87-4922-b44c-b8b2ddede3fc": SvgDropbox,
+  Instagram: SvgInstagram,
+  Facebook: SvgFacebook,
+  Snapchat: SvgSnapchat,
+  Google: SvgGoogle,
+  Tinder: SvgTinder,
+  Evernote: SvgEvernote,
+  TikTok: SvgTikTok,
+  Twitter: SvgTwitter,
+  Dropbox: SvgDropbox,
+};
+
+const getDiff = (createdAt: string) => {
+  const date = new Date(createdAt);
+  const today = new Date();
+
+  const minutes = differenceInMinutes(today, date);
+  const hours = differenceInHours(today, date);
+  const days = differenceInDays(today, date);
+  const months = differenceInMonths(today, date);
+  const years = differenceInYears(today, date);
+
+  if (years) return `${years}y`;
+  if (months) return `${months}M`;
+  if (days) return `${days}d`;
+  if (hours) return `${hours}h`;
+
+  return `${minutes}m`;
 };
 
 interface Props {
@@ -44,6 +68,7 @@ interface Props {
 
 const Search = ({ title, searchTerm, isPagination = true, sort }: Props) => {
   const [users, setUsers] = useState<UsersResponse>();
+  const [platforms, setPlatforms] = useState<Platform[]>();
   const [pagination, setPagination] = useState<Pagination>({
     limit: 12,
     page: 1,
@@ -59,8 +84,10 @@ const Search = ({ title, searchTerm, isPagination = true, sort }: Props) => {
         order: pagination.sort === "username" ? "ASC" : "DESC",
         ...pagination,
       });
+      const fetchedPlatforms = await getPlatforms();
 
       setUsers(fetchedUsers ?? { count: 0, items: [] });
+      setPlatforms(fetchedPlatforms);
     };
 
     fetchUsers();
@@ -72,7 +99,8 @@ const Search = ({ title, searchTerm, isPagination = true, sort }: Props) => {
         {title && <h1 className="title">{title}</h1>}
         <div className={styles.filter}>
           <select
-            defaultValue={pagination.sort}
+            value={pagination.sort}
+            defaultValue="default"
             onChange={(e) => {
               const value = e.target.value as keyof User;
               setPagination({ ...pagination, sort: value });
@@ -82,7 +110,7 @@ const Search = ({ title, searchTerm, isPagination = true, sort }: Props) => {
             })}
             disabled={!!sort}
           >
-            <option value={undefined} disabled={true} selected={true}>
+            <option value="default" disabled={true}>
               Sort ...
             </option>
             <option value="created_at">Newest</option>
@@ -95,22 +123,17 @@ const Search = ({ title, searchTerm, isPagination = true, sort }: Props) => {
       <div>
         {users?.items.length === 0 && <div>No Accounts found</div>}
         {users?.items.map((user) => {
-          const hoursDiff = differenceInHours(
-            new Date(),
-            new Date(user.created_at)
-          );
-          const minutesDiff = differenceInMinutes(
-            new Date(),
-            new Date(user.created_at)
-          );
+          const time = user.created_at && getDiff(user.created_at);
 
-          const icon = logoMapping[user.platform_id];
+          const platform = platforms?.find((p) => p.id === user.platform_id);
+
+          const icon = platform && logoMapping[platform.name];
 
           return (
             <div className={styles.row} key={user.id}>
               {icon && (
                 <a
-                  href={user.domain}
+                  href={platform?.domain}
                   className={styles.platform}
                   target="_blank"
                 >
@@ -147,27 +170,25 @@ const Search = ({ title, searchTerm, isPagination = true, sort }: Props) => {
                 </button>
               </div>
               <div className={styles.votes}>
-                <div className={styles.vote}>
+                <button className={styles.vote} onClick={() => {}}>
                   <SvgArrowUp
                     className={classNames(styles.icon, styles.iconGreen)}
                   />
                   <p className={classNames(styles.textSmall, styles.voteText)}>
                     {user.votes_up}
                   </p>
-                </div>
-                <div className={styles.vote}>
+                </button>
+                <button className={styles.vote} onClick={() => {}}>
                   <SvgArrowDown
                     className={classNames(styles.icon, styles.iconRed)}
                   />
                   <p className={classNames(styles.textSmall, styles.voteText)}>
                     {user.votes_down}
                   </p>
-                </div>
+                </button>
               </div>
-              <div>
-                <p className={classNames(styles.textSmall)}>
-                  {hoursDiff ? `${hoursDiff}h` : `${minutesDiff}m`}
-                </p>
+              <div className={styles.date}>
+                <p className={classNames(styles.textSmall)}>{time}</p>
               </div>
             </div>
           );

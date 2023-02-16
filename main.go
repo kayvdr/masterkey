@@ -42,6 +42,12 @@ func main() {
 				r.Delete("/{userId}", app.DeleteUser)
 			})
 		})
+
+		r.Group(func(r chi.Router) {
+			r.Route("/platforms", func(r chi.Router) {
+				r.Get("/", app.GetPlatforms)
+			})
+		})
 	})
 
 	port := env.Port

@@ -11,7 +11,7 @@ const SearchPage = () => {
   return (
     <>
       <Header />
-      <section className={styles.searchFieldWrapper}>
+      <section className={styles.wrapper}>
         <div className="container">
           <Searchfield onSubmit={setValue} />
         </div>

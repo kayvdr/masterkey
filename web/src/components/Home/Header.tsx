@@ -17,7 +17,7 @@ const Header = () => {
           className={({ isActive }) =>
             classNames(styles.navItem, { [styles.navActive]: isActive })
           }
-          to={"/"}
+          to="/"
         >
           Home
         </NavLink>
@@ -25,7 +25,7 @@ const Header = () => {
           className={({ isActive }) =>
             classNames(styles.navItem, { [styles.navActive]: isActive })
           }
-          to={"/search"}
+          to="/search"
         >
           Search
         </NavLink>
@@ -33,9 +33,9 @@ const Header = () => {
           className={({ isActive }) =>
             classNames(styles.navItem, { [styles.navActive]: isActive })
           }
-          to={"/imprint"}
+          to="/add"
         >
-          Imprint
+          Add Account
         </NavLink>
       </div>
     </header>

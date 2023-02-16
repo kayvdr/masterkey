@@ -1,3 +1,4 @@
+import AddAccount from "./AddAccount";
 import FavoritePlatforms from "./FavoritePlatforms";
 import Footer from "./Footer";
 import Header from "./Header";
@@ -9,6 +10,7 @@ const HomePage = () => (
     <Header />
     <Intro />
     <NewestList />
+    <AddAccount />
     <FavoritePlatforms />
     <Footer />
   </>

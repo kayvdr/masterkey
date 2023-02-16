@@ -33,6 +33,7 @@
   border-radius: 0.5em;
   padding: 0.5em;
   margin-bottom: 0.5em;
+  width: 100%;
 }
 
 .row:hover {
@@ -78,11 +79,26 @@
 
 .vote {
   display: flex;
+  align-items: center;
   padding: 0 0.5em;
+}
+
+.vote svg {
+  transition: all 0.5s;
+  transform: scale(1);
+}
+
+.vote:hover svg {
+  transform: scale(1.2);
 }
 
 .voteText {
   width: 2em;
+}
+
+.date {
+  width: 3em;
+  text-align: right;
 }
 
 .icon {

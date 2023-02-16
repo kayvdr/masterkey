@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import Button from "../../ui/Button";
-import styles from "../Home/NewstList.module.css";
+import styles from "../Home/NewestList.module.css";
 import Search from "../Search/Search";
 
 const NewestList = () => {

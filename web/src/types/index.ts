@@ -8,13 +8,17 @@ export interface UsersResponse {
 }
 
 export interface User {
-  id: string;
+  id?: string;
   username: string;
   password: string;
-  votes_up: number;
-  votes_down: number;
-  created_at: string;
   platform_id: string;
+  votes_up?: number;
+  votes_down?: number;
+  created_at?: string;
+}
+
+export interface Platform {
+  id: string;
   name: string;
   domain: string;
 }

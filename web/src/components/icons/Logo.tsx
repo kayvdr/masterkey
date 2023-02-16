@@ -21,8 +21,8 @@ const SvgLogo: Glyph = (props) => (
         y2="51"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#429E51" />
-        <stop offset="1" stop-color="#4B5E4E" />
+        <stop stopColor="#429E51" />
+        <stop offset="1" stopColor="#4B5E4E" />
       </linearGradient>
     </defs>
   </svg>

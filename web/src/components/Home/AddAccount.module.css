@@ -1,0 +1,20 @@
+.bg {
+  background-color: var(--ci-dark-green);
+}
+
+.wrapper {
+  padding-top: 2em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  color: white;
+}
+
+.title {
+  font-size: 2em;
+}
+
+.btnWrapper {
+  margin-top: 1em;
+}

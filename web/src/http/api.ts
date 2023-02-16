@@ -1,4 +1,4 @@
-import { Pagination, User } from "../types";
+import { Pagination, Platform, User } from "../types";
 
 const baseUrl = "http://localhost:60001";
 
@@ -31,16 +31,17 @@ export const getUsers = async (pagination?: Pagination) => {
 };
 
 export const setUser = async (user: User) => {
+  console.log(user);
   return await fetchData<User>(`${baseUrl}/v1/users`, {
     method: "POST",
-    body: JSON.stringify({ user }),
-    // body: JSON.stringify({
-    //   username: user.username,
-    //   password: user.password,
-    //   votes_up: user.votes_up,
-    //   votes_down: user.votes_down,
-    //   platform_id: user.platform_id,
-    // }),
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      username: user.username,
+      password: user.password,
+      votes_up: user.votes_up ?? 0,
+      votes_down: user.votes_down ?? 0,
+      platform_id: user.platform_id,
+    }),
   });
 };
 
@@ -60,5 +61,11 @@ export const patchUser = async (user: User) => {
 export const deleteUser = async (id: string) => {
   return await fetchData(`${baseUrl}/v1/users/${id}`, {
     method: "DELETE",
+  });
+};
+
+export const getPlatforms = async () => {
+  return await fetchData<Platform[]>(`${baseUrl}/v1/platforms`, {
+    method: "GET",
   });
 };
