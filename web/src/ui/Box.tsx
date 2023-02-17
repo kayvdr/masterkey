@@ -16,11 +16,8 @@ const Box = ({ glyph, label }: Props) => {
       onClick={() => navigate(`/search?q=${label.toLowerCase()}`)}
       className={styles.box}
     >
-      <div className={styles.boxLogo}>
-        <Icon glyph={glyph} className={styles.boxIcon} />
-        <h3 className={styles.boxTitle}>{label}</h3>
-      </div>
-      <div className={styles.boxLabel}>Get Accounts</div>
+      <Icon glyph={glyph} className={styles.boxIcon} />
+      <h3 className={styles.boxTitle}>{label}</h3>
     </button>
   );
 };

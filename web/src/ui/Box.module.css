@@ -4,27 +4,19 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: stretch;
+  align-items: center;
   overflow: hidden;
   height: 12em;
+  padding: 1em;
 }
 
 .box:hover {
-  background-color: var(--ci-green);
-  justify-content: space-between;
-}
-
-.boxLogo {
-  padding: 1em;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
+  background-color: var(--ci-dark-grey);
 }
 
 .boxIcon {
-  width: 4em !important;
-  height: 4em;
+  width: 3.5em !important;
+  height: auto;
 }
 
 .boxTitle {
@@ -34,16 +26,4 @@
 
 .box:hover .boxTitle {
   color: white;
-}
-
-.boxLabel {
-  padding: 1em;
-  display: none;
-  background-color: var(--ci-light-grey);
-}
-
-.box:hover .boxLabel {
-  display: block;
-  color: var(--ci-grey);
-  font-weight: 600;
 }

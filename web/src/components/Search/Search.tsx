@@ -7,7 +7,7 @@ import {
   differenceInYears,
 } from "date-fns";
 import { useEffect, useState } from "react";
-import { getPlatforms, getUsers } from "../../http/api";
+import { getPlatforms, getUsers, patchUser } from "../../http/api";
 import { Glyph, Pagination, Platform, User, UsersResponse } from "../../types";
 import Icon from "../../ui/Icon";
 import SvgArrowDown from "../icons/ArrowDown";
@@ -170,7 +170,16 @@ const Search = ({ title, searchTerm, isPagination = true, sort }: Props) => {
                 </button>
               </div>
               <div className={styles.votes}>
-                <button className={styles.vote} onClick={() => {}}>
+                <button
+                  className={styles.vote}
+                  onClick={() => {
+                    patchUser({
+                      ...user,
+                      votes_up: (user.votes_up ?? 0) + 1,
+                    });
+                    setPagination({ ...pagination, limit: 12 });
+                  }}
+                >
                   <SvgArrowUp
                     className={classNames(styles.icon, styles.iconGreen)}
                   />
@@ -178,7 +187,16 @@ const Search = ({ title, searchTerm, isPagination = true, sort }: Props) => {
                     {user.votes_up}
                   </p>
                 </button>
-                <button className={styles.vote} onClick={() => {}}>
+                <button
+                  className={styles.vote}
+                  onClick={() => {
+                    patchUser({
+                      ...user,
+                      votes_down: (user.votes_down ?? 0) + 1,
+                    });
+                    setPagination({ ...pagination, limit: 12 });
+                  }}
+                >
                   <SvgArrowDown
                     className={classNames(styles.icon, styles.iconRed)}
                   />

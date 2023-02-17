@@ -10,9 +10,9 @@ const Footer = () => (
         <div className={styles.company}>
           <h3 className={styles.companyTitle}>Shac</h3>
           <p>
-            Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
-            nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
-            erat, sed diam voluptua.
+            We are a platform where people can share their accounts with others.
+            The advantage of these accounts is that their privacy is protected
+            and you also save time.
           </p>
         </div>
         <div className={styles.social}>
@@ -71,7 +71,7 @@ const Footer = () => (
           </ul>
         </div>
       </div>
-      <p className={styles.copyright}>© 2022 Dribbble. All rights reserved.</p>
+      <p className={styles.copyright}>© 2023 ON3K. All rights reserved.</p>
     </div>
   </footer>
 );

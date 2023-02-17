@@ -53,7 +53,14 @@ export const getUser = async (id: string) => {
 export const patchUser = async (user: User) => {
   return await fetchData<User>(`${baseUrl}/v1/users/${user.id}`, {
     method: "POST",
-    body: JSON.stringify({ user }),
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      username: user.username,
+      password: user.password,
+      votes_up: user.votes_up ?? 0,
+      votes_down: user.votes_down ?? 0,
+      platform_id: user.platform_id,
+    }),
   });
 };
 

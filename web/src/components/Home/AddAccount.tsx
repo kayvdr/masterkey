@@ -11,11 +11,10 @@ const AddAccount = () => {
       <div className={classNames("container", styles.wrapper)}>
         <h2 className={styles.title}>We need your help!</h2>
         <p>
-          Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
-          nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
-          sed diam voluptua. At vero eos et accusam et justo duo dolores et ea
-          rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem
-          ipsum dolor sit amet.
+          Our site lives on your willingness to share accounts with us. These
+          should be accounts that you no longer necessarily use and it does not
+          matter whether others use this now. Enter the data in the form and
+          help us and others.
         </p>
         <div className={styles.btnWrapper}>
           <Button onClick={() => navigate("/add")}>Share your Account</Button>
