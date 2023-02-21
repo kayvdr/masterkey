@@ -5,10 +5,26 @@
 
 .wrapper {
   display: grid;
-  grid-template-columns: 30% 1fr 1fr 1fr;
+  grid-template-columns: 1fr;
   column-gap: 3em;
   padding-top: 2em;
   padding-bottom: 2em;
+}
+
+@media (min-width: 768px) {
+  .wrapper {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (min-width: 992px) {
+  .wrapper {
+    grid-template-columns: 30% 1fr 1fr 1fr;
+  }
+}
+
+.item {
+  margin-bottom: 1em;
 }
 
 .companyTitle {

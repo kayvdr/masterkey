@@ -7,7 +7,7 @@ const Footer = () => (
   <footer className={styles.footer}>
     <div className="container">
       <div className={styles.wrapper}>
-        <div className={styles.company}>
+        <div className={styles.item}>
           <h3 className={styles.companyTitle}>Shac</h3>
           <p>
             We are a platform where people can share their accounts with others.
@@ -15,7 +15,7 @@ const Footer = () => (
             and you also save time.
           </p>
         </div>
-        <div className={styles.social}>
+        <div className={styles.item}>
           <h4 className={styles.title}>Social Media</h4>
           <ul className={styles.list}>
             <li className={styles.listItem}>
@@ -38,7 +38,7 @@ const Footer = () => (
             </li>
           </ul>
         </div>
-        <div className={styles.links}>
+        <div className={styles.item}>
           <h4 className={styles.title}>Links</h4>
           <ul className={styles.list}>
             <li className={styles.listItem}>
@@ -53,7 +53,7 @@ const Footer = () => (
             </li>
           </ul>
         </div>
-        <div className={styles.contacts}>
+        <div className={styles.item}>
           <h4 className={styles.title}>Contacts</h4>
           <ul className={styles.list}>
             <li className={styles.listItem}>61 Broadway</li>

@@ -43,7 +43,9 @@ const Searchfield = ({ onSubmit }: Props) => {
             className={styles.input}
           />
         </div>
-        <Button type="submit">Search</Button>
+        <Button type="submit" className={styles.btn}>
+          Search
+        </Button>
       </div>
     </form>
   );

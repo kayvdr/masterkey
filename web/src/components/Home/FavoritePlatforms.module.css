@@ -1,5 +1,18 @@
 .boxes {
   display: grid;
-  gap: 2em 4em;
-  grid-template-columns: repeat(4, 1fr);
+  gap: 1em;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+  .boxes {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 992px) {
+  .boxes {
+    gap: 2em 4em;
+    grid-template-columns: repeat(4, 1fr);
+  }
 }

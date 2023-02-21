@@ -17,7 +17,7 @@ const Intro = () => {
         <h1 className={styles.title}>
           Access for <span>Everyone</span>
         </h1>
-        <h2>
+        <h2 className={styles.subtitle}>
           It should not be necessary to register with every website in order to
           use their basic services. Because not everyone can handle your data
           responsibly, you need to protect yourself.
