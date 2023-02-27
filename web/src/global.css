@@ -44,9 +44,15 @@ body {
 .container {
   max-width: 1300px;
   width: 100%;
-  padding: 4em 2em;
+  padding: 2em 1em;
   margin-left: auto;
   margin-right: auto;
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding: 4em 1em;
+  }
 }
 
 h1,

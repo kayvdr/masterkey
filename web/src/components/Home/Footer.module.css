@@ -7,8 +7,6 @@
   display: grid;
   grid-template-columns: 1fr;
   column-gap: 3em;
-  padding-top: 2em;
-  padding-bottom: 2em;
 }
 
 @media (min-width: 768px) {
@@ -80,4 +78,5 @@
 .copyright {
   font-size: 0.8em;
   color: var(--ci-grey);
+  margin: 0;
 }

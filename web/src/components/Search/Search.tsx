@@ -141,35 +141,41 @@ const Search = ({ title, searchTerm, isPagination = true, sort }: Props) => {
                   <Icon glyph={SvgOpenNew} className={styles.open} />
                 </a>
               )}
-              <div className={styles.data}>
-                <button
-                  className={styles.copyBtn}
-                  onClick={() => {
-                    navigator.clipboard.writeText(user.username);
-                  }}
-                >
-                  <SvgUser className={styles.icon} />
-                  <p className={styles.text}>{user.username}</p>
-                  <SvgCopy
-                    className={classNames(styles.icon, styles.iconCopy)}
-                  />
-                </button>
+              <div className={styles.wrapper}>
+                <div className={styles.data}>
+                  <button
+                    className={styles.copyBtn}
+                    onClick={() => {
+                      navigator.clipboard.writeText(user.username);
+                    }}
+                  >
+                    <SvgUser
+                      className={classNames(styles.icon, styles.iconUsername)}
+                    />
+                    <p className={styles.text}>{user.username}</p>
+                    <SvgCopy
+                      className={classNames(styles.icon, styles.iconCopy)}
+                    />
+                  </button>
+                </div>
+                <div className={styles.data}>
+                  <button
+                    className={styles.copyBtn}
+                    onClick={() => {
+                      navigator.clipboard.writeText(user.password);
+                    }}
+                  >
+                    <SvgKey
+                      className={classNames(styles.icon, styles.iconPassword)}
+                    />
+                    <p className={styles.text}>{user.password}</p>
+                    <SvgCopy
+                      className={classNames(styles.icon, styles.iconCopy)}
+                    />
+                  </button>
+                </div>
               </div>
-              <div className={styles.data}>
-                <button
-                  className={styles.copyBtn}
-                  onClick={() => {
-                    navigator.clipboard.writeText(user.password);
-                  }}
-                >
-                  <SvgKey className={styles.icon} />
-                  <p className={styles.text}>{user.password}</p>
-                  <SvgCopy
-                    className={classNames(styles.icon, styles.iconCopy)}
-                  />
-                </button>
-              </div>
-              <div className={styles.votes}>
+              <div className={styles.wrapper}>
                 <button
                   className={styles.vote}
                   onClick={() => {
@@ -180,12 +186,12 @@ const Search = ({ title, searchTerm, isPagination = true, sort }: Props) => {
                     setPagination({ ...pagination, limit: 12 });
                   }}
                 >
-                  <SvgArrowUp
-                    className={classNames(styles.icon, styles.iconGreen)}
-                  />
                   <p className={classNames(styles.textSmall, styles.voteText)}>
                     {user.votes_up}
                   </p>
+                  <SvgArrowUp
+                    className={classNames(styles.icon, styles.iconGreen)}
+                  />
                 </button>
                 <button
                   className={styles.vote}
@@ -197,12 +203,12 @@ const Search = ({ title, searchTerm, isPagination = true, sort }: Props) => {
                     setPagination({ ...pagination, limit: 12 });
                   }}
                 >
-                  <SvgArrowDown
-                    className={classNames(styles.icon, styles.iconRed)}
-                  />
                   <p className={classNames(styles.textSmall, styles.voteText)}>
                     {user.votes_down}
                   </p>
+                  <SvgArrowDown
+                    className={classNames(styles.icon, styles.iconRed)}
+                  />
                 </button>
               </div>
               <div className={styles.date}>

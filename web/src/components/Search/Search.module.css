@@ -27,13 +27,32 @@
 }
 
 .row {
-  display: flex;
+  display: grid;
   align-items: center;
-  justify-content: space-between;
+  grid-template-columns: 3em 1fr 3.5em;
   border-radius: 0.5em;
-  padding: 0.5em;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
   margin-bottom: 0.5em;
   width: 100%;
+}
+
+@media (min-width: 350px) {
+  .row {
+    grid-template-columns: 4em 1fr 4em;
+  }
+}
+
+@media (min-width: 768px) {
+  .row {
+    grid-template-columns: 5em 1fr 5em 5em;
+  }
+}
+
+@media (min-width: 1024px) {
+  .row {
+    grid-template-columns: 5em 1fr 10em 5em;
+  }
 }
 
 .row:hover {
@@ -46,6 +65,13 @@
 
 .platformIcon {
   width: 2em;
+  margin-right: 0.5em;
+}
+
+@media (min-width: 768px) {
+  .platformIcon {
+    margin-right: 0;
+  }
 }
 
 .open {
@@ -54,6 +80,13 @@
   opacity: 0;
   transition: opacity 0.5s;
   fill: var(--ci-darker-grey);
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .open {
+    display: block;
+  }
 }
 
 .platform:hover .open {
@@ -61,25 +94,44 @@
   opacity: 1;
 }
 
+.wrapper {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+  .wrapper {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
 .data {
-  width: 15em;
+  max-width: 15em;
+  min-width: 10em;
+  font-size: 0.8em;
+}
+
+@media (min-width: 768px) {
+  .data {
+    font-size: 1em;
+  }
 }
 
 .copyBtn {
   background-color: transparent;
   border: 0;
-  display: flex;
+  display: grid;
   align-items: center;
-}
-
-.votes {
-  display: flex;
-  align-items: center;
+  grid-template-columns: 1.5em 1fr 1.5em;
+  width: 100%;
+  column-gap: 1em;
+  text-align: left;
 }
 
 .vote {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   padding: 0 0.5em;
 }
 
@@ -92,26 +144,31 @@
   transform: scale(1.2);
 }
 
-.voteText {
-  width: 2em;
+.date {
+  text-align: right;
+  display: none;
 }
 
-.date {
-  width: 3em;
-  text-align: right;
+@media (min-width: 768px) {
+  .date {
+    display: block;
+  }
 }
 
 .icon {
   width: 1.5em;
   height: auto;
-  margin-right: 0.5em;
   vertical-align: middle;
+}
+
+.iconUsername,
+.iconPassword {
+  margin-right: 0.5em;
 }
 
 .iconGreen,
 .iconRed {
   width: 0.8em;
-  margin-right: 0.3em;
 }
 
 .iconGreen {
@@ -138,11 +195,12 @@
 
 .text {
   margin: 0;
-  line-height: 1;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 .textSmall {
-  margin: 0;
+  margin: 0 0.5em 0 0;
   font-size: 0.8em;
 }
 
@@ -185,7 +243,7 @@
 }
 
 .paginationBtn {
-  padding: 0.5em;
+  padding: 0 0.5em;
 }
 
 .paginationActive {

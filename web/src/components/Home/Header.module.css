@@ -2,7 +2,7 @@
   position: absolute;
   z-index: 5;
   width: 100%;
-  padding: 0.5em 2em;
+  padding: 0.5em 1em;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -87,15 +87,4 @@
 .navActive {
   color: var(--ci-green);
   font-weight: 600;
-  position: relative;
-}
-
-.navActive::before {
-  content: "";
-  position: absolute;
-  bottom: -0.25em;
-  left: 0;
-  width: 100%;
-  height: 0.15em;
-  background-color: var(--ci-green);
 }

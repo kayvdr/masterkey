@@ -7,11 +7,12 @@
 .field {
   display: flex;
   flex-direction: column;
-  padding: 0.25em;
+  padding-top: 0.25em;
+  padding-bottom: 0.25em;
   position: relative;
 }
 
-@media (min-width: 992px) {
+@media (min-width: 768px) {
   .field {
     flex-direction: row;
   }
@@ -30,7 +31,7 @@
   margin-bottom: 0.35em;
 }
 
-@media (min-width: 992px) {
+@media (min-width: 768px) {
   .inputField {
     margin-bottom: 0;
   }
@@ -39,13 +40,19 @@
 .input {
   background: #fff;
   border: 1px solid var(--ci-light-grey);
-  padding: 0.7em 0.75em 0.7em 3em;
+  padding: 0.7em 2em 0.7em 3em;
   outline: none;
   width: 100%;
   border: 0;
   color: grey;
   background-color: white;
   border-radius: 2em;
+}
+
+@media (min-width: 768px) {
+  .input {
+    padding: 0.7em 0.75em 0.7em 3em;
+  }
 }
 
 .input::placeholder {
@@ -68,10 +75,10 @@
   box-shadow: 0 0 0 4px var(--red-97);
 }
 
-@media (min-width: 992px) {
+@media (min-width: 768px) {
   .btn {
     position: absolute;
     top: 0.45em;
-    right: 0.5em;
+    right: 0.25em;
   }
 }

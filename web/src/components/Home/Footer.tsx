@@ -1,3 +1,4 @@
+import { NavLink } from "react-router-dom";
 import styles from "../Home/Footer.module.css";
 import SvgFacebookBlack from "../icons/FacebookBlack";
 import SvgGithubBlack from "../icons/GithubBlack";
@@ -19,22 +20,22 @@ const Footer = () => (
           <h4 className={styles.title}>Social Media</h4>
           <ul className={styles.list}>
             <li className={styles.listItem}>
-              <a href="" className={styles.listLink}>
+              <NavLink to="" className={styles.listLink}>
                 <SvgInstagramBlack className={styles.icon} />
                 Instagram
-              </a>
+              </NavLink>
             </li>
             <li className={styles.listItem}>
-              <a href="" className={styles.listLink}>
+              <NavLink to="" className={styles.listLink}>
                 <SvgFacebookBlack className={styles.icon} />
                 Facebook
-              </a>
+              </NavLink>
             </li>
             <li className={styles.listItem}>
-              <a href="" className={styles.listLink}>
+              <NavLink to="" className={styles.listLink}>
                 <SvgGithubBlack className={styles.icon} />
                 Github
-              </a>
+              </NavLink>
             </li>
           </ul>
         </div>
@@ -42,14 +43,14 @@ const Footer = () => (
           <h4 className={styles.title}>Links</h4>
           <ul className={styles.list}>
             <li className={styles.listItem}>
-              <a href="" className={styles.listLink}>
+              <NavLink to="/impressum" className={styles.listLink}>
                 Impressum
-              </a>
+              </NavLink>
             </li>
             <li className={styles.listItem}>
-              <a href="" className={styles.listLink}>
+              <NavLink to="/privacy" className={styles.listLink}>
                 Privacy
-              </a>
+              </NavLink>
             </li>
           </ul>
         </div>
