@@ -99,8 +99,7 @@ const Search = ({ title, searchTerm, isPagination = true, sort }: Props) => {
         {title && <h1 className="title">{title}</h1>}
         <div className={styles.filter}>
           <select
-            value={pagination.sort}
-            defaultValue="default"
+            value={pagination.sort ?? ""}
             onChange={(e) => {
               const value = e.target.value as keyof User;
               setPagination({ ...pagination, sort: value });
@@ -110,7 +109,7 @@ const Search = ({ title, searchTerm, isPagination = true, sort }: Props) => {
             })}
             disabled={!!sort}
           >
-            <option value="default" disabled={true}>
+            <option value="" disabled={true}>
               Sort ...
             </option>
             <option value="created_at">Newest</option>
