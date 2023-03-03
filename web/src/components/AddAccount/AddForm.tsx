@@ -1,3 +1,4 @@
+import classNames from "classnames";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { getPlatforms, setUser } from "../../http/api";
@@ -13,13 +14,20 @@ export interface FormUser {
   honeypot: string;
 }
 
+interface Error {
+  code: number;
+  message: string;
+}
+
 const AddForm = () => {
   const [platforms, setPlatforms] = useState<Platform[]>();
+  const [error, setError] = useState<Error>();
+  const [isSuccessful, setIsSuccessful] = useState(false);
   const {
     register,
     reset,
     handleSubmit,
-    formState: { errors, isSubmitSuccessful },
+    formState: { errors },
   } = useForm<FormUser>();
 
   useEffect(() => {
@@ -32,14 +40,26 @@ const AddForm = () => {
     fetchUsers();
   }, []);
 
-  const onSubmit = (data: FormUser) => {
-    if (data.honeypot) return console.error("Something went wrong!");
+  const onSubmit = async (data: FormUser) => {
+    if (data.honeypot)
+      return setError({ code: 400, message: "Something went wrong!" });
 
     const { username, password, platform } = data;
+
+    const platformId = platforms?.find(
+      ({ name }) => name.toLowerCase() === platform
+    );
+
+    if (!platformId)
+      return setError({ code: 404, message: "Platform not found" });
+
     setUser({
       username,
       password,
-      platform_id: platform,
+      platform_id: platformId.id,
+    }).then(async (response) => {
+      const res = await response.json();
+      !response.ok ? setError(res.error) : setIsSuccessful(true);
     });
 
     reset();
@@ -49,25 +69,28 @@ const AddForm = () => {
     <div className={styles.formWrapper}>
       <h2 className={styles.subtitle}>Please enter the following data.</h2>
       <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
-        {isSubmitSuccessful && (
-          <div className={styles.success}>Data send successfully!</div>
+        {isSuccessful && (
+          <div className={styles.success}>Added successfully!</div>
         )}
+        {error && <div className={styles.fail}>{error.message}</div>}
         <div className={styles.field}>
           <select
             className={styles.select}
             {...register("platform", { required: "Please choose a platform" })}
-            defaultValue="default"
+            defaultValue=""
           >
-            <option value="default" disabled={true}>
+            <option value="" disabled={true}>
               Choose platform...
             </option>
             {platforms?.map((p) => (
-              <option key={p.id} value={p.id}>
+              <option key={p.id} value={p.name.toLowerCase()}>
                 {p.name}
               </option>
             ))}
           </select>
-          {errors?.platform && <p>{errors.platform.message}</p>}
+          {errors.platform && (
+            <div className={styles.inputError}>{errors.platform.message}</div>
+          )}
         </div>
         <div className={styles.field}>
           <input
@@ -78,7 +101,9 @@ const AddForm = () => {
               required: "Please insert the username",
             })}
           />
-          {errors?.username && <p>{errors.username.message}</p>}
+          {errors.username && (
+            <div className={styles.inputError}>{errors.username.message}</div>
+          )}
         </div>
         <div className={styles.field}>
           <input
@@ -89,7 +114,9 @@ const AddForm = () => {
               required: "Please insert the passwort",
             })}
           />
-          {errors?.password && <p>{errors.password.message}</p>}
+          {errors.password && (
+            <div className={styles.inputError}>{errors.password.message}</div>
+          )}
         </div>
         <div className={styles.field}>
           <label>
@@ -100,11 +127,14 @@ const AddForm = () => {
                 required: "Please accept the checkbox",
               })}
             />
-            <span className={styles.label}>
+            <span
+              className={classNames(styles.label, {
+                [styles.checkBoxError]: errors.privacy,
+              })}
+            >
               I agree that this data will be stored and further disseminated
             </span>
           </label>
-          {errors?.privacy && <p>{errors.privacy.message}</p>}
         </div>
         <input
           type="text"

@@ -19,6 +19,10 @@
   margin-bottom: 1em;
 }
 
+.label {
+  margin-left: 0.25em;
+}
+
 .input[type="text"],
 .select {
   width: 100%;
@@ -29,8 +33,13 @@
   border-radius: 0.5em;
 }
 
-.label {
-  margin-left: 0.25em;
+.inputError {
+  font-size: 0.75em;
+  color: var(--ci-red);
+}
+
+.checkBoxError {
+  color: var(--ci-red);
 }
 
 .notvisible {
@@ -40,12 +49,24 @@
   position: absolute;
 }
 
-.success {
-  background-color: var(--ci-green);
+.success,
+.fail {
   width: 100%;
   padding: 0.5em;
   text-align: center;
   color: white;
   border-radius: 0.5em;
   margin-bottom: 1em;
+}
+
+.success {
+  background-color: var(--ci-green);
+}
+
+.fail {
+  background-color: var(--ci-red);
+}
+
+.fail:first-letter {
+  text-transform: uppercase;
 }

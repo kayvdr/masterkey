@@ -31,7 +31,7 @@ export const getUsers = async (pagination?: Pagination) => {
 };
 
 export const setUser = async (user: User) => {
-  return await fetchData<User>(`${baseUrl}/v1/users`, {
+  return await fetch(`${baseUrl}/v1/users`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -51,7 +51,7 @@ export const getUser = async (id: string) => {
 };
 
 export const patchUser = async (user: User) => {
-  return await fetchData<User>(`${baseUrl}/v1/users/${user.id}`, {
+  return await fetch(`${baseUrl}/v1/users/${user.id}`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
