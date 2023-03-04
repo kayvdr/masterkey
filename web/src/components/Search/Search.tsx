@@ -15,16 +15,23 @@ import SvgArrowLeft from "../icons/ArrowLeft";
 import SvgArrowRight from "../icons/ArrowRight";
 import SvgArrowUp from "../icons/ArrowUp";
 import SvgCopy from "../icons/Copy";
+import SvgDiscord from "../icons/Discord";
 import SvgDropbox from "../icons/Dropbox";
 import SvgEvernote from "../icons/Evernote";
 import SvgFacebook from "../icons/Facebook";
 import SvgGoogle from "../icons/Google";
 import SvgInstagram from "../icons/Instagram";
 import SvgKey from "../icons/Key";
+import SvgOnlyfans from "../icons/Onlyfans";
 import SvgOpenNew from "../icons/OpenNew";
+import SvgPinterest from "../icons/Pinterest";
+import SvgReddit from "../icons/Reddit";
 import SvgSnapchat from "../icons/Snapchat";
+import SvgStackExchange from "../icons/StackExchange";
+import SvgStackOverflow from "../icons/StackOverflow";
 import SvgTikTok from "../icons/Tiktok";
 import SvgTinder from "../icons/Tinder";
+import SvgTwitch from "../icons/Twitch";
 import SvgTwitter from "../icons/Twitter";
 import SvgUser from "../icons/User";
 import styles from "../Search/Search.module.css";
@@ -39,6 +46,13 @@ const logoMapping: { [key in string]: Glyph } = {
   TikTok: SvgTikTok,
   Twitter: SvgTwitter,
   Dropbox: SvgDropbox,
+  Onlyfans: SvgOnlyfans,
+  Discord: SvgDiscord,
+  Pinterest: SvgPinterest,
+  Reddit: SvgReddit,
+  "Stack Exchange": SvgStackExchange,
+  "Stack Overflow": SvgStackOverflow,
+  Twitch: SvgTwitch,
 };
 
 const getDiff = (createdAt: string) => {
