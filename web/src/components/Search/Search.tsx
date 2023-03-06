@@ -191,12 +191,19 @@ const Search = ({ title, searchTerm, isPagination = true, sort }: Props) => {
               <div className={styles.wrapper}>
                 <button
                   className={styles.vote}
-                  onClick={() => {
-                    patchUser({
+                  onClick={async () => {
+                    const response = await patchUser({
                       ...user,
                       votes_up: (user.votes_up ?? 0) + 1,
                     });
-                    setPagination({ ...pagination, limit: 12 });
+
+                    if (!response) return;
+
+                    const updatedUsers = users.items.map((u) =>
+                      u.id === response.id ? response : u
+                    );
+
+                    setUsers({ ...users, items: updatedUsers });
                   }}
                 >
                   <p className={classNames(styles.textSmall, styles.voteText)}>
@@ -208,12 +215,19 @@ const Search = ({ title, searchTerm, isPagination = true, sort }: Props) => {
                 </button>
                 <button
                   className={styles.vote}
-                  onClick={() => {
-                    patchUser({
+                  onClick={async () => {
+                    const response = await patchUser({
                       ...user,
                       votes_down: (user.votes_down ?? 0) + 1,
                     });
-                    setPagination({ ...pagination, limit: 12 });
+
+                    if (!response) return;
+
+                    const updatedUsers = users.items.map((u) =>
+                      u.id === response.id ? response : u
+                    );
+
+                    setUsers({ ...users, items: updatedUsers });
                   }}
                 >
                   <p className={classNames(styles.textSmall, styles.voteText)}>
@@ -235,9 +249,10 @@ const Search = ({ title, searchTerm, isPagination = true, sort }: Props) => {
         <div className={styles.pagination}>
           <button
             className={styles.paginationPrev}
-            onClick={() =>
-              setPagination({ ...pagination, page: pagination.page - 1 })
-            }
+            onClick={() => {
+              setPagination({ ...pagination, page: pagination.page - 1 });
+              // setLoaded(false);
+            }}
             disabled={pagination.page <= 1}
           >
             <SvgArrowLeft
@@ -257,9 +272,10 @@ const Search = ({ title, searchTerm, isPagination = true, sort }: Props) => {
           ))}
           <button
             className={styles.paginationNext}
-            onClick={() =>
-              setPagination({ ...pagination, page: pagination.page + 1 })
-            }
+            onClick={() => {
+              setPagination({ ...pagination, page: pagination.page + 1 });
+              // setLoaded(false);
+            }}
             disabled={
               users && pagination.limit * pagination.page >= users.count
             }

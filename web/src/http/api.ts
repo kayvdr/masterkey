@@ -51,7 +51,7 @@ export const getUser = async (id: string) => {
 };
 
 export const patchUser = async (user: User) => {
-  return await fetch(`${baseUrl}/v1/users/${user.id}`, {
+  return await fetchData<User>(`${baseUrl}/v1/users/${user.id}`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
