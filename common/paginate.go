@@ -43,12 +43,12 @@ func NewPagination(searchTerm string, page int, limit int, sort string, order st
 	}
 
 	if len(sort) > 0 {
-		values := []string{"username", "password", "votes_up", "votes_down", "created_at"}
+		values := []string{"id", "username", "password", "votes_up", "votes_down", "created_at"}
 		if !Contains(values, sort) {
 			return nil, ErrPageSortValue
 		}
 	} else {
-		sort = "created_at"
+		sort = "id"
 	}
 
 	if len(order) > 0 {
@@ -80,13 +80,7 @@ func NewPaginationFromURL(urlValues url.Values) (Pagination, error) {
 		limit = 10
 	}
 	sort := urlValues.Get("sort")
-	if err != nil {
-		sort = "created_at"
-	}
 	order := urlValues.Get("order")
-	if err != nil {
-		order = "ASC"
-	}
 
 	return NewPagination(searchTerm, page, limit, sort, order)
 }
