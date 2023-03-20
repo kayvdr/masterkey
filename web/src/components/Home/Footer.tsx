@@ -43,8 +43,8 @@ const Footer = () => (
           <h4 className={styles.title}>Links</h4>
           <ul className={styles.list}>
             <li className={styles.listItem}>
-              <NavLink to="/impressum" className={styles.listLink}>
-                Impressum
+              <NavLink to="/imprint" className={styles.listLink}>
+                Imprint
               </NavLink>
             </li>
             <li className={styles.listItem}>

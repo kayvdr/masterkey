@@ -1,7 +1,7 @@
 .btn {
-  padding: 0.5em 2em;
-  background-color: #429e51;
-  border-radius: 2em;
+  padding: 0.6em 2em;
+  background-color: var(--ci-green);
+  border-radius: 0.65em;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -9,9 +9,13 @@
   color: var(--ci-light-grey);
 }
 
+.fullWidth {
+  width: 100%;
+}
+
 .btn:hover,
 .btn:active {
-  background-color: #67b974;
+  background-color: var(--ci-light-green);
 }
 
 .icon {

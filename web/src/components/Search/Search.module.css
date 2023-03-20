@@ -10,7 +10,7 @@
 
 .sortSelect {
   background-color: var(--ci-light-grey);
-  border-radius: 5em;
+  border-radius: 0.65em;
   padding: 0.5em 1em;
   width: 10em;
   border: 0;
@@ -30,7 +30,7 @@
   display: grid;
   align-items: center;
   grid-template-columns: 3em 1fr 3.5em;
-  border-radius: 0.5em;
+  border-radius: 0.65em;
   padding-top: 0.5em;
   padding-bottom: 0.5em;
   margin-bottom: 0.5em;

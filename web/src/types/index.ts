@@ -30,3 +30,8 @@ export interface Pagination {
   sort: keyof User | undefined;
   order?: "ASC" | "DESC";
 }
+
+export interface CustomError {
+  code: number;
+  message: string;
+}

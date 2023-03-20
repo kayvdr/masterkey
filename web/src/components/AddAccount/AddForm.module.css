@@ -14,34 +14,6 @@
   max-width: 32em;
 }
 
-.field {
-  width: 100%;
-  margin-bottom: 1em;
-}
-
-.label {
-  margin-left: 0.25em;
-}
-
-.input[type="text"],
-.select {
-  width: 100%;
-  border: 0;
-  padding: 0.5em 1em;
-  height: 2.75em;
-  background-color: var(--ci-light-grey);
-  border-radius: 0.5em;
-}
-
-.inputError {
-  font-size: 0.75em;
-  color: var(--ci-red);
-}
-
-.checkBoxError {
-  color: var(--ci-red);
-}
-
 .notvisible {
   visibility: hidden;
   height: 0;

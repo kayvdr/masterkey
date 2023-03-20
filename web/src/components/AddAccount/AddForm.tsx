@@ -1,12 +1,14 @@
-import classNames from "classnames";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { getPlatforms, setUser } from "../../http/api";
-import { Platform } from "../../types";
+import { CustomError, Platform } from "../../types";
 import Button from "../../ui/Button";
+import InputCheckBox from "../../ui/InputCheckBox";
+import InputField from "../../ui/InputField";
+import Select from "../../ui/Select";
 import styles from "../AddAccount/AddForm.module.css";
 
-export interface FormUser {
+interface FormUser {
   platform: string;
   username: string;
   password: string;
@@ -14,14 +16,9 @@ export interface FormUser {
   honeypot: string;
 }
 
-interface Error {
-  code: number;
-  message: string;
-}
-
 const AddForm = () => {
   const [platforms, setPlatforms] = useState<Platform[]>();
-  const [error, setError] = useState<Error>();
+  const [error, setError] = useState<CustomError>();
   const [isSuccessful, setIsSuccessful] = useState(false);
   const {
     register,
@@ -73,76 +70,50 @@ const AddForm = () => {
           <div className={styles.success}>Added successfully!</div>
         )}
         {error && <div className={styles.fail}>{error.message}</div>}
-        <div className={styles.field}>
-          <select
-            className={styles.select}
-            {...register("platform", { required: "Please choose a platform" })}
-            defaultValue=""
-          >
-            <option value="" disabled={true}>
-              Choose platform...
-            </option>
-            {platforms?.map((p) => (
-              <option key={p.id} value={p.name.toLowerCase()}>
-                {p.name}
-              </option>
-            ))}
-          </select>
-          {errors.platform && (
-            <div className={styles.inputError}>{errors.platform.message}</div>
-          )}
-        </div>
-        <div className={styles.field}>
-          <input
-            type="text"
-            placeholder="Username"
-            className={styles.input}
-            {...register("username", {
+        <Select
+          placeholder="Choose platform..."
+          register={{
+            ...register("platform", { required: "Please choose a platform" }),
+          }}
+          options={platforms}
+          error={errors.platform}
+        />
+        <InputField
+          placeholder="Username"
+          register={{
+            ...register("username", {
               required: "Please insert the username",
-            })}
-          />
-          {errors.username && (
-            <div className={styles.inputError}>{errors.username.message}</div>
-          )}
-        </div>
-        <div className={styles.field}>
-          <input
-            type="text"
-            placeholder="Password"
-            className={styles.input}
-            {...register("password", {
+            }),
+          }}
+          error={errors.username}
+        />
+        <InputField
+          placeholder="Password"
+          register={{
+            ...register("password", {
               required: "Please insert the passwort",
-            })}
-          />
-          {errors.password && (
-            <div className={styles.inputError}>{errors.password.message}</div>
-          )}
-        </div>
-        <div className={styles.field}>
-          <label>
-            <input
-              type="checkbox"
-              className={styles.input}
-              {...register("privacy", {
-                required: "Please accept the checkbox",
-              })}
-            />
-            <span
-              className={classNames(styles.label, {
-                [styles.checkBoxError]: errors.privacy,
-              })}
-            >
-              I agree that this data will be stored and further disseminated
-            </span>
-          </label>
-        </div>
+            }),
+          }}
+          error={errors.password}
+        />
+        <InputCheckBox
+          register={{
+            ...register("privacy", {
+              required: "Please accept the checkbox",
+            }),
+          }}
+          error={errors.privacy}
+          text="I agree that this data will be stored and further disseminated"
+        />
         <input
           type="text"
           className={styles.notvisible}
           {...register("honeypot")}
         />
         <div className={styles.field}>
-          <Button type="submit">Submit</Button>
+          <Button type="submit" fullWidth={true}>
+            Submit
+          </Button>
         </div>
       </form>
     </div>

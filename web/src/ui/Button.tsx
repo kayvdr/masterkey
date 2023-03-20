@@ -9,6 +9,7 @@ type Props = PropsWithChildren<{
   icon?: Glyph;
   onClick?: () => void;
   className?: string;
+  fullWidth?: boolean;
 }>;
 
 const Button = ({
@@ -16,11 +17,14 @@ const Button = ({
   icon,
   onClick,
   className,
+  fullWidth = false,
   children,
 }: Props) => (
   <button
     type={type}
-    className={classNames(styles.btn, className)}
+    className={classNames(styles.btn, className, {
+      [styles.fullWidth]: fullWidth,
+    })}
     onClick={onClick}
   >
     {icon && <Icon glyph={icon} className={styles.icon} />}
