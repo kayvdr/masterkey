@@ -1,5 +1,5 @@
-import Footer from "../Home/Footer";
-import Header from "../Home/Header";
+import Footer from "../Footer";
+import Header from "../Header";
 import styles from "../Imprint/ImprintPage.module.css";
 
 const ImprintPage = () => (

@@ -1,6 +1,6 @@
 import styles from "../AddAccount/AddAccountPage.module.css";
-import Footer from "../Home/Footer";
-import Header from "../Home/Header";
+import Footer from "../Footer";
+import Header from "../Header";
 import AddForm from "./AddForm";
 
 const AddAccountPage = () => {

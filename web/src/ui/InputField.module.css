@@ -12,8 +12,7 @@ select {
   border: 0;
   padding: 0.5em 1em;
   height: 2.6em;
-  background-color: var(--ci-light-grey);
-  border: 2px solid #c9c9c9;
+  border: 1px solid var(--ci-light-grey);
   border-radius: 0.65em;
   transition: all 0.5s;
 }

@@ -85,3 +85,20 @@
 .separator {
   padding: 0 1em;
 }
+
+.fail {
+  width: 100%;
+  padding: 0.5em;
+  text-align: center;
+  color: white;
+  border-radius: 0.5em;
+  margin-bottom: 1em;
+}
+
+.fail {
+  background-color: var(--ci-red);
+}
+
+.fail:first-letter {
+  text-transform: uppercase;
+}

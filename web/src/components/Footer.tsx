@@ -1,8 +1,8 @@
 import { NavLink } from "react-router-dom";
-import styles from "../Home/Footer.module.css";
-import SvgFacebookBlack from "../icons/FacebookBlack";
-import SvgGithubBlack from "../icons/GithubBlack";
-import SvgInstagramBlack from "../icons/InstagramBlack";
+import styles from "./Footer.module.css";
+import SvgFacebookBlack from "./icons/FacebookBlack";
+import SvgGithubBlack from "./icons/GithubBlack";
+import SvgInstagramBlack from "./icons/InstagramBlack";
 
 const Footer = () => (
   <footer className={styles.footer}>

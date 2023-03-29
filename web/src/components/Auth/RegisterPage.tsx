@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import { supabase } from "../../http/supabase";
 import { CustomError } from "../../types";
 import Button from "../../ui/Button";
 import Icon from "../../ui/Icon";
@@ -17,6 +18,7 @@ interface FormLogin {
 
 const RegisterPage = () => {
   const [error, setError] = useState<CustomError>();
+  const navigate = useNavigate();
   const {
     register,
     reset,
@@ -24,10 +26,16 @@ const RegisterPage = () => {
     formState: { errors },
   } = useForm<FormLogin>();
 
-  const onSubmit = async (data: FormLogin) => {
-    console.log(data);
-    setError({ code: 500, message: "Error" });
+  const onSubmit = async (formData: FormLogin) => {
+    const { error } = await supabase.auth.signUp(formData);
+
+    if (error?.status) {
+      setError({ code: error.status, message: error.message });
+      return;
+    }
+
     reset();
+    navigate("/login");
   };
 
   return (

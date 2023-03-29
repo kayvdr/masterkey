@@ -1,0 +1,155 @@
+.header {
+  position: absolute;
+  z-index: 5;
+  width: 100%;
+  padding: 0.5em 1em;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  width: 2.5em;
+  height: 2.5em;
+  fill: white;
+}
+
+.navToggle {
+  padding: 0.5em;
+  width: 3em;
+  height: 3em;
+  position: relative;
+  z-index: 10;
+}
+
+.navToggleIcon,
+.navToggleIcon::before,
+.navToggleIcon::after {
+  width: 100%;
+  height: 0;
+  display: block;
+  border-bottom: 0.25em solid white;
+  border-radius: 1em;
+}
+
+.navToggleIcon::before,
+.navToggleIcon::after {
+  content: "";
+  position: relative;
+}
+
+.navToggleIcon::before {
+  top: -0.6em;
+}
+
+.navToggleIcon::after {
+  top: 0.4em;
+}
+
+.navToggleActive .navToggleIcon {
+  border-color: transparent;
+}
+
+.navToggleActive .navToggleIcon::before {
+  transform: rotate(45deg);
+  top: 0;
+}
+
+.navToggleActive .navToggleIcon::after {
+  transform: rotate(-45deg);
+  top: -0.15em;
+}
+
+.navbar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    display: none;
+  }
+
+  .navbarActive.navbar {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    width: 80%;
+    right: 0;
+    height: 100%;
+    background-color: var(--ci-darker-grey);
+    padding: 4em 1em;
+  }
+}
+
+.navItem {
+  margin: 0 1em;
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .navItem {
+    margin-bottom: 1em;
+  }
+}
+
+.navActive {
+  color: var(--ci-green);
+  font-weight: 600;
+}
+
+.navBtn {
+  padding: 0.25em 1.5em;
+}
+
+.account {
+  position: relative;
+  color: var(--grey);
+}
+
+.accountBtn {
+  background-color: white;
+  padding: 0.15em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 100%;
+}
+
+.accountIcon {
+  width: 1.5em;
+  vertical-align: middle;
+}
+
+.accountDropdown {
+  position: absolute;
+  background-color: white;
+  right: 0;
+  padding: 0.35em 0;
+  margin-top: 0.5em;
+  border-radius: 0.65em;
+  width: 12em;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+}
+
+.dropdownBtn {
+  padding: 0.5em 1em;
+  width: 100%;
+  text-align: left;
+  font-size: 0.9em;
+}
+
+.dropdownBtn:hover {
+  background-color: var(--ci-light-grey);
+}
+
+.separator {
+  background: var(--ci-light-grey);
+  margin: 0.25em 0;
+  height: 1px;
+}

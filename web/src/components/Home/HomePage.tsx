@@ -1,7 +1,7 @@
+import Footer from "../Footer";
+import Header from "../Header";
 import AddAccount from "./AddAccount";
 import FavoritePlatforms from "./FavoritePlatforms";
-import Footer from "./Footer";
-import Header from "./Header";
 import Intro from "./Intro";
 import NewestList from "./NewestList";
 

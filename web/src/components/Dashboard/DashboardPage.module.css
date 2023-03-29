@@ -1,0 +1,71 @@
+.sectionGrey {
+  padding: 6em 0 2em;
+  background-color: var(--ci-dark-grey);
+}
+
+.title {
+  color: white;
+  text-align: center;
+  font-size: 2em;
+  text-transform: uppercase;
+}
+
+.wrapper {
+  display: grid;
+  gap: 2em;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.box {
+  border-radius: 0.65em;
+  border: 1px solid var(--ci-light-grey);
+  padding: 1em;
+}
+
+.subtitle {
+  font-weight: 300;
+  font-size: 1.35em;
+  margin-bottom: 0.75em;
+}
+
+.itemTitle {
+  margin-top: 0;
+  margin-bottom: 0.25em;
+}
+
+.profileItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5em;
+}
+
+.itemValue {
+  margin: 0;
+}
+
+.editIcon {
+  width: 1.35em;
+}
+
+.form {
+  display: flex;
+}
+
+.input {
+  margin-bottom: 0;
+}
+
+.saveBtn {
+  width: auto;
+  margin-left: 0.5em;
+}
+
+.link {
+  color: var(--ci-dark-green);
+  text-decoration: underline;
+}
+
+.link:hover {
+  color: var(--ci-green);
+}
