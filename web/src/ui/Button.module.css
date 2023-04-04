@@ -1,6 +1,5 @@
 .btn {
   padding: 0.6em 2em;
-  background-color: var(--ci-green);
   border-radius: 0.65em;
   display: flex;
   align-items: center;
@@ -13,11 +12,21 @@
   width: 100%;
 }
 
-.btn:hover,
-.btn:active {
+.primary {
+  background-color: var(--ci-green);
+}
+
+.primary:hover,
+.primary:active {
   background-color: var(--ci-light-green);
 }
 
-.icon {
-  margin-right: 0.2em;
+.secondary {
+  background-color: var(--ci-grey);
+  color: white;
+}
+
+.secondary:hover,
+.secondary:active {
+  background-color: var(--ci-dark-grey);
 }

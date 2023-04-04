@@ -20,22 +20,34 @@ const Footer = () => (
           <h4 className={styles.title}>Social Media</h4>
           <ul className={styles.list}>
             <li className={styles.listItem}>
-              <NavLink to="" className={styles.listLink}>
+              <a
+                href="https://www.instagram.com/on3k.dev"
+                className={styles.listLink}
+                target="_blank"
+              >
                 <SvgInstagramBlack className={styles.icon} />
                 Instagram
-              </NavLink>
+              </a>
             </li>
             <li className={styles.listItem}>
-              <NavLink to="" className={styles.listLink}>
+              <a
+                href="https://www.facebook.com/profile.php?id=100075349660325"
+                className={styles.listLink}
+                target="_blank"
+              >
                 <SvgFacebookBlack className={styles.icon} />
                 Facebook
-              </NavLink>
+              </a>
             </li>
             <li className={styles.listItem}>
-              <NavLink to="" className={styles.listLink}>
+              <a
+                href="https://github.com/on3kdev"
+                className={styles.listLink}
+                target="_blank"
+              >
                 <SvgGithubBlack className={styles.icon} />
                 Github
-              </NavLink>
+              </a>
             </li>
           </ul>
         </div>

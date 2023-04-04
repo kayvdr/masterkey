@@ -13,13 +13,20 @@
 .wrapper {
   display: grid;
   gap: 2em;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1.25fr 1.25fr;
+}
+
+.column {
+  display: grid;
+  row-gap: 2em;
 }
 
 .box {
   border-radius: 0.65em;
   border: 1px solid var(--ci-light-grey);
   padding: 1em;
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
 }
 
 .subtitle {
@@ -33,11 +40,14 @@
   margin-bottom: 0.25em;
 }
 
+.profileWrapper {
+  margin-bottom: 0.75em;
+}
+
 .profileItem {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.5em;
 }
 
 .itemValue {
@@ -56,16 +66,68 @@
   margin-bottom: 0;
 }
 
-.saveBtn {
-  width: auto;
-  margin-left: 0.5em;
-}
-
 .link {
-  color: var(--ci-dark-green);
-  text-decoration: underline;
+  color: var(--ci-grey);
 }
 
 .link:hover {
+  color: var(--ci-dark-grey);
+}
+
+.delete {
+  color: var(--ci-red);
+}
+
+.total,
+.list {
+  text-align: center;
+}
+
+.totalLabel {
+  color: var(--ci-grey);
+  font-size: 0.8em;
+  margin: 0;
+}
+
+.totalValue {
+  font-size: 3em;
+  margin: 0;
+  line-height: 1;
+  font-weight: 600;
   color: var(--ci-green);
+}
+
+.list {
+  margin-top: 2em;
+  overflow-y: auto;
+}
+
+.listItem {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.25em;
+}
+
+.provider {
+  display: flex;
+  align-items: center;
+}
+
+.providerIcon {
+  margin-right: 1em;
+  width: 1.25em;
+}
+
+.btnRow {
+  margin-top: 2em;
+  display: flex;
+  justify-content: center;
+}
+
+.iconGreen {
+  fill: hsl(120, 61%, 34%);
+}
+
+.iconRed {
+  fill: hsl(0, 100%, 60%);
 }

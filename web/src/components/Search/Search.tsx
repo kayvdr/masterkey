@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { getPlatforms, getUsers, patchUser } from "../../http/api";
 import { Glyph, Pagination, Platform, User, UsersResponse } from "../../types";
 import Icon from "../../ui/Icon";
+import styles from "../Search/Search.module.css";
 import SvgArrowDown from "../icons/ArrowDown";
 import SvgArrowLeft from "../icons/ArrowLeft";
 import SvgArrowRight from "../icons/ArrowRight";
@@ -34,7 +35,6 @@ import SvgTinder from "../icons/Tinder";
 import SvgTwitch from "../icons/Twitch";
 import SvgTwitter from "../icons/Twitter";
 import SvgUser from "../icons/User";
-import styles from "../Search/Search.module.css";
 
 const logoMapping: { [key in string]: Glyph } = {
   Instagram: SvgInstagram,
@@ -162,11 +162,13 @@ const Search = ({ title, searchTerm, isPagination = true, sort }: Props) => {
                       navigator.clipboard.writeText(user.username);
                     }}
                   >
-                    <SvgUser
+                    <Icon
+                      glyph={SvgUser}
                       className={classNames(styles.icon, styles.iconUsername)}
                     />
                     <p className={styles.text}>{user.username}</p>
-                    <SvgCopy
+                    <Icon
+                      glyph={SvgCopy}
                       className={classNames(styles.icon, styles.iconCopy)}
                     />
                   </button>
@@ -178,7 +180,8 @@ const Search = ({ title, searchTerm, isPagination = true, sort }: Props) => {
                       navigator.clipboard.writeText(user.password);
                     }}
                   >
-                    <SvgKey
+                    <Icon
+                      glyph={SvgKey}
                       className={classNames(styles.icon, styles.iconPassword)}
                     />
                     <p className={styles.text}>{user.password}</p>
@@ -206,12 +209,10 @@ const Search = ({ title, searchTerm, isPagination = true, sort }: Props) => {
                     setUsers({ ...users, items: updatedUsers });
                   }}
                 >
+                  <Icon glyph={SvgArrowUp} className={styles.iconGreen} />
                   <p className={classNames(styles.textSmall, styles.voteText)}>
                     {user.votes_up}
                   </p>
-                  <SvgArrowUp
-                    className={classNames(styles.icon, styles.iconGreen)}
-                  />
                 </button>
                 <button
                   className={styles.vote}
@@ -230,12 +231,10 @@ const Search = ({ title, searchTerm, isPagination = true, sort }: Props) => {
                     setUsers({ ...users, items: updatedUsers });
                   }}
                 >
+                  <Icon glyph={SvgArrowDown} className={styles.iconRed} />
                   <p className={classNames(styles.textSmall, styles.voteText)}>
                     {user.votes_down}
                   </p>
-                  <SvgArrowDown
-                    className={classNames(styles.icon, styles.iconRed)}
-                  />
                 </button>
               </div>
               <div className={styles.date}>
@@ -251,7 +250,6 @@ const Search = ({ title, searchTerm, isPagination = true, sort }: Props) => {
             className={styles.paginationPrev}
             onClick={() => {
               setPagination({ ...pagination, page: pagination.page - 1 });
-              // setLoaded(false);
             }}
             disabled={pagination.page <= 1}
           >
@@ -274,7 +272,6 @@ const Search = ({ title, searchTerm, isPagination = true, sort }: Props) => {
             className={styles.paginationNext}
             onClick={() => {
               setPagination({ ...pagination, page: pagination.page + 1 });
-              // setLoaded(false);
             }}
             disabled={
               users && pagination.limit * pagination.page >= users.count

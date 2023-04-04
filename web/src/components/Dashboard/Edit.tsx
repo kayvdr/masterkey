@@ -71,9 +71,7 @@ const Edit = ({ name, value, label }: Props) => {
             error={errors[name]}
             className={{ field: styles.input }}
           />
-          <Button type="submit" fullWidth={true} className={styles.saveBtn}>
-            Save
-          </Button>
+          <Button type="submit">Save</Button>
         </form>
       )}
     </>
