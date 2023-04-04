@@ -22,7 +22,7 @@ import Edit from "./Edit";
 const getDate = (dateString: string | undefined) => {
   if (!dateString) return;
 
-  return format(new Date(dateString), "YYYY-MM-DD HH:mm:ss");
+  return format(new Date(dateString), "yyyy-MM-dd HH:mm:ss");
 };
 
 const DashboardPage = () => {
