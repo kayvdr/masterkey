@@ -1,0 +1,24 @@
+.wrapper {
+  display: flex;
+}
+
+.list {
+  width: 100%;
+}
+
+.details {
+  width: 40%;
+  margin-left: 2.5em;
+  padding: 0.5em;
+}
+
+.detailsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.iconClose {
+  width: 0.8em;
+  fill: var(--ci-grey);
+}

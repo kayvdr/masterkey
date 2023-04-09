@@ -1,4 +1,4 @@
-import { Pagination, Platform, User } from "../types";
+import { Pagination, Platform, UserResponse } from "../types";
 
 const baseUrl = "http://localhost:60001";
 
@@ -25,12 +25,12 @@ export const getUsers = async (pagination?: Pagination) => {
     url = `${url}?${searchParams.toString()}`;
   }
 
-  return await fetchData<{ count: number; items: User[] }>(url, {
+  return await fetchData<{ count: number; items: UserResponse[] }>(url, {
     method: "GET",
   });
 };
 
-export const setUser = async (user: User) => {
+export const setUser = async (user: UserResponse) => {
   return await fetch(`${baseUrl}/v1/users`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -45,13 +45,13 @@ export const setUser = async (user: User) => {
 };
 
 export const getUser = async (id: string) => {
-  return await fetchData<User>(`${baseUrl}/v1/users/${id}`, {
+  return await fetchData<UserResponse>(`${baseUrl}/v1/users/${id}`, {
     method: "GET",
   });
 };
 
-export const patchUser = async (user: User) => {
-  return await fetchData<User>(`${baseUrl}/v1/users/${user.id}`, {
+export const patchUser = async (user: UserResponse) => {
+  return await fetchData<UserResponse>(`${baseUrl}/v1/users/${user.id}`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({

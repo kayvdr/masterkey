@@ -7,24 +7,19 @@ import {
   differenceInYears,
 } from "date-fns";
 import { useEffect, useState } from "react";
-import { getPlatforms, getUsers, patchUser } from "../../http/api";
-import { Glyph, Pagination, Platform, User, UsersResponse } from "../../types";
-import Icon from "../../ui/Icon";
+import { getPlatforms, getUsers } from "../../http/api";
+import { Glyph, Pagination, User, UserResponse } from "../../types";
+import UserList from "../../ui/UserList";
 import styles from "../Search/Search.module.css";
-import SvgArrowDown from "../icons/ArrowDown";
 import SvgArrowLeft from "../icons/ArrowLeft";
 import SvgArrowRight from "../icons/ArrowRight";
-import SvgArrowUp from "../icons/ArrowUp";
-import SvgCopy from "../icons/Copy";
 import SvgDiscord from "../icons/Discord";
 import SvgDropbox from "../icons/Dropbox";
 import SvgEvernote from "../icons/Evernote";
 import SvgFacebook from "../icons/Facebook";
 import SvgGoogle from "../icons/Google";
 import SvgInstagram from "../icons/Instagram";
-import SvgKey from "../icons/Key";
 import SvgOnlyfans from "../icons/Onlyfans";
-import SvgOpenNew from "../icons/OpenNew";
 import SvgPinterest from "../icons/Pinterest";
 import SvgReddit from "../icons/Reddit";
 import SvgSnapchat from "../icons/Snapchat";
@@ -34,7 +29,6 @@ import SvgTikTok from "../icons/Tiktok";
 import SvgTinder from "../icons/Tinder";
 import SvgTwitch from "../icons/Twitch";
 import SvgTwitter from "../icons/Twitter";
-import SvgUser from "../icons/User";
 
 const logoMapping: { [key in string]: Glyph } = {
   Instagram: SvgInstagram,
@@ -81,15 +75,15 @@ interface Props {
 }
 
 const Search = ({ title, searchTerm, isPagination = true, sort }: Props) => {
-  const [users, setUsers] = useState<UsersResponse>();
-  const [platforms, setPlatforms] = useState<Platform[]>();
+  const [users, setUsers] = useState<User[]>();
+  const [count, setCount] = useState<number>();
   const [pagination, setPagination] = useState<Pagination>({
     limit: 12,
     page: 1,
-    sort,
+    sort: sort as keyof UserResponse,
   });
 
-  let pages = users && Math.ceil(users.count / pagination.limit);
+  let pages = count && Math.ceil(count / pagination.limit);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -100,8 +94,29 @@ const Search = ({ title, searchTerm, isPagination = true, sort }: Props) => {
       });
       const fetchedPlatforms = await getPlatforms();
 
-      setUsers(fetchedUsers ?? { count: 0, items: [] });
-      setPlatforms(fetchedPlatforms);
+      const users = fetchedUsers?.items.map<User>((user) => {
+        const time = user.created_at && getDiff(user.created_at);
+
+        const platform = fetchedPlatforms?.find(
+          (p) => p.id === user.platform_id
+        );
+
+        return {
+          id: user.id,
+          username: user.username,
+          password: user.password,
+          platform: {
+            href: platform?.domain,
+            icon: platform && logoMapping[platform.name],
+          },
+          votesUp: user.votes_up,
+          votesDown: user.votes_down,
+          time: time,
+        };
+      });
+
+      setUsers(users);
+      setCount(fetchedUsers?.count);
     };
 
     fetchUsers();
@@ -115,7 +130,7 @@ const Search = ({ title, searchTerm, isPagination = true, sort }: Props) => {
           <select
             value={pagination.sort ?? ""}
             onChange={(e) => {
-              const value = e.target.value as keyof User;
+              const value = e.target.value as keyof UserResponse;
               setPagination({ ...pagination, sort: value });
             }}
             className={classNames(styles.sortSelect, {
@@ -134,115 +149,8 @@ const Search = ({ title, searchTerm, isPagination = true, sort }: Props) => {
         </div>
       </div>
       <div>
-        {users?.items.length === 0 && <div>No Accounts found</div>}
-        {users?.items.map((user) => {
-          const time = user.created_at && getDiff(user.created_at);
-
-          const platform = platforms?.find((p) => p.id === user.platform_id);
-
-          const icon = platform && logoMapping[platform.name];
-
-          return (
-            <div className={styles.row} key={user.id}>
-              {icon && (
-                <a
-                  href={platform?.domain}
-                  className={styles.platform}
-                  target="_blank"
-                >
-                  <Icon glyph={icon} className={styles.platformIcon} />
-                  <Icon glyph={SvgOpenNew} className={styles.open} />
-                </a>
-              )}
-              <div className={styles.wrapper}>
-                <div className={styles.data}>
-                  <button
-                    className={styles.copyBtn}
-                    onClick={() => {
-                      navigator.clipboard.writeText(user.username);
-                    }}
-                  >
-                    <Icon
-                      glyph={SvgUser}
-                      className={classNames(styles.icon, styles.iconUsername)}
-                    />
-                    <p className={styles.text}>{user.username}</p>
-                    <Icon
-                      glyph={SvgCopy}
-                      className={classNames(styles.icon, styles.iconCopy)}
-                    />
-                  </button>
-                </div>
-                <div className={styles.data}>
-                  <button
-                    className={styles.copyBtn}
-                    onClick={() => {
-                      navigator.clipboard.writeText(user.password);
-                    }}
-                  >
-                    <Icon
-                      glyph={SvgKey}
-                      className={classNames(styles.icon, styles.iconPassword)}
-                    />
-                    <p className={styles.text}>{user.password}</p>
-                    <SvgCopy
-                      className={classNames(styles.icon, styles.iconCopy)}
-                    />
-                  </button>
-                </div>
-              </div>
-              <div className={styles.wrapper}>
-                <button
-                  className={styles.vote}
-                  onClick={async () => {
-                    const response = await patchUser({
-                      ...user,
-                      votes_up: (user.votes_up ?? 0) + 1,
-                    });
-
-                    if (!response) return;
-
-                    const updatedUsers = users.items.map((u) =>
-                      u.id === response.id ? response : u
-                    );
-
-                    setUsers({ ...users, items: updatedUsers });
-                  }}
-                >
-                  <Icon glyph={SvgArrowUp} className={styles.iconGreen} />
-                  <p className={classNames(styles.textSmall, styles.voteText)}>
-                    {user.votes_up}
-                  </p>
-                </button>
-                <button
-                  className={styles.vote}
-                  onClick={async () => {
-                    const response = await patchUser({
-                      ...user,
-                      votes_down: (user.votes_down ?? 0) + 1,
-                    });
-
-                    if (!response) return;
-
-                    const updatedUsers = users.items.map((u) =>
-                      u.id === response.id ? response : u
-                    );
-
-                    setUsers({ ...users, items: updatedUsers });
-                  }}
-                >
-                  <Icon glyph={SvgArrowDown} className={styles.iconRed} />
-                  <p className={classNames(styles.textSmall, styles.voteText)}>
-                    {user.votes_down}
-                  </p>
-                </button>
-              </div>
-              <div className={styles.date}>
-                <p className={classNames(styles.textSmall)}>{time}</p>
-              </div>
-            </div>
-          );
-        })}
+        {users?.length === 0 && <div>No Accounts found</div>}
+        {users && <UserList users={users} />}
       </div>
       {isPagination && (
         <div className={styles.pagination}>
@@ -273,9 +181,7 @@ const Search = ({ title, searchTerm, isPagination = true, sort }: Props) => {
             onClick={() => {
               setPagination({ ...pagination, page: pagination.page + 1 });
             }}
-            disabled={
-              users && pagination.limit * pagination.page >= users.count
-            }
+            disabled={pagination.limit * pagination.page >= (count ?? 0)}
           >
             <SvgArrowRight
               className={classNames(styles.icon, styles.iconPagination)}

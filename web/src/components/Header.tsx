@@ -91,6 +91,9 @@ const Header = () => {
                     <NavLink className={styles.dropdownBtn} to="/dashboard">
                       Profile
                     </NavLink>
+                    <NavLink className={styles.dropdownBtn} to="/youraccounts">
+                      Your Accounts
+                    </NavLink>
                     <div className={styles.separator}></div>
                     <button
                       className={styles.dropdownBtn}

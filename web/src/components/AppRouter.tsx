@@ -12,6 +12,7 @@ import ImprintPage from "./Imprint/ImprintPage";
 import NotFoundPage from "./NotFound/NotFoundPage";
 import PrivacyPage from "./Privacy/PrivacyPage";
 import SearchPage from "./Search/SearchPage";
+import SharedAccounts from "./SharedAccounts/SharedAccountsPage";
 
 export const SessionContext = createContext<Session | null>(null);
 
@@ -25,6 +26,12 @@ const AppRouter = () => {
       <ScrollTop />
       <SessionContext.Provider value={session}>
         <Routes>
+          <Route
+            path="/youraccounts"
+            element={
+              session ? <SharedAccounts /> : <Navigate to="/login" replace />
+            }
+          />
           <Route
             path="/dashboard"
             element={

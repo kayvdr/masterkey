@@ -29,6 +29,7 @@
 .inputField {
   width: 100%;
   margin-bottom: 0.35em;
+  margin-right: 0.5em;
 }
 
 @media (min-width: 768px) {
@@ -73,12 +74,4 @@
 .invalid {
   border: 1px solid var(--red-53);
   box-shadow: 0 0 0 4px var(--red-97);
-}
-
-@media (min-width: 768px) {
-  .btn {
-    position: absolute;
-    top: 0.45em;
-    right: 0.25em;
-  }
 }
