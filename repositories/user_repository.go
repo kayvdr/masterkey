@@ -26,6 +26,7 @@ type User struct {
 	Password string    `json:"password"`
 	VotesUp *int    `json:"votes_up"`
 	VotesDown *int    `json:"votes_down"`
+	CreatedBy uuid.UUID    `json:"created_by"`
 	CreatedAt time.Time    `json:"created_at"`
 	PlatformId uuid.UUID    `json:"platform_id"`
 	PlatformName  string    `json:"name"`
@@ -49,7 +50,7 @@ func (r UserRepository) GetUser(ctx context.Context, id uuid.UUID) (*User, error
 func (r UserRepository) GetAllUsers(ctx context.Context, pagination common.Pagination) ([]*User, error) {
 	params := fmt.Sprintf("ORDER BY %s LIMIT %s OFFSET %s", pagination.Sort() + " " + pagination.Order(), strconv.FormatInt(int64(pagination.Limit()), 10), strconv.FormatInt(int64(pagination.Offset()), 10))
 	rows, err := r.pool.Query(ctx, `
-		SELECT u.id, u.username, u.password, u.votes_up, u.votes_down, u.created_at, u.platform_id, p.name, p.domain
+		SELECT u.id, u.username, u.password, u.votes_up, u.votes_down, u.created_at, u.created_by, u.platform_id, p.name, p.domain
 		FROM users AS u 
 		INNER JOIN platforms AS p ON u.platform_id = p.id
 		WHERE ($1 = '' OR p.name ILIKE $1)
@@ -70,6 +71,45 @@ func (r UserRepository) GetAllUsers(ctx context.Context, pagination common.Pagin
 			&user.VotesUp,
 			&user.VotesDown,
 			&user.CreatedAt,
+			&user.CreatedBy,
+			&user.PlatformId,
+			&user.PlatformName,
+			&user.PlatformDomain,
+		)
+		users = append(users, user)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return users, nil
+}
+
+func (r UserRepository) GetUsersByCreator(ctx context.Context, pagination common.Pagination, userId uuid.UUID) ([]*User, error) {
+	rows, err := r.pool.Query(ctx, `
+		SELECT u.id, u.username, u.password, u.votes_up, u.votes_down, u.created_at, u.created_by, u.platform_id, p.name, p.domain
+		FROM users AS u 
+		INNER JOIN platforms AS p ON u.platform_id = p.id
+		WHERE created_by = $1
+	`, userId)
+
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	users := []*User{}
+	for rows.Next() {
+		user := &User{}
+		rows.Scan(
+			&user.Id,
+			&user.Username,
+			&user.Password,
+			&user.VotesUp,
+			&user.VotesDown,
+			&user.CreatedAt,
+			&user.CreatedBy,
 			&user.PlatformId,
 			&user.PlatformName,
 			&user.PlatformDomain,

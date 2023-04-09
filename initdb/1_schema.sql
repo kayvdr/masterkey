@@ -15,6 +15,7 @@ CREATE TABLE users (
   votes_up integer,
   votes_down integer,
   created_at timestamptz NOT NULL DEFAULT now(),
+  created_by uuid NOT NULL,
   platform_id uuid NOT NULL REFERENCES platforms (id)
 );
 

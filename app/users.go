@@ -51,6 +51,40 @@ func (app Application) GetUsers(w http.ResponseWriter, r *http.Request) {
 	render.JSON(w, r, res)
 }
 
+func (app Application) GetUsersByCreator(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	param := chi.URLParam(r, "creatorsId")
+	if param == "" {
+		render.Render(w, r, httperr.ErrBadRequest("missing parameter 'userId'"))
+		return
+	}
+	userId, err := uuid.Parse(param)
+	if err != nil {
+		render.Render(w, r, httperr.ErrBadRequest("invalid parameter userId"))
+		return
+	}
+
+	pagination, err := common.NewPaginationFromURL(r.URL.Query())
+	if err != nil {
+		render.Render(w, r, httperr.ErrBadRequest(err.Error()))
+		return
+	}
+
+	users, err := app.Repositories.User.GetUsersByCreator(ctx, pagination, userId)
+	if err != nil {
+		render.Render(w, r, httperr.ErrInternalServer(err.Error()))
+		return
+	}
+
+	type Response struct {
+		Count int                 `json:"count"`
+		Items     []*repositories.User `json:"items"`
+	}
+
+	res := Response{Count: len(users), Items: users}
+
+	render.JSON(w, r, res)
+}
 
 func (app Application) GetUser(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
