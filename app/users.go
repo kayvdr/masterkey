@@ -54,14 +54,14 @@ func (app Application) GetUsers(w http.ResponseWriter, r *http.Request) {
 
 func (app Application) GetUsersByCreator(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	param := chi.URLParam(r, "creatorsId")
+	param := chi.URLParam(r, "createdById")
 	if param == "" {
-		render.Render(w, r, httperr.ErrBadRequest("missing parameter 'userId'"))
+		render.Render(w, r, httperr.ErrBadRequest("missing parameter 'createdById'"))
 		return
 	}
-	userId, err := uuid.Parse(param)
+	createdById, err := uuid.Parse(param)
 	if err != nil {
-		render.Render(w, r, httperr.ErrBadRequest("invalid parameter userId"))
+		render.Render(w, r, httperr.ErrBadRequest("invalid parameter createdById"))
 		return
 	}
 
@@ -71,7 +71,7 @@ func (app Application) GetUsersByCreator(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	users, err := app.Repositories.User.GetUsersByCreator(ctx, pagination, userId)
+	users, err := app.Repositories.User.GetUsersByCreator(ctx, pagination, createdById)
 	if err != nil {
 		render.Render(w, r, httperr.ErrInternalServer(err.Error()))
 		return

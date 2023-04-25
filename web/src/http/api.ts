@@ -38,7 +38,7 @@ export const getUsers = async (pagination?: Pagination) => {
 
 export const getUsersByCreatorId = async (id: string) => {
   return await fetchData<{ count: number; items: FullUserResponse[] }>(
-    `${baseUrl}/v1/creators/${id}/users`,
+    `${baseUrl}/v1/users/${id}/createdBy`,
     {
       method: "GET",
     }
