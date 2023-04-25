@@ -59,3 +59,21 @@ export const logoMapping: { [key in string]: Glyph } = {
   "Stack Overflow": SvgStackOverflow,
   Twitch: SvgTwitch,
 };
+
+export const getSearchParams = (key: string) => {
+  const searchParams = new URLSearchParams(location.search);
+
+  return searchParams.get(key);
+};
+
+export const setSearchParams = (key: string, value: string) => {
+  const searchParams = new URLSearchParams(location.search);
+
+  searchParams.set(key, value);
+
+  window.history.replaceState(
+    {},
+    "",
+    `${location.pathname}?${searchParams.toString()}`
+  );
+};

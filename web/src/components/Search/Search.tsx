@@ -3,7 +3,12 @@ import { useEffect, useRef, useState } from "react";
 import { getPlatforms, getUsers } from "../../http/api";
 import { Pagination, User, UserResponse } from "../../types";
 import UserList, { RefType } from "../../ui/UserList";
-import { getDiff, logoMapping } from "../../utils";
+import {
+  getDiff,
+  getSearchParams,
+  logoMapping,
+  setSearchParams,
+} from "../../utils";
 import SvgArrowLeft from "../icons/ArrowLeft";
 import SvgArrowRight from "../icons/ArrowRight";
 import styles from "./Search.module.css";
@@ -29,7 +34,6 @@ const isKeyofUser = (value: string): value is keyof UserResponse =>
 const Search = ({ title, searchTerm, isPagination = true, sort }: Props) => {
   const [users, setUsers] = useState<User[]>();
   const [count, setCount] = useState<number>();
-  const searchParams = new URLSearchParams(location.search);
   const [pagination, setPagination] = useState<Pagination>({
     limit: 12,
     page: 1,
@@ -38,7 +42,7 @@ const Search = ({ title, searchTerm, isPagination = true, sort }: Props) => {
   const userListRef = useRef<RefType>(null);
 
   useEffect(() => {
-    const searchQuery = searchParams.get("sort");
+    const searchQuery = getSearchParams("sort");
     if (!searchQuery || sort) return;
 
     isKeyofUser(searchQuery) &&
@@ -98,12 +102,7 @@ const Search = ({ title, searchTerm, isPagination = true, sort }: Props) => {
               const value = e.target.value as keyof UserResponse;
               if (!isKeyofUser(value) || sort) return;
               setPagination({ ...pagination, sort: value });
-              searchParams.set("sort", value);
-              window.history.replaceState(
-                {},
-                "",
-                `${location.pathname}?${searchParams.toString()}`
-              );
+              setSearchParams("sort", value);
             }}
             className={classNames(styles.sortSelect, {
               [styles.selectActive]: !!pagination.sort,
