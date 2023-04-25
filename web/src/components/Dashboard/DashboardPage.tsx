@@ -7,7 +7,6 @@ import Button from "../../ui/Button";
 import Icon from "../../ui/Icon";
 import Popup from "../../ui/Popup";
 import { SessionContext } from "../AppRouter";
-import styles from "../Dashboard/DashboardPage.module.css";
 import Footer from "../Footer";
 import Header from "../Header";
 import useToggle from "../hooks/useToggle";
@@ -17,6 +16,7 @@ import SvgEvernote from "../icons/Evernote";
 import SvgFacebook from "../icons/Facebook";
 import SvgGoogle from "../icons/Google";
 import SvgInstagram from "../icons/Instagram";
+import styles from "./DashboardPage.module.css";
 import Edit from "./Edit";
 
 const getDate = (dateString: string | undefined) => {

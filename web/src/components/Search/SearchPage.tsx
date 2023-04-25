@@ -17,7 +17,7 @@ const SearchPage = () => {
         </div>
       </section>
       <section className="container">
-        <Search title="&nbsp;" searchTerm={value} />
+        <Search searchTerm={value} />
       </section>
       <Footer />
     </>

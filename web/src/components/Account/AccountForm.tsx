@@ -7,8 +7,8 @@ import Button from "../../ui/Button";
 import InputCheckBox from "../../ui/InputCheckBox";
 import InputField from "../../ui/InputField";
 import Select from "../../ui/Select";
-import styles from "../Account/AccountForm.module.css";
 import { SessionContext } from "../AppRouter";
+import styles from "./AccountForm.module.css";
 
 interface Props {
   user?: User;

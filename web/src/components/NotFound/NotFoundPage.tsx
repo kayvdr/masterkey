@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Button from "../../ui/Button";
 import Footer from "../Footer";
 import Header from "../Header";
-import styles from "../NotFound/NotFoundPage.module.css";
+import styles from "./NotFoundPage.module.css";
 
 const NotFoundPage = () => {
   const navigate = useNavigate();

@@ -4,26 +4,46 @@ import { getPlatforms, getUsers } from "../../http/api";
 import { Pagination, User, UserResponse } from "../../types";
 import UserList, { RefType } from "../../ui/UserList";
 import { getDiff, logoMapping } from "../../utils";
-import styles from "../Search/Search.module.css";
 import SvgArrowLeft from "../icons/ArrowLeft";
 import SvgArrowRight from "../icons/ArrowRight";
+import styles from "./Search.module.css";
 
 interface Props {
   title?: string;
   searchTerm?: string;
   isPagination?: boolean;
-  sort?: keyof User;
+  sort?: keyof UserResponse;
 }
+
+const isKeyofUser = (value: string): value is keyof UserResponse =>
+  [
+    "id",
+    "username",
+    "password",
+    "platform_id",
+    "votes_up",
+    "votes_down",
+    "created_at",
+  ].includes(value as keyof UserResponse);
 
 const Search = ({ title, searchTerm, isPagination = true, sort }: Props) => {
   const [users, setUsers] = useState<User[]>();
   const [count, setCount] = useState<number>();
+  const searchParams = new URLSearchParams(location.search);
   const [pagination, setPagination] = useState<Pagination>({
     limit: 12,
     page: 1,
     sort: sort as keyof UserResponse,
   });
   const userListRef = useRef<RefType>(null);
+
+  useEffect(() => {
+    const searchQuery = searchParams.get("sort");
+    if (!searchQuery || sort) return;
+
+    isKeyofUser(searchQuery) &&
+      setPagination({ ...pagination, sort: searchQuery });
+  }, []);
 
   let pages = count && Math.ceil(count / pagination.limit);
 
@@ -70,13 +90,20 @@ const Search = ({ title, searchTerm, isPagination = true, sort }: Props) => {
   return (
     <>
       <div className={styles.searchRow}>
-        {title && <h1 className="title">{title}</h1>}
+        {title ? <h1 className={styles.rowTitle}>{title}</h1> : <div></div>}
         <div className={styles.filter}>
           <select
             value={pagination.sort ?? ""}
             onChange={(e) => {
               const value = e.target.value as keyof UserResponse;
+              if (!isKeyofUser(value) || sort) return;
               setPagination({ ...pagination, sort: value });
+              searchParams.set("sort", value);
+              window.history.replaceState(
+                {},
+                "",
+                `${location.pathname}?${searchParams.toString()}`
+              );
             }}
             className={classNames(styles.sortSelect, {
               [styles.selectActive]: !!pagination.sort,

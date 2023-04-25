@@ -1,5 +1,4 @@
 import Box from "../../ui/Box";
-import styles from "../Home/FavoritePlatforms.module.css";
 import SvgDropbox from "../icons/Dropbox";
 import SvgEvernote from "../icons/Evernote";
 import SvgFacebook from "../icons/Facebook";
@@ -8,6 +7,7 @@ import SvgInstagram from "../icons/Instagram";
 import SvgSnapchat from "../icons/Snapchat";
 import SvgTikTok from "../icons/Tiktok";
 import SvgTinder from "../icons/Tinder";
+import styles from "./FavoritePlatforms.module.css";
 
 const FavoritePlatforms = () => (
   <section className="container">

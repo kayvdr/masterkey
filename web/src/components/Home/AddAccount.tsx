@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import { useNavigate } from "react-router-dom";
 import Button from "../../ui/Button";
-import styles from "../Home/AddAccount.module.css";
+import styles from "./AddAccount.module.css";
 
 const AddAccount = () => {
   const navigate = useNavigate();

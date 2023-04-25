@@ -1,7 +1,7 @@
-import styles from "../Account/AccountPage.module.css";
 import Footer from "../Footer";
 import Header from "../Header";
 import AddForm from "./AccountForm";
+import styles from "./AccountPage.module.css";
 
 const AddAccountPage = () => (
   <>

@@ -2,6 +2,11 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-bottom: 1.5em;
+}
+
+.rowTitle {
+  margin-bottom: 0;
 }
 
 .filter {
@@ -26,168 +31,11 @@
   color: white;
 }
 
-.row {
-  display: grid;
-  align-items: center;
-  grid-template-columns: 3em 1fr 3.5em;
-  border-radius: 0.65em;
-  padding: 0.5em;
-  margin-bottom: 0.5em;
-  width: 100%;
-}
-
-@media (min-width: 350px) {
-  .row {
-    grid-template-columns: 4em 1fr 4em;
-  }
-}
-
-@media (min-width: 768px) {
-  .row {
-    grid-template-columns: 5em 1fr 5em 5em;
-  }
-}
-
-@media (min-width: 1024px) {
-  .row {
-    grid-template-columns: 5em 1fr 10em 5em;
-  }
-}
-
-.row:hover {
-  background-color: var(--ci-light-grey);
-}
-
-.platform {
-  display: flex;
-}
-
-.platformIcon {
-  width: 2em;
-  margin-right: 0.5em;
-}
-
-@media (min-width: 768px) {
-  .platformIcon {
-    margin-right: 0;
-  }
-}
-
-.open {
-  margin-left: 0.5em;
-  visibility: hidden;
-  opacity: 0;
-  transition: opacity 0.5s;
-  fill: var(--ci-darker-grey);
-  display: none;
-}
-
-@media (min-width: 768px) {
-  .open {
-    display: block;
-  }
-}
-
-.platform:hover .open {
-  visibility: visible;
-  opacity: 1;
-}
-
-.wrapper {
-  display: grid;
-  grid-template-columns: 1fr;
-}
-
-@media (min-width: 768px) {
-  .wrapper {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-.data {
-  max-width: 15em;
-  min-width: 10em;
-  font-size: 0.8em;
-}
-
-@media (min-width: 768px) {
-  .data {
-    font-size: 1em;
-  }
-}
-
-.copyBtn {
-  background-color: transparent;
-  border: 0;
-  display: grid;
-  align-items: center;
-  grid-template-columns: 1.5em 1fr 1.5em;
-  width: 100%;
-  column-gap: 1em;
-  text-align: left;
-}
-
-.vote {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  padding: 0 0.5em;
-}
-
-.date {
-  text-align: right;
-  display: none;
-}
-
-@media (min-width: 768px) {
-  .date {
-    display: block;
-  }
-}
-
 .icon {
   width: 1.5em;
   height: auto;
   vertical-align: middle;
   margin-right: 0.5em;
-}
-
-.iconGreen,
-.iconRed {
-  width: 0.8em;
-}
-
-.iconGreen {
-  fill: #228b22;
-}
-
-.iconRed {
-  fill: #ff3131;
-}
-
-.iconCopy {
-  width: 0.8em;
-  margin-left: 0.2em;
-  fill: var(--ci-darker-grey);
-  visibility: hidden;
-  opacity: 0;
-  transition: all 0.5s;
-}
-
-.copyBtn:hover .iconCopy {
-  visibility: visible;
-  opacity: 1;
-}
-
-.text {
-  margin: 0;
-  text-overflow: ellipsis;
-  overflow: hidden;
-}
-
-.textSmall {
-  margin: 0 0 0 0.5em;
-  font-size: 0.8em;
 }
 
 .pagination {
