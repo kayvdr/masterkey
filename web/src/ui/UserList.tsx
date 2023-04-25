@@ -19,6 +19,7 @@ import SvgKey from "../components/icons/Key";
 import SvgUser from "../components/icons/User";
 import { deleteUser, patchUser } from "../http/api";
 import { User } from "../types";
+import { logoMapping } from "../utils";
 import Icon from "./Icon";
 import Popup from "./Popup";
 import UserItem from "./UserItem";
@@ -47,6 +48,9 @@ const UserList = ({ users, setUsers }: Props, ref: Ref<RefType>) => {
     },
   }));
 
+  const platformIcon =
+    detailData?.platform.name && logoMapping[detailData.platform.name];
+
   return (
     <div className={styles.wrapper}>
       <div className={styles.list}>
@@ -67,6 +71,12 @@ const UserList = ({ users, setUsers }: Props, ref: Ref<RefType>) => {
             </button>
           </header>
           <div className={styles.listContent}>
+            <div className={styles.platformItem}>
+              {platformIcon && (
+                <Icon glyph={platformIcon} className={styles.platformIcon} />
+              )}
+              <p className={styles.platformText}>{detailData?.platform.name}</p>
+            </div>
             <div className={styles.item}>
               <div className={styles.data}>
                 <Icon glyph={SvgUser} className={styles.icon} />
