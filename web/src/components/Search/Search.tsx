@@ -1,8 +1,8 @@
 import classNames from "classnames";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getPlatforms, getUsers } from "../../http/api";
 import { Pagination, User, UserResponse } from "../../types";
-import UserList from "../../ui/UserList";
+import UserList, { RefType } from "../../ui/UserList";
 import { getDiff, logoMapping } from "../../utils";
 import styles from "../Search/Search.module.css";
 import SvgArrowLeft from "../icons/ArrowLeft";
@@ -23,6 +23,7 @@ const Search = ({ title, searchTerm, isPagination = true, sort }: Props) => {
     page: 1,
     sort: sort as keyof UserResponse,
   });
+  const userListRef = useRef<RefType>(null);
 
   let pages = count && Math.ceil(count / pagination.limit);
 
@@ -95,16 +96,21 @@ const Search = ({ title, searchTerm, isPagination = true, sort }: Props) => {
       <div>
         {users?.length === 0 && <div>No Accounts found</div>}
         {users && (
-          <UserList users={users} setUsers={(data) => setUsers(data)} />
+          <UserList
+            ref={userListRef}
+            users={users}
+            setUsers={(data) => setUsers(data)}
+          />
         )}
       </div>
       {isPagination && (
         <div className={styles.pagination}>
           <button
             className={styles.paginationPrev}
-            onClick={() => {
-              setPagination({ ...pagination, page: pagination.page - 1 });
-            }}
+            onClick={() => (
+              setPagination({ ...pagination, page: pagination.page - 1 }),
+              userListRef.current?.toggleDetails()
+            )}
             disabled={pagination.page <= 1}
           >
             <SvgArrowLeft
@@ -116,7 +122,10 @@ const Search = ({ title, searchTerm, isPagination = true, sort }: Props) => {
               className={classNames(styles.paginationBtn, {
                 [styles.paginationActive]: pagination.page === p + 1,
               })}
-              onClick={() => setPagination({ ...pagination, page: p + 1 })}
+              onClick={() => (
+                setPagination({ ...pagination, page: p + 1 }),
+                userListRef.current?.toggleDetails()
+              )}
               key={p}
             >
               {p + 1}
@@ -124,9 +133,10 @@ const Search = ({ title, searchTerm, isPagination = true, sort }: Props) => {
           ))}
           <button
             className={styles.paginationNext}
-            onClick={() => {
-              setPagination({ ...pagination, page: pagination.page + 1 });
-            }}
+            onClick={() => (
+              setPagination({ ...pagination, page: pagination.page + 1 }),
+              userListRef.current?.toggleDetails()
+            )}
             disabled={pagination.limit * pagination.page >= (count ?? 0)}
           >
             <SvgArrowRight

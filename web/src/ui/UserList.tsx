@@ -1,5 +1,11 @@
 import classNames from "classnames";
-import { useContext, useState } from "react";
+import {
+  Ref,
+  forwardRef,
+  useContext,
+  useImperativeHandle,
+  useState,
+} from "react";
 import { useNavigate } from "react-router-dom";
 import { SessionContext } from "../components/AppRouter";
 import useToggle from "../components/hooks/useToggle";
@@ -24,12 +30,22 @@ interface Props {
   setUsers: (data: User[]) => void;
 }
 
-const UserList = ({ users, setUsers }: Props) => {
+export interface RefType {
+  toggleDetails: () => void;
+}
+
+const UserList = ({ users, setUsers }: Props, ref: Ref<RefType>) => {
   const details = useToggle();
   const popup = useToggle();
   const [detailData, setDetailData] = useState<User>();
   const session = useContext(SessionContext);
   const navigate = useNavigate();
+
+  useImperativeHandle(ref, () => ({
+    toggleDetails() {
+      details.close();
+    },
+  }));
 
   return (
     <div className={styles.wrapper}>
@@ -37,19 +53,7 @@ const UserList = ({ users, setUsers }: Props) => {
         {users.map((user) => (
           <UserItem
             user={user}
-            onClick={() => (
-              setDetailData({
-                id: user.id,
-                username: user.username,
-                password: user.password,
-                votesUp: user.votesUp,
-                votesDown: user.votesDown,
-                platform: user.platform,
-                time: user.time,
-                createdBy: user.createdBy,
-              }),
-              details.open()
-            )}
+            onClick={() => (setDetailData(user), details.open())}
             key={user.id}
           />
         ))}
@@ -180,4 +184,4 @@ const UserList = ({ users, setUsers }: Props) => {
   );
 };
 
-export default UserList;
+export default forwardRef(UserList);
