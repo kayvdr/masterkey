@@ -26,10 +26,14 @@ const LoginPage = () => {
   } = useForm<FormLogin>();
 
   const onSubmit = async (formData: FormLogin) => {
+    setError(undefined);
     const { error } = await supabase.auth.signInWithPassword(formData);
 
     if (error?.status) {
-      setError({ code: error.status, message: error.message });
+      setTimeout(() => {
+        setError({ code: error.status ?? 400, message: error.message });
+      }, 500);
+
       return;
     }
 
