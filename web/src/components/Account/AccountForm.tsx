@@ -1,12 +1,18 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { getPlatforms, setUser } from "../../http/api";
-import { CustomError, Platform } from "../../types";
+import { useNavigate } from "react-router-dom";
+import { getPlatforms, patchUser, setUser } from "../../http/api";
+import { CustomError, Platform, User } from "../../types";
 import Button from "../../ui/Button";
 import InputCheckBox from "../../ui/InputCheckBox";
 import InputField from "../../ui/InputField";
 import Select from "../../ui/Select";
-import styles from "../AddAccount/AddForm.module.css";
+import styles from "../Account/AccountForm.module.css";
+import { SessionContext } from "../AppRouter";
+
+interface Props {
+  user?: User;
+}
 
 interface FormUser {
   platform: string;
@@ -16,28 +22,37 @@ interface FormUser {
   honeypot: string;
 }
 
-const AddForm = () => {
+const AddForm = ({ user }: Props) => {
   const [platforms, setPlatforms] = useState<Platform[]>();
   const [error, setError] = useState<CustomError>();
   const [isSuccessful, setIsSuccessful] = useState(false);
+  const session = useContext(SessionContext);
+  const navigate = useNavigate();
   const {
     register,
     reset,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormUser>();
+  } = useForm<FormUser>({
+    defaultValues: {
+      username: user?.username,
+      password: user?.password,
+    },
+  });
 
   useEffect(() => {
     const fetchUsers = async () => {
       const fetchedPlatforms = await getPlatforms();
 
       setPlatforms(fetchedPlatforms);
+      reset({ platform: user?.platform.name?.toLowerCase() });
     };
 
     fetchUsers();
   }, []);
 
   const onSubmit = async (data: FormUser) => {
+    setError(undefined);
     if (data.honeypot)
       return setError({ code: 400, message: "Something went wrong!" });
 
@@ -50,16 +65,40 @@ const AddForm = () => {
     if (!platformId)
       return setError({ code: 404, message: "Platform not found" });
 
-    setUser({
-      username,
-      password,
-      platform_id: platformId.id,
-    }).then(async (response) => {
-      const res = await response.json();
-      !response.ok ? setError(res.error) : setIsSuccessful(true);
-    });
+    if (user) {
+      patchUser({
+        id: user.id,
+        username,
+        password,
+        platform: {
+          id: platformId.id,
+          href: undefined,
+          icon: undefined,
+          name: undefined,
+        },
+      }).then(async (response) => {
+        const res = await response.json();
+        !response.ok ? setError(res.error) : setIsSuccessful(true);
+      });
+    } else {
+      setUser({
+        username,
+        password,
+        platform: {
+          id: platformId.id,
+          href: undefined,
+          icon: undefined,
+          name: undefined,
+        },
+        createdBy: session?.user.id,
+      }).then(async (response) => {
+        const res = await response.json();
+        !response.ok ? setError(res.error) : setIsSuccessful(true);
+      });
+    }
 
     reset();
+    user && navigate(-1);
   };
 
   return (
@@ -73,7 +112,9 @@ const AddForm = () => {
         <Select
           placeholder="Choose platform..."
           register={{
-            ...register("platform", { required: "Please choose a platform" }),
+            ...register("platform", {
+              required: "Please choose a platform",
+            }),
           }}
           options={platforms}
           error={errors.platform}
@@ -96,15 +137,17 @@ const AddForm = () => {
           }}
           error={errors.password}
         />
-        <InputCheckBox
-          register={{
-            ...register("privacy", {
-              required: "Please accept the checkbox",
-            }),
-          }}
-          error={errors.privacy}
-          text="I agree that this data will be stored and further disseminated"
-        />
+        {!user && (
+          <InputCheckBox
+            register={{
+              ...register("privacy", {
+                required: "Please accept the checkbox",
+              }),
+            }}
+            error={errors.privacy}
+            text="I agree that this data will be stored and further disseminated"
+          />
+        )}
         <input
           type="text"
           className={styles.notvisible}

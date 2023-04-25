@@ -55,7 +55,7 @@ const Edit = ({ name, value, label }: Props) => {
             className={styles.editBtn}
             onClick={() => setEditToggle({ ...editToggle, [name]: true })}
           >
-            <Icon glyph={SvgEdit} className={styles.editIcon} />
+            <Icon glyph={SvgEdit} />
           </button>
         </div>
       ) : (

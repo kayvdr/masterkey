@@ -138,14 +138,15 @@ func (r UserRepository) GetUsersCount(ctx context.Context, pagination common.Pag
 func (r UserRepository) CreateUser(ctx context.Context, user *User) (*User, error) {
 	var userId uuid.UUID
 	err := r.pool.QueryRow(ctx, `
-		INSERT INTO users (id, username, password, votes_up, votes_down, platform_id) 
-		VALUES (gen_random_uuid(), $1, $2, $3, $4, $5)
+		INSERT INTO users (id, username, password, votes_up, votes_down, platform_id, created_by) 
+		VALUES (gen_random_uuid(), $1, $2, $3, $4, $5, $6)
 		RETURNING id`, 
 		user.Username, 
 		user.Password, 
 		user.VotesUp, 
 		user.VotesDown, 
 		user.PlatformId,
+		user.CreatedBy,
 	).Scan(&userId);
 
 	if err != nil {

@@ -1,4 +1,10 @@
-import { Pagination, Platform, UserResponse } from "../types";
+import {
+  FullUserResponse,
+  Pagination,
+  Platform,
+  User,
+  UserResponse,
+} from "../types";
 
 const baseUrl = "http://localhost:60001";
 
@@ -25,21 +31,31 @@ export const getUsers = async (pagination?: Pagination) => {
     url = `${url}?${searchParams.toString()}`;
   }
 
-  return await fetchData<{ count: number; items: UserResponse[] }>(url, {
+  return await fetchData<{ count: number; items: FullUserResponse[] }>(url, {
     method: "GET",
   });
 };
 
-export const setUser = async (user: UserResponse) => {
+export const getUsersByCreatorId = async (id: string) => {
+  return await fetchData<{ count: number; items: FullUserResponse[] }>(
+    `${baseUrl}/v1/creators/${id}/users`,
+    {
+      method: "GET",
+    }
+  );
+};
+
+export const setUser = async (user: User) => {
   return await fetch(`${baseUrl}/v1/users`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       username: user.username,
       password: user.password,
-      votes_up: user.votes_up ?? 0,
-      votes_down: user.votes_down ?? 0,
-      platform_id: user.platform_id,
+      votes_up: user.votesUp ?? 0,
+      votes_down: user.votesDown ?? 0,
+      platform_id: user.platform.id,
+      created_by: user.createdBy,
     }),
   });
 };
@@ -50,16 +66,16 @@ export const getUser = async (id: string) => {
   });
 };
 
-export const patchUser = async (user: UserResponse) => {
-  return await fetchData<UserResponse>(`${baseUrl}/v1/users/${user.id}`, {
+export const patchUser = async (user: User) => {
+  return await fetch(`${baseUrl}/v1/users/${user.id}`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       username: user.username,
       password: user.password,
-      votes_up: user.votes_up ?? 0,
-      votes_down: user.votes_down ?? 0,
-      platform_id: user.platform_id,
+      votes_up: user.votesUp ?? 0,
+      votes_down: user.votesDown ?? 0,
+      platform_id: user.platform.id,
     }),
   });
 };

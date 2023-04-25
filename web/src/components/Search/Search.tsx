@@ -1,71 +1,12 @@
 import classNames from "classnames";
-import {
-  differenceInDays,
-  differenceInHours,
-  differenceInMinutes,
-  differenceInMonths,
-  differenceInYears,
-} from "date-fns";
 import { useEffect, useState } from "react";
 import { getPlatforms, getUsers } from "../../http/api";
-import { Glyph, Pagination, User, UserResponse } from "../../types";
+import { Pagination, User, UserResponse } from "../../types";
 import UserList from "../../ui/UserList";
+import { getDiff, logoMapping } from "../../utils";
 import styles from "../Search/Search.module.css";
 import SvgArrowLeft from "../icons/ArrowLeft";
 import SvgArrowRight from "../icons/ArrowRight";
-import SvgDiscord from "../icons/Discord";
-import SvgDropbox from "../icons/Dropbox";
-import SvgEvernote from "../icons/Evernote";
-import SvgFacebook from "../icons/Facebook";
-import SvgGoogle from "../icons/Google";
-import SvgInstagram from "../icons/Instagram";
-import SvgOnlyfans from "../icons/Onlyfans";
-import SvgPinterest from "../icons/Pinterest";
-import SvgReddit from "../icons/Reddit";
-import SvgSnapchat from "../icons/Snapchat";
-import SvgStackExchange from "../icons/StackExchange";
-import SvgStackOverflow from "../icons/StackOverflow";
-import SvgTikTok from "../icons/Tiktok";
-import SvgTinder from "../icons/Tinder";
-import SvgTwitch from "../icons/Twitch";
-import SvgTwitter from "../icons/Twitter";
-
-const logoMapping: { [key in string]: Glyph } = {
-  Instagram: SvgInstagram,
-  Facebook: SvgFacebook,
-  Snapchat: SvgSnapchat,
-  Google: SvgGoogle,
-  Tinder: SvgTinder,
-  Evernote: SvgEvernote,
-  TikTok: SvgTikTok,
-  Twitter: SvgTwitter,
-  Dropbox: SvgDropbox,
-  Onlyfans: SvgOnlyfans,
-  Discord: SvgDiscord,
-  Pinterest: SvgPinterest,
-  Reddit: SvgReddit,
-  "Stack Exchange": SvgStackExchange,
-  "Stack Overflow": SvgStackOverflow,
-  Twitch: SvgTwitch,
-};
-
-const getDiff = (createdAt: string) => {
-  const date = new Date(createdAt);
-  const today = new Date();
-
-  const minutes = differenceInMinutes(today, date);
-  const hours = differenceInHours(today, date);
-  const days = differenceInDays(today, date);
-  const months = differenceInMonths(today, date);
-  const years = differenceInYears(today, date);
-
-  if (years) return `${years}y`;
-  if (months) return `${months}M`;
-  if (days) return `${days}d`;
-  if (hours) return `${hours}h`;
-
-  return `${minutes}m`;
-};
 
 interface Props {
   title?: string;
@@ -106,12 +47,15 @@ const Search = ({ title, searchTerm, isPagination = true, sort }: Props) => {
           username: user.username,
           password: user.password,
           platform: {
+            id: platform?.id,
             href: platform?.domain,
             icon: platform && logoMapping[platform.name],
+            name: platform?.name,
           },
           votesUp: user.votes_up,
           votesDown: user.votes_down,
           time: time,
+          createdBy: user.created_by,
         };
       });
 
@@ -150,7 +94,9 @@ const Search = ({ title, searchTerm, isPagination = true, sort }: Props) => {
       </div>
       <div>
         {users?.length === 0 && <div>No Accounts found</div>}
-        {users && <UserList users={users} />}
+        {users && (
+          <UserList users={users} setUsers={(data) => setUsers(data)} />
+        )}
       </div>
       {isPagination && (
         <div className={styles.pagination}>

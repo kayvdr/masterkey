@@ -14,6 +14,7 @@ type UserBody struct {
 	VotesUp    *int      `json:"votes_up"`
 	VotesDown  *int      `json:"votes_down"`
 	PlatformId uuid.UUID `json:"platform_id"`
+	CreatedBy  uuid.UUID `json:"created_by"`
 }
 
 func (b *UserBody) Bind(r *http.Request) error {

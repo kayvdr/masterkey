@@ -104,15 +104,6 @@
   padding: 0 0.5em;
 }
 
-.vote svg {
-  transition: all 0.5s;
-  transform: scale(1);
-}
-
-.vote:hover svg {
-  transform: scale(1.2);
-}
-
 .date {
   text-align: right;
   display: none;
@@ -129,6 +120,7 @@
   height: auto;
   vertical-align: middle;
   margin-right: 0.5em;
+  fill: var(--ci-grey);
 }
 
 .iconGreen,

@@ -54,16 +54,13 @@
   margin: 0;
 }
 
-.editIcon {
-  width: 1.35em;
-}
-
 .form {
   display: flex;
 }
 
 .input {
   margin-bottom: 0;
+  margin-right: 0.5em;
 }
 
 .link {

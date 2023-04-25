@@ -22,6 +22,7 @@ type User struct {
 	VotesDown *int    `json:"votes_down"`
 	CreatedAt time.Time `json:"created_at"`
 	PlatformId uuid.UUID    `json:"platform_id"`
+	CreatedBy uuid.UUID    `json:"created_by"`
 }
 
 func (app Application) GetUsers(w http.ResponseWriter, r *http.Request) {
@@ -142,6 +143,7 @@ func (app Application) CreateUser(w http.ResponseWriter, r *http.Request) {
 		VotesUp: &voteUp,
 		VotesDown: &voteDown,
 		PlatformId: body.PlatformId,
+		CreatedBy: body.CreatedBy,
 	}
 
 	res, err := app.Repositories.User.CreateUser(ctx, &user)
@@ -237,5 +239,6 @@ func mapUser(dbItem repositories.User) User {
 		dbItem.VotesDown,
 		dbItem.CreatedAt,
 		dbItem.PlatformId,
+		dbItem.CreatedBy,
 	}
 }

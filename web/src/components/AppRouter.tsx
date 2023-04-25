@@ -1,18 +1,19 @@
 import { Session } from "@supabase/supabase-js";
 import { createContext } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import AddAccountPage from "./AddAccount/AddAccountPage";
+import AddAccountPage from "./Account/AddAccountPage";
+import EditAccountPage from "./Account/EditAccountPage";
 import LoginPage from "./Auth/LoginPage";
 import RegisterPage from "./Auth/RegisterPage";
 import DashboardPage from "./Dashboard/DashboardPage";
 import HomePage from "./Home/HomePage";
-import useAuth from "./hooks/useAuth";
-import ScrollTop from "./hooks/useScrolltop";
 import ImprintPage from "./Imprint/ImprintPage";
 import NotFoundPage from "./NotFound/NotFoundPage";
 import PrivacyPage from "./Privacy/PrivacyPage";
 import SearchPage from "./Search/SearchPage";
 import SharedAccounts from "./SharedAccounts/SharedAccountsPage";
+import useAuth from "./hooks/useAuth";
+import ScrollTop from "./hooks/useScrolltop";
 
 export const SessionContext = createContext<Session | null>(null);
 
@@ -41,6 +42,7 @@ const AppRouter = () => {
           <Route path="/privacy" element={<PrivacyPage />} />
           <Route path="/imprint" element={<ImprintPage />} />
           <Route path="/add" element={<AddAccountPage />} />
+          <Route path="/edit" element={<EditAccountPage />} />
           <Route
             path="/register"
             element={

@@ -10,7 +10,7 @@ interface Props {
 
 const Select = ({ placeholder, error, register, options }: Props) => (
   <div className={styles.field}>
-    <select className={styles.select} {...register} defaultValue="">
+    <select className={styles.select} {...register}>
       <option value="" disabled={true}>
         {placeholder}
       </option>
