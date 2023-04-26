@@ -69,12 +69,10 @@ const Footer = () => (
         <div className={styles.item}>
           <h4 className={styles.title}>Contacts</h4>
           <ul className={styles.list}>
-            <li className={styles.listItem}>61 Broadway</li>
-            <li className={styles.listItem}>New York, NY 10006</li>
+            <li className={styles.listItem}></li>
+            <li className={styles.listItem}></li>
             <li className={styles.listItem}>
-              <a href="tel:340 0000 000" className={styles.listLink}>
-                340 0000 000
-              </a>
+              <a href="tel:" className={styles.listLink}></a>
             </li>
             <li className={styles.listItem}>
               <a href="mailto:on3k.dev@gmail.com" className={styles.listLink}>
