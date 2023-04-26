@@ -1,11 +1,13 @@
 import classNames from "classnames";
 import { format } from "date-fns";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { getUsersByCreatorId } from "../../http/api";
 import { supabase } from "../../http/supabase";
 import Button from "../../ui/Button";
 import Icon from "../../ui/Icon";
 import Popup from "../../ui/Popup";
+import { logoMapping } from "../../utils";
 import { SessionContext } from "../AppRouter";
 import Footer from "../Footer";
 import Header from "../Header";
@@ -25,10 +27,39 @@ const getDate = (dateString: string | undefined) => {
   return format(new Date(dateString), "yyyy-MM-dd HH:mm:ss");
 };
 
+interface List {
+  [key: string]: number;
+}
+
+interface FullListInfo {
+  count: number | undefined;
+  list: List | undefined;
+}
+
 const DashboardPage = () => {
   const session = useContext(SessionContext);
   const popup = useToggle();
   const navigate = useNavigate();
+  const [sharings, setSharings] = useState<FullListInfo>();
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      if (!session) return;
+      const fetchedUsers = await getUsersByCreatorId(session.user.id);
+      const groupedUsers = fetchedUsers?.items.reduce<List>((prev, curr) => {
+        const prevValue = prev[curr.name];
+
+        return {
+          ...prev,
+          [curr.name]: prevValue ? prevValue + 1 : 1,
+        };
+      }, {});
+
+      setSharings({ count: fetchedUsers?.count, list: groupedUsers });
+    };
+
+    fetchUsers();
+  }, []);
 
   return (
     <>
@@ -130,48 +161,30 @@ const DashboardPage = () => {
               <h2 className={styles.subtitle}>Your sharings</h2>
               <div className={styles.total}>
                 <p className={styles.totalLabel}>Total</p>
-                <p className={styles.totalValue}>12</p>
+                <p className={styles.totalValue}>{sharings?.count}</p>
               </div>
               <div className={styles.list}>
-                <div className={styles.listItem}>
-                  <div className={styles.provider}>
-                    <Icon glyph={SvgEvernote} className={styles.providerIcon} />
-                    <span>Evernote</span>
-                  </div>
-                  <div>
-                    <span>1</span>
-                  </div>
-                </div>
-                <div className={styles.listItem}>
-                  <div className={styles.provider}>
-                    <Icon glyph={SvgGoogle} className={styles.providerIcon} />
-                    <span>Google</span>
-                  </div>
-                  <div>
-                    <span>2</span>
-                  </div>
-                </div>
-                <div className={styles.listItem}>
-                  <div className={styles.provider}>
-                    <Icon
-                      glyph={SvgInstagram}
-                      className={styles.providerIcon}
-                    />
-                    <span>Instagram</span>
-                  </div>
-                  <div>
-                    <span>8</span>
-                  </div>
-                </div>
-                <div className={styles.listItem}>
-                  <div className={styles.provider}>
-                    <Icon glyph={SvgFacebook} className={styles.providerIcon} />
-                    <span>Facebook</span>
-                  </div>
-                  <div>
-                    <span>3</span>
-                  </div>
-                </div>
+                {sharings?.list &&
+                  Object.entries(sharings?.list).map(([name, count]) => {
+                    const icon = logoMapping[name];
+
+                    return (
+                      <div className={styles.listItem} key={name}>
+                        <div className={styles.provider}>
+                          {icon && (
+                            <Icon
+                              glyph={icon}
+                              className={styles.providerIcon}
+                            />
+                          )}
+                          <span>{name}</span>
+                        </div>
+                        <div>
+                          <span>{count}</span>
+                        </div>
+                      </div>
+                    );
+                  })}
               </div>
               <div className={styles.btnRow}>
                 <Button
