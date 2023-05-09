@@ -18,8 +18,6 @@ type User struct {
 	Id  uuid.UUID `json:"id"`
 	Username   string      `json:"username"`
 	Password string    `json:"password"`
-	VotesUp *int    `json:"votes_up"`
-	VotesDown *int    `json:"votes_down"`
 	CreatedAt time.Time `json:"created_at"`
 	PlatformId uuid.UUID    `json:"platform_id"`
 	CreatedBy uuid.UUID    `json:"created_by"`
@@ -40,14 +38,14 @@ func (app Application) GetUsers(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	all, _ := app.Repositories.User.GetUsersCount(ctx, pagination)
+	count, _ := app.Repositories.User.GetUsersCount(ctx, pagination)
 
 	type Response struct {
 		Count int                 `json:"count"`
-		Items     []*repositories.User `json:"items"`
+		Items     []*repositories.FullUser `json:"items"`
 	}
 
-	res := Response{Count: *all, Items: users}
+	res := Response{Count: *count, Items: users}
 
 	render.JSON(w, r, res)
 }
@@ -79,7 +77,7 @@ func (app Application) GetUsersByCreator(w http.ResponseWriter, r *http.Request)
 
 	type Response struct {
 		Count int                 `json:"count"`
-		Items     []*repositories.User `json:"items"`
+		Items     []*repositories.FullUser `json:"items"`
 	}
 
 	res := Response{Count: len(users), Items: users}
@@ -127,21 +125,9 @@ func (app Application) CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	voteUp := 0
-	if body.VotesUp != nil {
-		voteUp = *body.VotesUp
-	}
-
-	voteDown := 0
-	if body.VotesDown != nil {
-		voteDown = *body.VotesDown
-	}
-
 	user := repositories.User{
 		Username: body.Username,
 		Password: body.Password,
-		VotesUp: &voteUp,
-		VotesDown: &voteDown,
 		PlatformId: body.PlatformId,
 		CreatedBy: body.CreatedBy,
 	}
@@ -180,15 +166,7 @@ func (app Application) UpdateUser(w http.ResponseWriter, r *http.Request) {
 		Password: body.Password,
 		PlatformId: body.PlatformId,
 	}
-
-	if body.VotesUp != nil {
-		user.VotesUp = body.VotesUp
-	}
-
-	if body.VotesDown != nil {
-		user.VotesDown = body.VotesDown
-	}
-
+	
 	res, err := app.Repositories.User.UpdateUser(ctx, &user)
 	if err != nil {
 		render.Render(w, r, httperr.ErrInternalServer(err.Error()))
@@ -235,8 +213,6 @@ func mapUser(dbItem repositories.User) User {
 		dbItem.Id,
 		dbItem.Username,
 		dbItem.Password,
-		dbItem.VotesUp,
-		dbItem.VotesDown,
 		dbItem.CreatedAt,
 		dbItem.PlatformId,
 		dbItem.CreatedBy,

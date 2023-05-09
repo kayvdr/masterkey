@@ -42,6 +42,10 @@ func main() {
 				r.Delete("/{userId}", app.DeleteUser)
 				r.Get("/{createdById}/createdBy", app.GetUsersByCreator)
 			})
+			r.Route("/votes", func(r chi.Router) {
+				r.Post("/", app.CreateVote)
+				r.Delete("/{voteId}", app.DeleteVote)
+			})
 		})
 
 		r.Group(func(r chi.Router) {
