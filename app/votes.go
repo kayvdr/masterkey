@@ -70,6 +70,16 @@ func (app Application) DeleteVote(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	exists, errExists := app.Repositories.User.ExistsUser(ctx, voteId)
+	if errExists != nil {
+		render.Render(w, r, httperr.ErrInternalServer(errExists.Error()))
+		return
+	}
+	if !exists {
+		render.Render(w, r, httperr.ErrNotFound(fmt.Sprintf("user '%s' not found", voteId)))
+		return
+	}
+
 	_, err = app.Repositories.User.DeleteVote(ctx, voteId)
 	if err != nil {
 		render.Render(w, r, httperr.ErrInternalServer(err.Error()))
