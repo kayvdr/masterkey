@@ -1,6 +1,7 @@
 package app
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
@@ -31,6 +32,16 @@ func (app Application) CreateVote(w http.ResponseWriter, r *http.Request) {
 		Value: body.Value,
 		UserId: body.UserId,
 		CreatedBy: body.CreatedBy,
+	}
+
+	exists, errExists := app.Repositories.User.ExistsUser(ctx, vote.UserId)
+	if errExists != nil {
+		render.Render(w, r, httperr.ErrInternalServer(errExists.Error()))
+		return
+	}
+	if !exists {
+		render.Render(w, r, httperr.ErrNotFound(fmt.Sprintf("user '%s' not found", vote.UserId)))
+		return
 	}
 
 	res, err := app.Repositories.User.CreateVote(ctx, vote)
