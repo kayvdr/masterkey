@@ -9,8 +9,8 @@
       "type": "go",
       "request": "attach",
       "mode": "remote",
-      "remotePath": "${workspaceFolder}",
-      "port": 60001
+      "substitutePath": [{ "from": "${workspaceFolder}", "to": "/app" }],
+      "port": 60002
     }
   ]
 }
