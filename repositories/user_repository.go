@@ -133,6 +133,36 @@ func (r UserRepository) GetUsersByCreator(ctx context.Context, pagination common
 	return users, nil
 }
 
+func (r UserRepository) GetUserVotes(ctx context.Context, userId uuid.UUID) ([]*Vote, error) {
+	rows, err := r.pool.Query(ctx, `
+		SELECT * FROM votes
+		WHERE user_id = $1
+	`, userId)
+
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	votes := []*Vote{}
+	for rows.Next() {
+		vote := &Vote{}
+		rows.Scan(
+			&vote.Id,
+			&vote.Value,
+			&vote.UserId,
+			&vote.CreatedBy,
+		)
+		votes = append(votes, vote)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return votes, nil
+}
+
 func (r UserRepository) GetUsersCount(ctx context.Context, pagination common.Pagination) (*int, error) {
 	var count int
 	err := r.pool.QueryRow(ctx, `SELECT count(*)

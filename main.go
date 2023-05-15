@@ -41,6 +41,7 @@ func main() {
 				r.Post("/{userId}", app.UpdateUser)
 				r.Delete("/{userId}", app.DeleteUser)
 				r.Get("/{createdById}/createdBy", app.GetUsersByCreator)
+				r.Get("/{userId}/votes", app.GetUserVotes)
 			})
 			r.Route("/votes", func(r chi.Router) {
 				r.Post("/", app.CreateVote)

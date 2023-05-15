@@ -44,7 +44,7 @@ func (app Application) CreateVote(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	res, err := app.Repositories.User.CreateVote(ctx, vote)
+	res, err := app.Repositories.Vote.CreateVote(ctx, vote)
 	if err == repositories.ErrMultipleVotes {
 		render.Render(w, r, httperr.ErrBadRequest(err.Error()))
 		return
@@ -70,17 +70,17 @@ func (app Application) DeleteVote(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	exists, errExists := app.Repositories.User.ExistsUser(ctx, voteId)
+	exists, errExists := app.Repositories.Vote.ExistsVote(ctx, voteId)
 	if errExists != nil {
 		render.Render(w, r, httperr.ErrInternalServer(errExists.Error()))
 		return
 	}
 	if !exists {
-		render.Render(w, r, httperr.ErrNotFound(fmt.Sprintf("user '%s' not found", voteId)))
+		render.Render(w, r, httperr.ErrNotFound(fmt.Sprintf("vote '%s' not found", voteId)))
 		return
 	}
 
-	_, err = app.Repositories.User.DeleteVote(ctx, voteId)
+	_, err = app.Repositories.Vote.DeleteVote(ctx, voteId)
 	if err != nil {
 		render.Render(w, r, httperr.ErrInternalServer(err.Error()))
 		return

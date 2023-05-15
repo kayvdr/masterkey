@@ -26,7 +26,7 @@ func NewVoteRepository(pool *pgxpool.Pool) VoteRepository {
 	return VoteRepository{pool}
 }
 
-func (r UserRepository) GetVote(ctx context.Context, id uuid.UUID) (*Vote, error) {
+func (r VoteRepository) GetVote(ctx context.Context, id uuid.UUID) (*Vote, error) {
 	vote := Vote{}
 	err := r.pool.QueryRow(ctx, `SELECT v.id, v.value, v.user_id, v.created_by FROM votes AS v WHERE id = $1`, id).Scan(
 		&vote.Id,
@@ -37,7 +37,7 @@ func (r UserRepository) GetVote(ctx context.Context, id uuid.UUID) (*Vote, error
 	return &vote, err
 }
 
-func (r UserRepository) CreateVote(ctx context.Context, vote Vote) (*Vote, error) {
+func (r VoteRepository) CreateVote(ctx context.Context, vote Vote) (*Vote, error) {
 	var voteId uuid.UUID
 	err := r.pool.QueryRow(ctx, `
 		INSERT INTO votes (id, value, user_id, created_by)
@@ -61,7 +61,15 @@ func (r UserRepository) CreateVote(ctx context.Context, vote Vote) (*Vote, error
 	return r.GetVote(ctx, voteId)
 }
 
-func (r UserRepository) DeleteVote(ctx context.Context, voteId uuid.UUID) (bool, error) {
+func (r VoteRepository) ExistsVote(ctx context.Context, voteId uuid.UUID) (bool, error) {
+	exists := false
+	err := r.pool.QueryRow(ctx, `
+		SELECT EXISTS (SELECT NULL FROM votes WHERE id = $1)
+	`, voteId).Scan(&exists)
+	return exists, err
+}
+
+func (r VoteRepository) DeleteVote(ctx context.Context, voteId uuid.UUID) (bool, error) {
 	_, err := r.pool.Exec(ctx, `
 		DELETE FROM votes 
 		WHERE id = $1

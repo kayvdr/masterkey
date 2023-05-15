@@ -116,6 +116,37 @@ func (app Application) GetUser(w http.ResponseWriter, r *http.Request) {
 	render.JSON(w, r, mapUser(*res))
 }
 
+func (app Application) GetUserVotes(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	param := chi.URLParam(r, "userId")
+	if param == "" {
+		render.Render(w, r, httperr.ErrBadRequest("missing parameter 'userId'"))
+		return
+	}
+	userId, err := uuid.Parse(param)
+	if err != nil {
+		render.Render(w, r, httperr.ErrBadRequest("invalid parameter userId"))
+		return
+	}
+	exists, errExists := app.Repositories.User.ExistsUser(ctx, userId)
+	if errExists != nil {
+		render.Render(w, r, httperr.ErrInternalServer(errExists.Error()))
+		return
+	}
+	if !exists {
+		render.Render(w, r, httperr.ErrNotFound(fmt.Sprintf("user '%s' not found", userId)))
+		return
+	}
+
+	res, err := app.Repositories.User.GetUserVotes(ctx, userId)
+	if err != nil {
+		render.Render(w, r, httperr.ErrInternalServer(err.Error()))
+		return
+	}
+
+	render.JSON(w, r, res)
+}
+
 func (app Application) CreateUser(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	

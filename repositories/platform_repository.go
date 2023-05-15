@@ -21,7 +21,7 @@ type Platform struct {
 	Domain string    `json:"domain"`
 }
 
-func (r UserRepository) GetAllPlatforms(ctx context.Context) ([]*Platform, error) {
+func (r PlatformRepository) GetAllPlatforms(ctx context.Context) ([]*Platform, error) {
 	rows, err := r.pool.Query(ctx, `SELECT id, name, domain FROM platforms ORDER BY name`)
 
 	if err != nil {
