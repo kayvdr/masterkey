@@ -25,7 +25,7 @@ CREATE TYPE votes_values AS ENUM
 CREATE TABLE votes (
   id uuid PRIMARY KEY,
   value votes_values NOT NULL,
-  user_id uuid NOT NULL REFERENCES users (id),
+  user_id uuid NOT NULL REFERENCES users (id) ON DELETE CASCADE,
   created_by uuid NOT NULL
 );
 
