@@ -4,6 +4,8 @@ import {
   Platform,
   User,
   UserResponse,
+  Vote,
+  VoteResponse,
 } from "../types";
 
 const baseUrl = "http://localhost:60001";
@@ -52,8 +54,6 @@ export const setUser = async (user: User) => {
     body: JSON.stringify({
       username: user.username,
       password: user.password,
-      votes_up: user.votesUp ?? 0,
-      votes_down: user.votesDown ?? 0,
       platform_id: user.platform.id,
       created_by: user.createdBy,
     }),
@@ -73,8 +73,6 @@ export const patchUser = async (user: User) => {
     body: JSON.stringify({
       username: user.username,
       password: user.password,
-      votes_up: user.votesUp ?? 0,
-      votes_down: user.votesDown ?? 0,
       platform_id: user.platform.id,
     }),
   });
@@ -89,5 +87,29 @@ export const deleteUser = async (id: string) => {
 export const getPlatforms = async () => {
   return await fetchData<Platform[]>(`${baseUrl}/v1/platforms`, {
     method: "GET",
+  });
+};
+
+export const getVote = async (id: string) => {
+  return await fetchData<VoteResponse[]>(`${baseUrl}/v1/users/${id}/votes`, {
+    method: "GET",
+  });
+};
+
+export const setVote = async (vote: Vote) => {
+  return await fetch(`${baseUrl}/v1/votes`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      value: vote.value,
+      user_id: vote.userId,
+      created_by: vote.createdBy,
+    }),
+  });
+};
+
+export const deleteVote = async (id: string) => {
+  return await fetchData(`${baseUrl}/v1/votes/${id}`, {
+    method: "DELETE",
   });
 };

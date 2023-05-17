@@ -40,8 +40,8 @@ export interface User {
     icon: Glyph | undefined;
     name: string | undefined;
   };
-  votesUp?: number;
-  votesDown?: number;
+  votesUp: number;
+  votesDown: number;
   time?: string;
   createdBy?: string;
 }
@@ -50,6 +50,20 @@ export interface Platform {
   id: string;
   name: string;
   domain: string;
+}
+
+export interface VoteResponse {
+  id?: string;
+  value: "up" | "down";
+  user_id: string;
+  created_by: string;
+}
+
+export interface Vote {
+  id?: string;
+  value: "up" | "down";
+  userId: string;
+  createdBy: string;
 }
 
 export interface Pagination {
