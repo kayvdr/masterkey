@@ -11,8 +11,6 @@ type UserBody struct {
 	Id         uuid.UUID `json:"id"`
 	Username   string    `json:"username"`
 	Password   string    `json:"password"`
-	VotesUp    *int      `json:"votes_up"`
-	VotesDown  *int      `json:"votes_down"`
 	PlatformId uuid.UUID `json:"platform_id"`
 	CreatedBy  uuid.UUID `json:"created_by"`
 }

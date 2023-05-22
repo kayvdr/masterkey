@@ -3,6 +3,7 @@ import {
   Ref,
   forwardRef,
   useContext,
+  useEffect,
   useImperativeHandle,
   useState,
 } from "react";
@@ -17,8 +18,8 @@ import SvgDelete from "../components/icons/Delete";
 import SvgEdit from "../components/icons/Edit";
 import SvgKey from "../components/icons/Key";
 import SvgUser from "../components/icons/User";
-import { deleteUser, patchUser } from "../http/api";
-import { User } from "../types";
+import { deleteUser, deleteVote, getVote, setVote } from "../http/api";
+import { FullUser, Vote } from "../types";
 import { logoMapping } from "../utils";
 import Icon from "./Icon";
 import Popup from "./Popup";
@@ -27,8 +28,8 @@ import itemStyles from "./UserItem.module.css";
 import styles from "./UserList.module.css";
 
 interface Props {
-  users: User[];
-  setUsers: (data: User[]) => void;
+  users: FullUser[];
+  setUsers: (data: FullUser[]) => void;
 }
 
 export interface RefType {
@@ -38,7 +39,8 @@ export interface RefType {
 const UserList = ({ users, setUsers }: Props, ref: Ref<RefType>) => {
   const details = useToggle();
   const popup = useToggle();
-  const [detailData, setDetailData] = useState<User>();
+  const [detailData, setDetailData] = useState<FullUser>();
+  const [userVote, setUserVote] = useState<Vote>();
   const session = useContext(SessionContext);
   const navigate = useNavigate();
 
@@ -47,6 +49,57 @@ const UserList = ({ users, setUsers }: Props, ref: Ref<RefType>) => {
       details.close();
     },
   }));
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!detailData?.id) return;
+
+      const votes = await getVote(detailData.id);
+
+      const typedVotes: Vote[] | undefined = votes?.map((vote) => ({
+        id: vote.id,
+        value: vote.value,
+        userId: vote.user_id,
+        createdBy: vote.created_by,
+      }));
+
+      const existingVote = typedVotes?.find(
+        (vote) => vote.createdBy === session?.user.id
+      );
+
+      setUserVote(existingVote);
+    };
+
+    fetchData();
+  }, [detailData]);
+
+  const handleVote = async (value: "votesUp" | "votesDown") => {
+    if (!detailData) return;
+
+    userVote?.id
+      ? await deleteVote(userVote.id)
+      : await setVote({
+          value: value === "votesUp" ? "up" : "down",
+          userId: detailData.id ?? "",
+          createdBy: session?.user.id ?? "",
+        });
+
+    setUsers(
+      users.map((user) =>
+        user.id === detailData.id
+          ? {
+              ...user,
+              [value]: userVote?.id ? user[value] - 1 : user[value] + 1,
+            }
+          : user
+      )
+    );
+
+    setDetailData({
+      ...detailData,
+      [value]: userVote?.id ? detailData[value] - 1 : detailData[value] + 1,
+    });
+  };
 
   const platformIcon =
     detailData?.platform.name && logoMapping[detailData.platform.name];
@@ -109,33 +162,37 @@ const UserList = ({ users, setUsers }: Props, ref: Ref<RefType>) => {
             </div>
             <div className={styles.voteItem}>
               <button
-                className={styles.btn}
+                className={classNames(styles.btn, {
+                  [styles.btnActive]: userVote?.value === "up",
+                })}
                 onClick={async () => {
-                  if (!detailData) return;
-                  const updatedUser: User = {
-                    ...detailData,
-                    votesUp: (detailData.votesUp ?? 0) + 1,
-                  };
+                  if (!session) {
+                    navigate("/login");
+                    return;
+                  }
 
-                  const user = await patchUser(updatedUser);
-                  user && setDetailData(updatedUser);
+                  handleVote("votesUp");
                 }}
+                disabled={userVote?.value === "down"}
               >
                 <Icon glyph={SvgArrowUp} className={itemStyles.iconGreen} />
                 <p className={itemStyles.textSmall}>{detailData?.votesUp}</p>
               </button>
               <button
-                className={styles.btn}
+                className={classNames(styles.btn, {
+                  [styles.btnActive]: userVote?.value === "down",
+                })}
                 onClick={async () => {
                   if (!detailData) return;
-                  const updatedUser: User = {
-                    ...detailData,
-                    votesDown: (detailData.votesDown ?? 0) + 1,
-                  };
 
-                  const user = await patchUser(updatedUser);
-                  user && setDetailData(updatedUser);
+                  if (!session) {
+                    navigate("/login");
+                    return;
+                  }
+
+                  handleVote("votesDown");
                 }}
+                disabled={userVote?.value === "up"}
               >
                 <Icon glyph={SvgArrowDown} className={itemStyles.iconRed} />
                 <p className={itemStyles.textSmall}>{detailData?.votesDown}</p>

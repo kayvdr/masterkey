@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { getUsersByCreatorId } from "../../http/api";
-import { User } from "../../types";
+import { FullUser } from "../../types";
 import UserList from "../../ui/UserList";
 import { getDiff, logoMapping } from "../../utils";
 import { SessionContext } from "../AppRouter";
@@ -9,7 +9,7 @@ import Header from "../Header";
 import styles from "../SharedAccounts/SharedAccountsPage.module.css";
 
 const SharedAccounts = () => {
-  const [users, setUsers] = useState<User[]>();
+  const [users, setUsers] = useState<FullUser[]>();
   const session = useContext(SessionContext);
 
   useEffect(() => {
@@ -17,7 +17,7 @@ const SharedAccounts = () => {
       if (!session) return;
       const fetchedUsers = await getUsersByCreatorId(session.user.id);
 
-      const users = fetchedUsers?.items.map<User>((user) => {
+      const users = fetchedUsers?.items.map<FullUser>((user) => {
         const time = user.created_at && getDiff(user.created_at);
 
         return {
@@ -30,8 +30,8 @@ const SharedAccounts = () => {
             icon: logoMapping[user.name],
             name: user.name,
           },
-          votesUp: user.votes_up,
-          votesDown: user.votes_down,
+          votesUp: user.votes_up ?? 0,
+          votesDown: user.votes_down ?? 0,
           time: time,
           createdBy: user.created_by,
         };

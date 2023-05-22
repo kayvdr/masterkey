@@ -30,7 +30,7 @@ export interface FullUserResponse {
   created_by: string;
 }
 
-export interface User {
+export interface FullUser {
   id?: string;
   username: string;
   password?: string;
@@ -42,6 +42,20 @@ export interface User {
   };
   votesUp: number;
   votesDown: number;
+  time?: string;
+  createdBy?: string;
+}
+
+export interface User {
+  id?: string;
+  username: string;
+  password?: string;
+  platform: {
+    id: string | undefined;
+    href: string | undefined;
+    icon: Glyph | undefined;
+    name: string | undefined;
+  };
   time?: string;
   createdBy?: string;
 }

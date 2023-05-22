@@ -95,7 +95,13 @@
   width: 100%;
 }
 
-.btn:hover {
+.btn:disabled {
+  opacity: 0.75;
+  cursor: default;
+}
+
+.btnActive,
+.btn:hover:not(:disabled) {
   background-color: var(--ci-light-grey);
 }
 

@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import { useEffect, useRef, useState } from "react";
 import { getPlatforms, getUsers } from "../../http/api";
-import { Pagination, User, UserResponse } from "../../types";
+import { FullUser, Pagination, UserResponse } from "../../types";
 import UserList, { RefType } from "../../ui/UserList";
 import {
   getDiff,
@@ -32,7 +32,7 @@ const isKeyofUser = (value: string): value is keyof UserResponse =>
   ].includes(value as keyof UserResponse);
 
 const Search = ({ title, searchTerm, isPagination = true, sort }: Props) => {
-  const [users, setUsers] = useState<User[]>();
+  const [users, setUsers] = useState<FullUser[]>();
   const [count, setCount] = useState<number>();
   const [pagination, setPagination] = useState<Pagination>({
     limit: 12,
@@ -60,7 +60,7 @@ const Search = ({ title, searchTerm, isPagination = true, sort }: Props) => {
       });
       const fetchedPlatforms = await getPlatforms();
 
-      const users = fetchedUsers?.items.map<User>((user) => {
+      const users = fetchedUsers?.items.map<FullUser>((user) => {
         const time = user.created_at && getDiff(user.created_at);
 
         const platform = fetchedPlatforms?.find(
@@ -77,8 +77,8 @@ const Search = ({ title, searchTerm, isPagination = true, sort }: Props) => {
             icon: platform && logoMapping[platform.name],
             name: platform?.name,
           },
-          votesUp: user.votes_up,
-          votesDown: user.votes_down,
+          votesUp: user.votes_up ?? 0,
+          votesDown: user.votes_down ?? 0,
           time: time,
           createdBy: user.created_by,
         };
