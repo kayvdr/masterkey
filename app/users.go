@@ -8,10 +8,10 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
 	"github.com/google/uuid"
-	"github.com/on3k/api-test/common"
-	"github.com/on3k/api-test/common/httperr"
-	"github.com/on3k/api-test/domain"
-	"github.com/on3k/api-test/repositories"
+	"github.com/on3k/shac-api/common"
+	"github.com/on3k/shac-api/common/httperr"
+	"github.com/on3k/shac-api/domain"
+	"github.com/on3k/shac-api/repositories"
 )
 
 type User struct {
@@ -185,7 +185,7 @@ func (app Application) UpdateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	
-	var body domain.UserBody
+	var body domain.UserIdBody
 	if err := render.Bind(r, &body); err != nil {
 		render.Render(w, r, httperr.ErrBadRequest(err.Error()))
 		return
@@ -196,6 +196,16 @@ func (app Application) UpdateUser(w http.ResponseWriter, r *http.Request) {
 		Username: body.Username,
 		Password: body.Password,
 		PlatformId: body.PlatformId,
+	}
+
+	exists, errExists := app.Repositories.User.ExistsUser(ctx, userId)
+	if errExists != nil {
+		render.Render(w, r, httperr.ErrInternalServer(errExists.Error()))
+		return
+	}
+	if !exists {
+		render.Render(w, r, httperr.ErrNotFound(fmt.Sprintf("user '%s' not found", userId)))
+		return
 	}
 	
 	res, err := app.Repositories.User.UpdateUser(ctx, &user)

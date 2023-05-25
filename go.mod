@@ -1,4 +1,4 @@
-module github.com/on3k/api-test
+module github.com/on3k/shac-api
 
 go 1.19
 

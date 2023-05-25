@@ -18,11 +18,11 @@ func NewPlatformRepository(pool *pgxpool.Pool) PlatformRepository {
 type Platform struct {
 	Id  uuid.UUID `json:"id"`
 	Name string    `json:"name"`
-	Domain string    `json:"domain"`
+	URL string    `json:"url"`
 }
 
 func (r PlatformRepository) GetAllPlatforms(ctx context.Context) ([]*Platform, error) {
-	rows, err := r.pool.Query(ctx, `SELECT id, name, domain FROM platforms ORDER BY name`)
+	rows, err := r.pool.Query(ctx, `SELECT id, name, url FROM platforms ORDER BY name`)
 
 	if err != nil {
 		return nil, err
@@ -35,7 +35,7 @@ func (r PlatformRepository) GetAllPlatforms(ctx context.Context) ([]*Platform, e
 		rows.Scan(
 			&platform.Id,
 			&platform.Name,
-			&platform.Domain,
+			&platform.URL,
 		)
 		platforms = append(platforms, platform)
 	}

@@ -16,8 +16,6 @@ paths:
             application/json:
               schema:
                 type: object
-                required:
-                  - users
                 properties:
                   users:
                     type: array
@@ -27,13 +25,13 @@ paths:
                         id:
                           type: string
                           format: uuid
-                          example: "e0476273-83cd-4772-a4f9-f0280e3bb2af"
+                          example: e0476273-83cd-4772-a4f9-f0280e3bb2af
                         username:
                           type: string
-                          example: "jondoe"
+                          example: jondoe
                         passord:
                           type: string
-                          example: "password"
+                          example: password123
                         votes_up:
                           type: integer
                           example: 10
@@ -43,8 +41,73 @@ paths:
                         platform_id:
                           type: string
                           format: uuid
-                          example: "e0476273-83cd-4772-a4f9-f0280e3bb2af"
-  /users/{id}:
+                          example: e0476273-83cd-4772-a4f9-f0280e3bb2af
+                        name:
+                          type: string
+                          example: instagram
+                        url:
+                          type: string
+                          example: http://www.instagram.com
+
+    post:
+      operationId: CreateUser
+      description: Insert a new User
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - username
+                - password
+                - platformId
+                - createdBy
+              properties:
+                username:
+                  type: string
+                  example: jondoe
+                password:
+                  type: string
+                  example: password
+                platformId:
+                  type: string
+                  format: uuid
+                  example: e0476273-83cd-4772-a4f9-f0280e3bb2af
+                createdBy:
+                  type: string
+                  format: uuid
+                  example: e0476273-83cd-4772-a4f9-f0280e3bb2af
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                    example: e0476273-83cd-4772-a4f9-f0280e3bb2af
+                  username:
+                    type: string
+                    example: jondoe
+                  passord:
+                    type: string
+                    example: password
+                  platform_id:
+                    type: string
+                    format: uuid
+                    example: e0476273-83cd-4772-a4f9-f0280e3bb2af
+                  created_by:
+                    type: string
+                    format: uuid
+                    example: e0476273-83cd-4772-a4f9-f0280e3bb2af
+        "400":
+          description: Invalid request body. The message will vary depending on the cause.
+
+  /users/{userId}:
     get:
       operationId: GetUsers
       description: Returns single User by id
@@ -58,25 +121,78 @@ paths:
                 properties:
                   id:
                     type: string
-                    example: "e0476273-83cd-4772-a4f9-f0280e3bb2af"
+                    example: e0476273-83cd-4772-a4f9-f0280e3bb2af
                   username:
                     type: string
-                    example: "jondoe"
+                    example: jondoe
                   passord:
                     type: string
-                    example: "password"
-                  votes_up:
-                    type: integer
-                    example: 10
-                  votes_down:
-                    type: integer
-                    example: 5
+                    example: password
                   platform_id:
                     type: string
                     format: uuid
-                    example: "e0476273-83cd-4772-a4f9-f0280e3bb2af"
+                    example: e0476273-83cd-4772-a4f9-f0280e3bb2af
+                  created_by:
+                    type: string
+                    format: uuid
+                    example: e0476273-83cd-4772-a4f9-f0280e3bb2af
         "404":
           description: Returns an error if the provided user ID was not found.
+
+    post:
+      operationId: UpdateUser
+      description: Update a user
+      parameters:
+        - $ref: "#/components/parameters/userId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - username
+                - password
+                - platformId
+              properties:
+                username:
+                  type: string
+                  example: jondoe
+                password:
+                  type: string
+                  example: password
+                platformId:
+                  type: string
+                  format: uuid
+                  example: e0476273-83cd-4772-a4f9-f0280e3bb2af
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                    example: e0476273-83cd-4772-a4f9-f0280e3bb2af
+                  username:
+                    type: string
+                    example: jondoe
+                  passord:
+                    type: string
+                    example: password
+                  platform_id:
+                    type: string
+                    format: uuid
+                    example: e0476273-83cd-4772-a4f9-f0280e3bb2af
+                  created_by:
+                    type: string
+                    format: uuid
+                    example: e0476273-83cd-4772-a4f9-f0280e3bb2af
+        "400":
+          description: Invalid request body. The message will vary depending on the cause.
 
     delete:
       operationId: DeleteUser
@@ -92,15 +208,195 @@ paths:
       responses:
         "204":
           description: Successful operation
-        "400":
-          description: Invalid request body. The message will vary depending on the cause.
         "404":
           description: User not found
+
+  /users/{creatorId}/createdBy:
+    get:
+      operationId: GetUsersByCreator
+      description: Returns all users by creator id
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  users:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                          example: e0476273-83cd-4772-a4f9-f0280e3bb2af
+                        username:
+                          type: string
+                          example: jondoe
+                        passord:
+                          type: string
+                          example: password123
+                        votes_up:
+                          type: integer
+                          example: 10
+                        votes_down:
+                          type: integer
+                          example: 5
+                        platform_id:
+                          type: string
+                          format: uuid
+                          example: e0476273-83cd-4772-a4f9-f0280e3bb2af
+                        name:
+                          type: string
+                          example: instagram
+                        url:
+                          type: string
+                          example: http://www.instagram.com
+
+  /users/{userId}/votes:
+    get:
+      operationId: GetUserVotes
+      description: Return votes of users
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                properties:
+                  users:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                          example: e0476273-83cd-4772-a4f9-f0280e3bb2af
+                        value:
+                          type: string
+                          example: up
+                        user_id:
+                          type: string
+                          format: uuid
+                          example: e0476273-83cd-4772-a4f9-f0280e3bb2af
+                        created_by:
+                          type: string
+                          format: uuid
+                          example: e0476273-83cd-4772-a4f9-f0280e3bb2af
+        "404":
+          description: Returns an error if the provided user ID was not found.
+
+  /platforms:
+    get:
+      operationId: GetPlatforms
+      description: Return all platforms
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                properties:
+                  users:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                          example: e0476273-83cd-4772-a4f9-f0280e3bb2af
+                        name:
+                          type: string
+                          example: Instagram
+                        url:
+                          type: string
+                          example: https://www.instagram.com
+
+  /votes:
+    post:
+      operationId: CreateVote
+      description: Insert a new vote
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - value
+                - userId
+                - createdBy
+              properties:
+                value:
+                  type: string
+                  example: up
+                userId:
+                  type: string
+                  format: uuid
+                  example: e0476273-83cd-4772-a4f9-f0280e3bb2af
+                createdBy:
+                  type: string
+                  format: uuid
+                  example: e0476273-83cd-4772-a4f9-f0280e3bb2af
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                    example: e0476273-83cd-4772-a4f9-f0280e3bb2af
+                  value:
+                    type: string
+                    example: up
+                  user_id:
+                    type: string
+                    format: uuid
+                    example: e0476273-83cd-4772-a4f9-f0280e3bb2af
+                  created_by:
+                    type: string
+                    format: uuid
+                    example: e0476273-83cd-4772-a4f9-f0280e3bb2af
+        "400":
+          description: Invalid request body. The message will vary depending on the cause.
+
+  /votes/{voteId}:
+    delete:
+      operationId: DeleteVote
+      description: Remove a vote
+      parameters:
+        - $ref: "#/components/parameters/voteId"
+        - in: path
+          name: voteId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "204":
+          description: Successful operation
+        "404":
+          description: Vote not found
 
 components:
   parameters:
     userId:
       name: userId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    voteId:
+      name: voteId
       in: path
       required: true
       schema:

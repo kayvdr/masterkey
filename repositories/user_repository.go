@@ -8,8 +8,8 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/on3k/api-test/common"
-	"github.com/on3k/api-test/common/pg"
+	"github.com/on3k/shac-api/common"
+	"github.com/on3k/shac-api/common/pg"
 )
 
 type UserRepository struct {
@@ -34,7 +34,7 @@ type FullUser struct {
 	VotesUp *int    `json:"votes_up"`
 	VotesDown *int    `json:"votes_down"`
 	PlatformName  string    `json:"name"`
-	PlatformDomain  string    `json:"domain"`
+	PlatformURL  string    `json:"url"`
 }
 
 func (r UserRepository) GetUser(ctx context.Context, id uuid.UUID) (*User, error) {
@@ -56,7 +56,7 @@ func (r UserRepository) GetAllUsers(ctx context.Context, pagination common.Pagin
 		SELECT u.id, u.username, u.password, 
 			(SELECT count(v.id) FROM votes AS v WHERE v.user_id = u.id AND v.value = 'up') AS votes_up, 
 			(SELECT count(v.id) FROM votes AS v WHERE v.user_id = u.id AND v.value = 'down') AS votes_down, 
-			u.created_at, u.created_by, u.platform_id, p.name, p.domain
+			u.created_at, u.created_by, u.platform_id, p.name, p.url
 		FROM users AS u 
 		INNER JOIN platforms AS p ON u.platform_id = p.id
 		WHERE ($1 = '' OR p.name ILIKE $1)
@@ -80,7 +80,7 @@ func (r UserRepository) GetAllUsers(ctx context.Context, pagination common.Pagin
 			&user.CreatedBy,
 			&user.PlatformId,
 			&user.PlatformName,
-			&user.PlatformDomain,
+			&user.PlatformURL,
 		)
 		users = append(users, user)
 	}
@@ -97,7 +97,7 @@ func (r UserRepository) GetUsersByCreator(ctx context.Context, pagination common
 		SELECT u.id, u.username, u.password,
 			(SELECT count(v.id) FROM votes AS v WHERE v.user_id = u.id AND v.value = 'up') AS votes_up, 
 			(SELECT count(v.id) FROM votes AS v WHERE v.user_id = u.id AND v.value = 'down') AS votes_down, 
-		u.created_at, u.created_by, u.platform_id, p.name, p.domain
+		u.created_at, u.created_by, u.platform_id, p.name, p.url
 		FROM users AS u 
 		INNER JOIN platforms AS p ON u.platform_id = p.id
 		WHERE created_by = $1
@@ -121,7 +121,7 @@ func (r UserRepository) GetUsersByCreator(ctx context.Context, pagination common
 			&user.CreatedBy,
 			&user.PlatformId,
 			&user.PlatformName,
-			&user.PlatformDomain,
+			&user.PlatformURL,
 		)
 		users = append(users, user)
 	}

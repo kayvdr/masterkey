@@ -4,8 +4,8 @@ import (
 	"context"
 
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/on3k/api-test/common/env"
-	"github.com/on3k/api-test/repositories"
+	"github.com/on3k/shac-api/common/env"
+	"github.com/on3k/shac-api/repositories"
 )
 
 type Application struct {

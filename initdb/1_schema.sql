@@ -5,7 +5,7 @@ CREATE EXTENSION pg_trgm;
 CREATE TABLE platforms (
   id uuid PRIMARY KEY,
   name text NOT NULL,
-  domain text NOT NULL
+  url text NOT NULL
 );
 
 CREATE TABLE users (

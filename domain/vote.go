@@ -19,5 +19,13 @@ func (b *VoteBody) Bind(r *http.Request) error {
 		return errors.New("value is not valid")
 	}
 
+	if b.UserId == uuid.Nil {
+		return errors.New("user_id is required")
+	}
+
+	if b.CreatedBy == uuid.Nil {
+		return errors.New("created_by is required")
+	}
+
 	return nil
 }

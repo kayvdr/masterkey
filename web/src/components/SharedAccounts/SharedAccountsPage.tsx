@@ -26,7 +26,7 @@ const SharedAccounts = () => {
           password: user.password,
           platform: {
             id: user.platform_id,
-            href: user.domain,
+            href: user.url,
             icon: logoMapping[user.name],
             name: user.name,
           },

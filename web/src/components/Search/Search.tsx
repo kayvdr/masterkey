@@ -73,7 +73,7 @@ const Search = ({ title, searchTerm, isPagination = true, sort }: Props) => {
           password: user.password,
           platform: {
             id: platform?.id,
-            href: platform?.domain,
+            href: platform?.url,
             icon: platform && logoMapping[platform.name],
             name: platform?.name,
           },

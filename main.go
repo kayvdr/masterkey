@@ -9,8 +9,8 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
-	"github.com/on3k/api-test/app"
-	"github.com/on3k/api-test/common/env"
+	"github.com/on3k/shac-api/app"
+	"github.com/on3k/shac-api/common/env"
 )
 
 func main() {
@@ -43,15 +43,18 @@ func main() {
 				r.Get("/{createdById}/createdBy", app.GetUsersByCreator)
 				r.Get("/{userId}/votes", app.GetUserVotes)
 			})
-			r.Route("/votes", func(r chi.Router) {
-				r.Post("/", app.CreateVote)
-				r.Delete("/{voteId}", app.DeleteVote)
-			})
 		})
 
 		r.Group(func(r chi.Router) {
 			r.Route("/platforms", func(r chi.Router) {
 				r.Get("/", app.GetPlatforms)
+			})
+		})
+
+		r.Group(func(r chi.Router) {
+			r.Route("/votes", func(r chi.Router) {
+				r.Post("/", app.CreateVote)
+				r.Delete("/{voteId}", app.DeleteVote)
 			})
 		})
 	})

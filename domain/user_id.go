@@ -7,15 +7,14 @@ import (
 	"github.com/google/uuid"
 )
 
-type UserBody struct {
+type UserIdBody struct {
 	Id         uuid.UUID `json:"id"`
 	Username   string    `json:"username"`
 	Password   string    `json:"password"`
 	PlatformId uuid.UUID `json:"platform_id"`
-	CreatedBy  uuid.UUID `json:"created_by"`
 }
 
-func (b *UserBody) Bind(r *http.Request) error {
+func (b *UserIdBody) Bind(r *http.Request) error {
 	if b.Username == "" {
 		return errors.New("name is required")
 	}
@@ -34,10 +33,6 @@ func (b *UserBody) Bind(r *http.Request) error {
 
 	if b.PlatformId == uuid.Nil {
 		return errors.New("platform_id is required")
-	}
-
-	if b.CreatedBy == uuid.Nil {
-		return errors.New("created_by is required")
 	}
 
 	return nil

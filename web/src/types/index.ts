@@ -26,7 +26,7 @@ export interface FullUserResponse {
   votes_down?: number;
   created_at?: string;
   name: string;
-  domain: string;
+  url: string;
   created_by: string;
 }
 
@@ -63,7 +63,7 @@ export interface User {
 export interface Platform {
   id: string;
   name: string;
-  domain: string;
+  url: string;
 }
 
 export interface VoteResponse {

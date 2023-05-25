@@ -1,4 +1,4 @@
-INSERT INTO platforms (id, name, domain)VALUES 
+INSERT INTO platforms (id, name, url)VALUES 
 ('d6fbba90-4e07-4d2a-906c-9229610c95c4', 'Instagram', 'https://www.instagram.com'),
 ('a8f71f23-8e04-42e5-ab69-5baf7b78aea0', 'Facebook', 'https://www.facebook.com'),
 ('7389c780-86b1-42b7-a118-7f0830109464', 'Snapchat', 'https://www.snapchat.com'),

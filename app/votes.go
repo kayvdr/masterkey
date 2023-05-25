@@ -7,9 +7,9 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
 	"github.com/google/uuid"
-	"github.com/on3k/api-test/common/httperr"
-	"github.com/on3k/api-test/domain"
-	"github.com/on3k/api-test/repositories"
+	"github.com/on3k/shac-api/common/httperr"
+	"github.com/on3k/shac-api/domain"
+	"github.com/on3k/shac-api/repositories"
 )
 
 type Vote struct {
