@@ -211,9 +211,43 @@ paths:
         "404":
           description: User not found
 
-  /users/{creatorId}/createdBy:
+  /users/{userId}/votes:
     get:
-      operationId: GetUsersByCreator
+      operationId: GetUserVotes
+      description: Return votes of users
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                properties:
+                  users:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                          example: e0476273-83cd-4772-a4f9-f0280e3bb2af
+                        value:
+                          type: string
+                          example: up
+                        user_id:
+                          type: string
+                          format: uuid
+                          example: e0476273-83cd-4772-a4f9-f0280e3bb2af
+                        created_by:
+                          type: string
+                          format: uuid
+                          example: e0476273-83cd-4772-a4f9-f0280e3bb2af
+        "404":
+          description: Returns an error if the provided user ID was not found.
+
+  /creators/{creatorId}/users:
+    get:
+      operationId: GetCreatorsUsers
       description: Returns all users by creator id
       responses:
         "200":
@@ -254,40 +288,6 @@ paths:
                         url:
                           type: string
                           example: http://www.instagram.com
-
-  /users/{userId}/votes:
-    get:
-      operationId: GetUserVotes
-      description: Return votes of users
-      responses:
-        "200":
-          description: ""
-          content:
-            application/json:
-              schema:
-                properties:
-                  users:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        id:
-                          type: string
-                          format: uuid
-                          example: e0476273-83cd-4772-a4f9-f0280e3bb2af
-                        value:
-                          type: string
-                          example: up
-                        user_id:
-                          type: string
-                          format: uuid
-                          example: e0476273-83cd-4772-a4f9-f0280e3bb2af
-                        created_by:
-                          type: string
-                          format: uuid
-                          example: e0476273-83cd-4772-a4f9-f0280e3bb2af
-        "404":
-          description: Returns an error if the provided user ID was not found.
 
   /platforms:
     get:
