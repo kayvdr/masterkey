@@ -20,7 +20,7 @@ type User struct {
 	Password string    `json:"password"`
 	CreatedAt time.Time `json:"created_at"`
 	PlatformId uuid.UUID    `json:"platform_id"`
-	CreatedBy uuid.UUID    `json:"created_by"`
+	CreatorId uuid.UUID    `json:"creator_id"`
 }
 
 func (app Application) GetUsers(w http.ResponseWriter, r *http.Request) {
@@ -125,7 +125,7 @@ func (app Application) CreateUser(w http.ResponseWriter, r *http.Request) {
 		Username: body.Username,
 		Password: body.Password,
 		PlatformId: body.PlatformId,
-		CreatedBy: body.CreatedBy,
+		CreatorId: body.CreatorId,
 	}
 
 	res, err := app.Repositories.User.CreateUser(ctx, &user)
@@ -221,6 +221,6 @@ func mapUser(dbItem repositories.User) User {
 		dbItem.Password,
 		dbItem.CreatedAt,
 		dbItem.PlatformId,
-		dbItem.CreatedBy,
+		dbItem.CreatorId,
 	}
 }

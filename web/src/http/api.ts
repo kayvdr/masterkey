@@ -40,7 +40,7 @@ export const getUsers = async (pagination?: Pagination) => {
 
 export const getUsersByCreatorId = async (id: string) => {
   return await fetchData<{ count: number; items: FullUserResponse[] }>(
-    `${baseUrl}/v1/users/${id}/createdBy`,
+    `${baseUrl}/v1/creators/${id}/users`,
     {
       method: "GET",
     }
@@ -55,7 +55,7 @@ export const setUser = async (user: User) => {
       username: user.username,
       password: user.password,
       platform_id: user.platform.id,
-      created_by: user.createdBy,
+      creator_id: user.creatorId,
     }),
   });
 };
@@ -103,7 +103,7 @@ export const setVote = async (vote: Vote) => {
     body: JSON.stringify({
       value: vote.value,
       user_id: vote.userId,
-      created_by: vote.createdBy,
+      creator_id: vote.creatorId,
     }),
   });
 };

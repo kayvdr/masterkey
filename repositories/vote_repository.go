@@ -17,7 +17,7 @@ type Vote struct {
 	Id  uuid.UUID `json:"id"`
 	Value string    `json:"value"`
 	UserId uuid.UUID    `json:"user_id"`
-	CreatedBy uuid.UUID    `json:"created_by"`
+	CreatorId uuid.UUID    `json:"creator_id"`
 }
 
 var ErrMultipleVotes = errors.New("multiple user votes are not valid")
@@ -28,11 +28,11 @@ func NewVoteRepository(pool *pgxpool.Pool) VoteRepository {
 
 func (r VoteRepository) GetVote(ctx context.Context, id uuid.UUID) (*Vote, error) {
 	vote := Vote{}
-	err := r.pool.QueryRow(ctx, `SELECT v.id, v.value, v.user_id, v.created_by FROM votes AS v WHERE id = $1`, id).Scan(
+	err := r.pool.QueryRow(ctx, `SELECT v.id, v.value, v.user_id, v.creator_id FROM votes AS v WHERE id = $1`, id).Scan(
 		&vote.Id,
 		&vote.Value,
 		&vote.UserId,
-		&vote.CreatedBy,
+		&vote.CreatorId,
 	)
 	return &vote, err
 }
@@ -40,16 +40,16 @@ func (r VoteRepository) GetVote(ctx context.Context, id uuid.UUID) (*Vote, error
 func (r VoteRepository) CreateVote(ctx context.Context, vote Vote) (*Vote, error) {
 	var voteId uuid.UUID
 	err := r.pool.QueryRow(ctx, `
-		INSERT INTO votes (id, value, user_id, created_by)
+		INSERT INTO votes (id, value, user_id, creator_id)
 		SELECT gen_random_uuid(), $1, $2, $3
 		WHERE NOT EXISTS (
-			SELECT * FROM votes WHERE user_id=$2 AND created_by=$3
+			SELECT * FROM votes WHERE user_id=$2 AND creator_id=$3
 		)
 		RETURNING id
 		`, 
 		vote.Value,
 		vote.UserId,
-		vote.CreatedBy,
+		vote.CreatorId,
 	).Scan(&voteId);
 
 	if err == pgx.ErrNoRows {

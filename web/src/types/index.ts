@@ -27,7 +27,7 @@ export interface FullUserResponse {
   created_at?: string;
   name: string;
   url: string;
-  created_by: string;
+  creator_id: string;
 }
 
 export interface FullUser {
@@ -43,7 +43,7 @@ export interface FullUser {
   votesUp: number;
   votesDown: number;
   time?: string;
-  createdBy?: string;
+  creatorId?: string;
 }
 
 export interface User {
@@ -57,7 +57,7 @@ export interface User {
     name: string | undefined;
   };
   time?: string;
-  createdBy?: string;
+  creatorId?: string;
 }
 
 export interface Platform {
@@ -70,14 +70,14 @@ export interface VoteResponse {
   id?: string;
   value: "up" | "down";
   user_id: string;
-  created_by: string;
+  creator_id: string;
 }
 
 export interface Vote {
   id?: string;
   value: "up" | "down";
   userId: string;
-  createdBy: string;
+  creatorId: string;
 }
 
 export interface Pagination {

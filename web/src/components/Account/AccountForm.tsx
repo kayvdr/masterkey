@@ -90,7 +90,7 @@ const AddForm = ({ user }: Props) => {
           icon: undefined,
           name: undefined,
         },
-        createdBy: session?.user.id,
+        creatorId: session?.user.id,
       }).then(async (response) => {
         const res = await response.json();
         !response.ok ? setError(res.error) : setIsSuccessful(true);

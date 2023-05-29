@@ -62,7 +62,7 @@ paths:
                 - username
                 - password
                 - platformId
-                - createdBy
+                - creatorId
               properties:
                 username:
                   type: string
@@ -74,7 +74,7 @@ paths:
                   type: string
                   format: uuid
                   example: e0476273-83cd-4772-a4f9-f0280e3bb2af
-                createdBy:
+                creatorId:
                   type: string
                   format: uuid
                   example: e0476273-83cd-4772-a4f9-f0280e3bb2af
@@ -100,7 +100,7 @@ paths:
                     type: string
                     format: uuid
                     example: e0476273-83cd-4772-a4f9-f0280e3bb2af
-                  created_by:
+                  creator_id:
                     type: string
                     format: uuid
                     example: e0476273-83cd-4772-a4f9-f0280e3bb2af
@@ -132,7 +132,7 @@ paths:
                     type: string
                     format: uuid
                     example: e0476273-83cd-4772-a4f9-f0280e3bb2af
-                  created_by:
+                  creator_id:
                     type: string
                     format: uuid
                     example: e0476273-83cd-4772-a4f9-f0280e3bb2af
@@ -187,7 +187,7 @@ paths:
                     type: string
                     format: uuid
                     example: e0476273-83cd-4772-a4f9-f0280e3bb2af
-                  created_by:
+                  creator_id:
                     type: string
                     format: uuid
                     example: e0476273-83cd-4772-a4f9-f0280e3bb2af
@@ -238,7 +238,7 @@ paths:
                           type: string
                           format: uuid
                           example: e0476273-83cd-4772-a4f9-f0280e3bb2af
-                        created_by:
+                        creator_id:
                           type: string
                           format: uuid
                           example: e0476273-83cd-4772-a4f9-f0280e3bb2af
@@ -329,7 +329,7 @@ paths:
               required:
                 - value
                 - userId
-                - createdBy
+                - creatorId
               properties:
                 value:
                   type: string
@@ -338,7 +338,7 @@ paths:
                   type: string
                   format: uuid
                   example: e0476273-83cd-4772-a4f9-f0280e3bb2af
-                createdBy:
+                creatorId:
                   type: string
                   format: uuid
                   example: e0476273-83cd-4772-a4f9-f0280e3bb2af
@@ -361,7 +361,7 @@ paths:
                     type: string
                     format: uuid
                     example: e0476273-83cd-4772-a4f9-f0280e3bb2af
-                  created_by:
+                  creator_id:
                     type: string
                     format: uuid
                     example: e0476273-83cd-4772-a4f9-f0280e3bb2af

@@ -24,7 +24,7 @@ type User struct {
 	Id  uuid.UUID `json:"id"`
 	Username   string      `json:"username"`
 	Password string    `json:"password"`
-	CreatedBy uuid.UUID    `json:"created_by"`
+	CreatorId uuid.UUID    `json:"creator_id"`
 	CreatedAt time.Time    `json:"created_at"`
 	PlatformId uuid.UUID    `json:"platform_id"`
 }
@@ -39,12 +39,12 @@ type FullUser struct {
 
 func (r UserRepository) GetUser(ctx context.Context, id uuid.UUID) (*User, error) {
 	user := User{}
-	err := r.pool.QueryRow(ctx, `SELECT u.id, u.username, u.password, u.created_at, u.created_by, u.platform_id FROM users AS u WHERE id = $1`, id).Scan(
+	err := r.pool.QueryRow(ctx, `SELECT u.id, u.username, u.password, u.created_at, u.creator_id, u.platform_id FROM users AS u WHERE id = $1`, id).Scan(
 		&user.Id,
 		&user.Username,
 		&user.Password,
 		&user.CreatedAt,
-		&user.CreatedBy,
+		&user.CreatorId,
 		&user.PlatformId,
 	)
 	return &user, err
@@ -56,7 +56,7 @@ func (r UserRepository) GetAllUsers(ctx context.Context, pagination common.Pagin
 		SELECT u.id, u.username, u.password, 
 			(SELECT count(v.id) FROM votes AS v WHERE v.user_id = u.id AND v.value = 'up') AS votes_up, 
 			(SELECT count(v.id) FROM votes AS v WHERE v.user_id = u.id AND v.value = 'down') AS votes_down, 
-			u.created_at, u.created_by, u.platform_id, p.name, p.url
+			u.created_at, u.creator_id, u.platform_id, p.name, p.url
 		FROM users AS u 
 		INNER JOIN platforms AS p ON u.platform_id = p.id
 		WHERE ($1 = '' OR p.name ILIKE $1)
@@ -77,7 +77,7 @@ func (r UserRepository) GetAllUsers(ctx context.Context, pagination common.Pagin
 			&user.VotesUp,
 			&user.VotesDown,
 			&user.CreatedAt,
-			&user.CreatedBy,
+			&user.CreatorId,
 			&user.PlatformId,
 			&user.PlatformName,
 			&user.PlatformURL,
@@ -97,10 +97,10 @@ func (r UserRepository) GetUsersByCreator(ctx context.Context, pagination common
 		SELECT u.id, u.username, u.password,
 			(SELECT count(v.id) FROM votes AS v WHERE v.user_id = u.id AND v.value = 'up') AS votes_up, 
 			(SELECT count(v.id) FROM votes AS v WHERE v.user_id = u.id AND v.value = 'down') AS votes_down, 
-		u.created_at, u.created_by, u.platform_id, p.name, p.url
+		u.created_at, u.creator_id, u.platform_id, p.name, p.url
 		FROM users AS u 
 		INNER JOIN platforms AS p ON u.platform_id = p.id
-		WHERE created_by = $1
+		WHERE creator_id = $1
 	`, userId)
 
 	if err != nil {
@@ -118,7 +118,7 @@ func (r UserRepository) GetUsersByCreator(ctx context.Context, pagination common
 			&user.VotesUp,
 			&user.VotesDown,
 			&user.CreatedAt,
-			&user.CreatedBy,
+			&user.CreatorId,
 			&user.PlatformId,
 			&user.PlatformName,
 			&user.PlatformURL,
@@ -151,7 +151,7 @@ func (r UserRepository) GetUserVotes(ctx context.Context, userId uuid.UUID) ([]*
 			&vote.Id,
 			&vote.Value,
 			&vote.UserId,
-			&vote.CreatedBy,
+			&vote.CreatorId,
 		)
 		votes = append(votes, vote)
 	}
@@ -177,13 +177,13 @@ func (r UserRepository) GetUsersCount(ctx context.Context, pagination common.Pag
 func (r UserRepository) CreateUser(ctx context.Context, user *User) (*User, error) {
 	var userId uuid.UUID
 	err := r.pool.QueryRow(ctx, `
-		INSERT INTO users (id, username, password, platform_id, created_by) 
+		INSERT INTO users (id, username, password, platform_id, creator_id) 
 		VALUES (gen_random_uuid(), $1, $2, $3, $4)
 		RETURNING id`, 
 		user.Username, 
 		user.Password,
 		user.PlatformId,
-		user.CreatedBy,
+		user.CreatorId,
 	).Scan(&userId);
 
 	if err != nil {

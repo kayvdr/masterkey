@@ -60,11 +60,11 @@ const UserList = ({ users, setUsers }: Props, ref: Ref<RefType>) => {
         id: vote.id,
         value: vote.value,
         userId: vote.user_id,
-        createdBy: vote.created_by,
+        creatorId: vote.creator_id,
       }));
 
       const existingVote = typedVotes?.find(
-        (vote) => vote.createdBy === session?.user.id
+        (vote) => vote.creatorId === session?.user.id
       );
 
       setUserVote(existingVote);
@@ -81,7 +81,7 @@ const UserList = ({ users, setUsers }: Props, ref: Ref<RefType>) => {
       : await setVote({
           value: value === "votesUp" ? "up" : "down",
           userId: detailData.id ?? "",
-          createdBy: session?.user.id ?? "",
+          creatorId: session?.user.id ?? "",
         });
 
     setUsers(
@@ -198,7 +198,7 @@ const UserList = ({ users, setUsers }: Props, ref: Ref<RefType>) => {
                 <p className={itemStyles.textSmall}>{detailData?.votesDown}</p>
               </button>
             </div>
-            {detailData?.createdBy === session?.user.id && (
+            {detailData?.creatorId === session?.user.id && (
               <>
                 <div>
                   <button

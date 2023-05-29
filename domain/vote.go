@@ -11,7 +11,7 @@ type VoteBody struct {
 	Id         uuid.UUID `json:"id"`
 	Value   string    `json:"value"`
 	UserId   uuid.UUID    `json:"user_id"`
-	CreatedBy  uuid.UUID `json:"created_by"`
+	CreatorId  uuid.UUID `json:"creator_id"`
 }
 
 func (b *VoteBody) Bind(r *http.Request) error {
@@ -23,8 +23,8 @@ func (b *VoteBody) Bind(r *http.Request) error {
 		return errors.New("user_id is required")
 	}
 
-	if b.CreatedBy == uuid.Nil {
-		return errors.New("created_by is required")
+	if b.CreatorId == uuid.Nil {
+		return errors.New("creator_id is required")
 	}
 
 	return nil

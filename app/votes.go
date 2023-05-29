@@ -16,7 +16,7 @@ type Vote struct {
 	Id  uuid.UUID `json:"id"`
 	Value   string      `json:"value"`
 	UserId uuid.UUID    `json:"user_id"`
-	CreatedBy uuid.UUID    `json:"created_by"`
+	CreatorId uuid.UUID    `json:"creator_id"`
 }
 
 func (app Application) CreateVote(w http.ResponseWriter, r *http.Request) {
@@ -31,7 +31,7 @@ func (app Application) CreateVote(w http.ResponseWriter, r *http.Request) {
 	vote := repositories.Vote{
 		Value: body.Value,
 		UserId: body.UserId,
-		CreatedBy: body.CreatedBy,
+		CreatorId: body.CreatorId,
 	}
 
 	exists, errExists := app.Repositories.User.ExistsUser(ctx, vote.UserId)

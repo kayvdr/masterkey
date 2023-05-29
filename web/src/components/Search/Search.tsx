@@ -80,7 +80,7 @@ const Search = ({ title, searchTerm, isPagination = true, sort }: Props) => {
           votesUp: user.votes_up ?? 0,
           votesDown: user.votes_down ?? 0,
           time: time,
-          createdBy: user.created_by,
+          creatorId: user.creator_id,
         };
       });
 
