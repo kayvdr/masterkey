@@ -2,8 +2,9 @@ import classNames from "classnames";
 import { format } from "date-fns";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getUsersByCreatorId } from "../../http/api";
+import { getUsersByCreatorId, getVotesByCreatorId } from "../../http/api";
 import { supabase } from "../../http/supabase";
+import { FullVoteResponse } from "../../types";
 import Button from "../../ui/Button";
 import Icon from "../../ui/Icon";
 import Popup from "../../ui/Popup";
@@ -14,10 +15,6 @@ import Header from "../Header";
 import useToggle from "../hooks/useToggle";
 import SvgArrowDown from "../icons/ArrowDown";
 import SvgArrowUp from "../icons/ArrowUp";
-import SvgEvernote from "../icons/Evernote";
-import SvgFacebook from "../icons/Facebook";
-import SvgGoogle from "../icons/Google";
-import SvgInstagram from "../icons/Instagram";
 import styles from "./DashboardPage.module.css";
 import Edit from "./Edit";
 
@@ -31,16 +28,22 @@ interface List {
   [key: string]: number;
 }
 
-interface FullListInfo {
+interface FullUsersInfo {
   count: number | undefined;
-  list: List | undefined;
+  items: List | undefined;
+}
+
+interface FullVotesInfo {
+  count: number | undefined;
+  items: FullVoteResponse[] | undefined;
 }
 
 const DashboardPage = () => {
   const session = useContext(SessionContext);
   const popup = useToggle();
   const navigate = useNavigate();
-  const [sharings, setSharings] = useState<FullListInfo>();
+  const [sharings, setSharings] = useState<FullUsersInfo>();
+  const [votes, setVotes] = useState<FullVotesInfo>();
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -55,10 +58,17 @@ const DashboardPage = () => {
         };
       }, {});
 
-      setSharings({ count: fetchedUsers?.count, list: groupedUsers });
+      setSharings({ count: fetchedUsers?.count, items: groupedUsers });
+    };
+    const fetchVotes = async () => {
+      if (!session) return;
+      const fetchedVotes = await getVotesByCreatorId(session.user.id);
+
+      setVotes({ count: fetchedVotes?.count, items: fetchedVotes?.items });
     };
 
     fetchUsers();
+    fetchVotes();
   }, []);
 
   return (
@@ -164,8 +174,8 @@ const DashboardPage = () => {
                 <p className={styles.totalValue}>{sharings?.count}</p>
               </div>
               <div className={styles.list}>
-                {sharings?.list &&
-                  Object.entries(sharings?.list).map(([name, count]) => {
+                {sharings?.items &&
+                  Object.entries(sharings?.items).map(([name, count]) => {
                     const icon = logoMapping[name];
 
                     return (
@@ -201,68 +211,45 @@ const DashboardPage = () => {
               <h2 className={styles.subtitle}>Your votes</h2>
               <div className={styles.total}>
                 <p className={styles.totalLabel}>Total</p>
-                <p className={styles.totalValue}>64</p>
+                <p className={styles.totalValue}>{votes?.count}</p>
               </div>
               <div className={styles.list}>
-                <div className={styles.listItem}>
-                  <div className={styles.provider}>
-                    <Icon glyph={SvgEvernote} className={styles.providerIcon} />
-                    <span>sam</span>
-                  </div>
-                  <div>
-                    <Icon glyph={SvgArrowDown} className={styles.iconRed} />
-                  </div>
-                </div>
-                <div className={styles.listItem}>
-                  <div className={styles.provider}>
-                    <Icon glyph={SvgGoogle} className={styles.providerIcon} />
-                    <span>AdAm</span>
-                  </div>
-                  <div>
-                    <Icon glyph={SvgArrowUp} className={styles.iconGreen} />
-                  </div>
-                </div>
-                <div className={styles.listItem}>
-                  <div className={styles.provider}>
-                    <Icon
-                      glyph={SvgInstagram}
-                      className={styles.providerIcon}
-                    />
-                    <span>kortnei85</span>
-                  </div>
-                  <div>
-                    <Icon glyph={SvgArrowDown} className={styles.iconRed} />
-                  </div>
-                </div>
-                <div className={styles.listItem}>
-                  <div className={styles.provider}>
-                    <Icon glyph={SvgFacebook} className={styles.providerIcon} />
-                    <span>asdfasdf</span>
-                  </div>
-                  <div>
-                    <span>
-                      <Icon glyph={SvgArrowUp} className={styles.iconGreen} />
-                    </span>
-                  </div>
-                </div>
-                <div className={styles.listItem}>
-                  <div className={styles.provider}>
-                    <Icon glyph={SvgFacebook} className={styles.providerIcon} />
-                    <span>jaiden.s</span>
-                  </div>
-                  <div>
-                    <Icon glyph={SvgArrowUp} className={styles.iconGreen} />
-                  </div>
-                </div>
+                {votes?.items?.map((vote) => {
+                  const icon = logoMapping[vote.platform_name];
+
+                  return (
+                    <div className={styles.listItem} key={vote.id}>
+                      <div className={styles.provider}>
+                        {icon && (
+                          <Icon glyph={icon} className={styles.providerIcon} />
+                        )}
+                        <span>{vote.username}</span>
+                      </div>
+                      <div>
+                        {vote.value === "up" ? (
+                          <Icon
+                            glyph={SvgArrowUp}
+                            className={styles.iconGreen}
+                          />
+                        ) : (
+                          <Icon
+                            glyph={SvgArrowDown}
+                            className={styles.iconRed}
+                          />
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
-              <div className={styles.btnRow}>
+              {/* <div className={styles.btnRow}>
                 <Button
                   onClick={() => navigate("/youraccounts")}
                   scheme="secondary"
                 >
                   All your activities
                 </Button>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

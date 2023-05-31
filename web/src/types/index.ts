@@ -66,6 +66,13 @@ export interface Platform {
   url: string;
 }
 
+export interface FullVoteResponse {
+  id?: string;
+  value: "up" | "down";
+  username: string;
+  platform_name: string;
+}
+
 export interface VoteResponse {
   id?: string;
   value: "up" | "down";

@@ -7,6 +7,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/on3k/shac-api/common"
 )
 
 type VoteRepository struct {
@@ -18,6 +19,13 @@ type Vote struct {
 	Value string    `json:"value"`
 	UserId uuid.UUID    `json:"user_id"`
 	CreatorId uuid.UUID    `json:"creator_id"`
+}
+
+type FullVote struct {
+	Id  uuid.UUID `json:"id"`
+	Value string    `json:"value"`
+	Username string    `json:"username"`
+	PlatformName string    `json:"platform_name"`
 }
 
 var ErrMultipleVotes = errors.New("multiple user votes are not valid")
@@ -59,6 +67,38 @@ func (r VoteRepository) CreateVote(ctx context.Context, vote Vote) (*Vote, error
 		return nil, err
 	}
 	return r.GetVote(ctx, voteId)
+}
+
+func (r VoteRepository) GetVotesByCreator(ctx context.Context, pagination common.Pagination, creatorId uuid.UUID) ([]*FullVote, error) {
+	rows, err := r.pool.Query(ctx, `
+		SELECT v.id, v.value, u.username, p.name FROM votes AS v
+		INNER JOIN users AS u ON v.user_id = u.id
+		INNER JOIN platforms AS p ON u.platform_id = p.id
+		WHERE v.creator_id = $1
+	`, creatorId)
+
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	votes := []*FullVote{}
+	for rows.Next() {
+		vote := &FullVote{}
+		rows.Scan(
+			&vote.Id,
+			&vote.Value,
+			&vote.Username,
+			&vote.PlatformName,
+		)
+		votes = append(votes, vote)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return votes, nil
 }
 
 func (r VoteRepository) ExistsVote(ctx context.Context, voteId uuid.UUID) (bool, error) {

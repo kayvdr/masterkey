@@ -47,6 +47,7 @@ func main() {
 		r.Group(func(r chi.Router) {
 			r.Route("/creators", func(r chi.Router) {
 				r.Get("/{creatorId}/users", app.GetCreatorsUsers)
+				r.Get("/{creatorId}/votes", app.GetCreatorsVotes)
 			})
 		})
 

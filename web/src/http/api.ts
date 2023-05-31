@@ -1,5 +1,6 @@
 import {
   FullUserResponse,
+  FullVoteResponse,
   Pagination,
   Platform,
   User,
@@ -94,6 +95,15 @@ export const getVote = async (id: string) => {
   return await fetchData<VoteResponse[]>(`${baseUrl}/v1/users/${id}/votes`, {
     method: "GET",
   });
+};
+
+export const getVotesByCreatorId = async (id: string) => {
+  return await fetchData<{ count: number; items: FullVoteResponse[] }>(
+    `${baseUrl}/v1/creators/${id}/votes`,
+    {
+      method: "GET",
+    }
+  );
 };
 
 export const setVote = async (vote: Vote) => {

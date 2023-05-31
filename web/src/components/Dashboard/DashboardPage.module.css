@@ -97,6 +97,7 @@
 .list {
   margin-top: 2em;
   overflow-y: auto;
+  max-height: 20em;
 }
 
 .listItem {
