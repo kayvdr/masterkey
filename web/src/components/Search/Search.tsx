@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import { useEffect, useRef, useState } from "react";
+import { RefObject, useEffect, useState } from "react";
 import { getPlatforms, getUsers } from "../../http/api";
 import { FullUser, Pagination, UserResponse } from "../../types";
 import UserList, { RefType } from "../../ui/UserList";
@@ -18,6 +18,7 @@ interface Props {
   searchTerm?: string;
   isPagination?: boolean;
   sort?: keyof UserResponse;
+  userListRef?: RefObject<RefType>;
 }
 
 const isKeyofUser = (value: string): value is keyof UserResponse =>
@@ -31,7 +32,13 @@ const isKeyofUser = (value: string): value is keyof UserResponse =>
     "created_at",
   ].includes(value as keyof UserResponse);
 
-const Search = ({ title, searchTerm, isPagination = true, sort }: Props) => {
+const Search = ({
+  title,
+  searchTerm,
+  isPagination = true,
+  sort,
+  userListRef,
+}: Props) => {
   const [users, setUsers] = useState<FullUser[]>();
   const [count, setCount] = useState<number>();
   const [pagination, setPagination] = useState<Pagination>({
@@ -39,7 +46,6 @@ const Search = ({ title, searchTerm, isPagination = true, sort }: Props) => {
     page: 1,
     sort: sort as keyof UserResponse,
   });
-  const userListRef = useRef<RefType>(null);
 
   useEffect(() => {
     const searchQuery = getSearchParams("sort");
@@ -135,7 +141,7 @@ const Search = ({ title, searchTerm, isPagination = true, sort }: Props) => {
             className={styles.paginationPrev}
             onClick={() => (
               setPagination({ ...pagination, page: pagination.page - 1 }),
-              userListRef.current?.toggleDetails()
+              userListRef?.current?.toggleDetails()
             )}
             disabled={pagination.page <= 1}
           >
@@ -150,7 +156,7 @@ const Search = ({ title, searchTerm, isPagination = true, sort }: Props) => {
               })}
               onClick={() => (
                 setPagination({ ...pagination, page: p + 1 }),
-                userListRef.current?.toggleDetails()
+                userListRef?.current?.toggleDetails()
               )}
               key={p}
             >
@@ -161,7 +167,7 @@ const Search = ({ title, searchTerm, isPagination = true, sort }: Props) => {
             className={styles.paginationNext}
             onClick={() => (
               setPagination({ ...pagination, page: pagination.page + 1 }),
-              userListRef.current?.toggleDetails()
+              userListRef?.current?.toggleDetails()
             )}
             disabled={pagination.limit * pagination.page >= (count ?? 0)}
           >
