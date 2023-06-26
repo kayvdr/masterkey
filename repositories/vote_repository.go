@@ -15,17 +15,17 @@ type VoteRepository struct {
 }
 
 type Vote struct {
-	Id  uuid.UUID `json:"id"`
-	Value string    `json:"value"`
-	UserId uuid.UUID    `json:"user_id"`
-	CreatorId uuid.UUID    `json:"creator_id"`
+	Id  uuid.UUID `db:"id"`
+	Value string    `db:"value"`
+	UserId uuid.UUID    `db:"user_id"`
+	CreatorId uuid.UUID    `db:"creator_id"`
 }
 
 type FullVote struct {
-	Id  uuid.UUID `json:"id"`
-	Value string    `json:"value"`
-	Username string    `json:"username"`
-	PlatformName string    `json:"platform_name"`
+	Id  uuid.UUID `db:"id"`
+	Value string    `db:"value"`
+	Username string    `db:"username"`
+	PlatformName string    `db:"platform_name"`
 }
 
 var ErrMultipleVotes = errors.New("multiple user votes are not valid")

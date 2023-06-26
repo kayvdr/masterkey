@@ -3,9 +3,8 @@ package app
 import (
 	"fmt"
 	"net/http"
-	"time"
 
-	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
 	"github.com/google/uuid"
 	"github.com/on3k/shac-api/common"
@@ -13,15 +12,6 @@ import (
 	"github.com/on3k/shac-api/domain"
 	"github.com/on3k/shac-api/repositories"
 )
-
-type User struct {
-	Id  uuid.UUID `json:"id"`
-	Username   string      `json:"username"`
-	Password string    `json:"password"`
-	CreatedAt time.Time `json:"created_at"`
-	PlatformId uuid.UUID    `json:"platform_id"`
-	CreatorId uuid.UUID    `json:"creator_id"`
-}
 
 func (app Application) GetUsers(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
@@ -115,20 +105,13 @@ func (app Application) GetUserVotes(w http.ResponseWriter, r *http.Request) {
 func (app Application) CreateUser(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	
-	var body domain.UserBody
+	var body domain.CreateUserBody
 	if err := render.Bind(r, &body); err != nil {
 		render.Render(w, r, httperr.ErrBadRequest(err.Error()))
 		return
 	}
-
-	user := repositories.User{
-		Username: body.Username,
-		Password: body.Password,
-		PlatformId: body.PlatformId,
-		CreatorId: body.CreatorId,
-	}
-
-	res, err := app.Repositories.User.CreateUser(ctx, &user)
+	
+	res, err := app.Repositories.User.CreateUser(ctx, body.Model())
 	if err != nil {
 		render.Render(w, r, httperr.ErrInternalServer(err.Error()))
 		return
@@ -150,17 +133,10 @@ func (app Application) UpdateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	
-	var body domain.UserIdBody
+	var body domain.PatchUserBody
 	if err := render.Bind(r, &body); err != nil {
 		render.Render(w, r, httperr.ErrBadRequest(err.Error()))
 		return
-	}
-
-	user := repositories.User{
-		Id: userId,
-		Username: body.Username,
-		Password: body.Password,
-		PlatformId: body.PlatformId,
 	}
 
 	exists, errExists := app.Repositories.User.ExistsUser(ctx, userId)
@@ -173,7 +149,7 @@ func (app Application) UpdateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	
-	res, err := app.Repositories.User.UpdateUser(ctx, &user)
+	res, err := app.Repositories.User.UpdateUser(ctx, body.Model(userId))
 	if err != nil {
 		render.Render(w, r, httperr.ErrInternalServer(err.Error()))
 		return
@@ -214,13 +190,13 @@ func (app Application) DeleteUser(w http.ResponseWriter, r *http.Request) {
 	render.NoContent(w, r)
 }
 
-func mapUser(dbItem repositories.User) User {
-	return User{
-		dbItem.Id,
-		dbItem.Username,
-		dbItem.Password,
-		dbItem.CreatedAt,
-		dbItem.PlatformId,
-		dbItem.CreatorId,
+func mapUser(dbItem repositories.User) domain.User {
+	return domain.User{
+		Id: dbItem.Id,
+		Username: dbItem.Username,
+		Password: dbItem.Password,
+		CreatedAt: dbItem.CreatedAt,
+		PlatformId: dbItem.PlatformId,
+		CreatorId: dbItem.CreatorId,
 	}
 }

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
 	"github.com/google/uuid"
 	"github.com/on3k/shac-api/common/httperr"
@@ -12,39 +12,26 @@ import (
 	"github.com/on3k/shac-api/repositories"
 )
 
-type Vote struct {
-	Id  uuid.UUID `json:"id"`
-	Value   string      `json:"value"`
-	UserId uuid.UUID    `json:"user_id"`
-	CreatorId uuid.UUID    `json:"creator_id"`
-}
-
 func (app Application) CreateVote(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	
-	var body domain.VoteBody
+	var body domain.CreateVoteBody
 	if err := render.Bind(r, &body); err != nil {
 		render.Render(w, r, httperr.ErrBadRequest(err.Error()))
 		return
 	}
 
-	vote := repositories.Vote{
-		Value: body.Value,
-		UserId: body.UserId,
-		CreatorId: body.CreatorId,
-	}
-
-	exists, errExists := app.Repositories.User.ExistsUser(ctx, vote.UserId)
+	exists, errExists := app.Repositories.User.ExistsUser(ctx, body.UserId)
 	if errExists != nil {
 		render.Render(w, r, httperr.ErrInternalServer(errExists.Error()))
 		return
 	}
 	if !exists {
-		render.Render(w, r, httperr.ErrNotFound(fmt.Sprintf("user '%s' not found", vote.UserId)))
+		render.Render(w, r, httperr.ErrNotFound(fmt.Sprintf("user '%s' not found", body.UserId)))
 		return
 	}
 
-	res, err := app.Repositories.Vote.CreateVote(ctx, vote)
+	res, err := app.Repositories.Vote.CreateVote(ctx, body.Model())
 	if err == repositories.ErrMultipleVotes {
 		render.Render(w, r, httperr.ErrBadRequest(err.Error()))
 		return

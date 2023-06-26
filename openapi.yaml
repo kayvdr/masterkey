@@ -32,13 +32,13 @@ paths:
                         passord:
                           type: string
                           example: password123
-                        votes_up:
+                        votesUp:
                           type: integer
                           example: 10
-                        votes_down:
+                        votesDown:
                           type: integer
                           example: 5
-                        platform_id:
+                        platformId:
                           type: string
                           format: uuid
                           example: e0476273-83cd-4772-a4f9-f0280e3bb2af
@@ -96,11 +96,11 @@ paths:
                   passord:
                     type: string
                     example: password
-                  platform_id:
+                  platformId:
                     type: string
                     format: uuid
                     example: e0476273-83cd-4772-a4f9-f0280e3bb2af
-                  creator_id:
+                  creatorId:
                     type: string
                     format: uuid
                     example: e0476273-83cd-4772-a4f9-f0280e3bb2af
@@ -128,18 +128,18 @@ paths:
                   passord:
                     type: string
                     example: password
-                  platform_id:
+                  platformId:
                     type: string
                     format: uuid
                     example: e0476273-83cd-4772-a4f9-f0280e3bb2af
-                  creator_id:
+                  creatorId:
                     type: string
                     format: uuid
                     example: e0476273-83cd-4772-a4f9-f0280e3bb2af
         "404":
           description: Returns an error if the provided user ID was not found.
 
-    post:
+    patch:
       operationId: UpdateUser
       description: Update a user
       parameters:
@@ -183,11 +183,11 @@ paths:
                   passord:
                     type: string
                     example: password
-                  platform_id:
+                  platformId:
                     type: string
                     format: uuid
                     example: e0476273-83cd-4772-a4f9-f0280e3bb2af
-                  creator_id:
+                  creatorId:
                     type: string
                     format: uuid
                     example: e0476273-83cd-4772-a4f9-f0280e3bb2af
@@ -234,11 +234,11 @@ paths:
                         value:
                           type: string
                           example: up
-                        user_id:
+                        userId:
                           type: string
                           format: uuid
                           example: e0476273-83cd-4772-a4f9-f0280e3bb2af
-                        creator_id:
+                        creatorId:
                           type: string
                           format: uuid
                           example: e0476273-83cd-4772-a4f9-f0280e3bb2af
@@ -272,13 +272,13 @@ paths:
                         passord:
                           type: string
                           example: password123
-                        votes_up:
+                        votesUp:
                           type: integer
                           example: 10
-                        votes_down:
+                        votesDown:
                           type: integer
                           example: 5
-                        platform_id:
+                        platformId:
                           type: string
                           format: uuid
                           example: e0476273-83cd-4772-a4f9-f0280e3bb2af
@@ -316,22 +316,9 @@ paths:
                         passord:
                           type: string
                           example: password123
-                        votes_up:
-                          type: integer
-                          example: 10
-                        votes_down:
-                          type: integer
-                          example: 5
-                        platform_id:
-                          type: string
-                          format: uuid
-                          example: e0476273-83cd-4772-a4f9-f0280e3bb2af
-                        name:
+                        PlatformName:
                           type: string
                           example: instagram
-                        url:
-                          type: string
-                          example: http://www.instagram.com
 
   /platforms:
     get:
@@ -401,11 +388,11 @@ paths:
                   value:
                     type: string
                     example: up
-                  user_id:
+                  userId:
                     type: string
                     format: uuid
                     example: e0476273-83cd-4772-a4f9-f0280e3bb2af
-                  creator_id:
+                  creatorId:
                     type: string
                     format: uuid
                     example: e0476273-83cd-4772-a4f9-f0280e3bb2af

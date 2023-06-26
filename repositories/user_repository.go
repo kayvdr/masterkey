@@ -21,20 +21,20 @@ func NewUserRepository(pool *pgxpool.Pool) UserRepository {
 }
 
 type User struct {
-	Id  uuid.UUID `json:"id"`
-	Username   string      `json:"username"`
-	Password string    `json:"password"`
-	CreatorId uuid.UUID    `json:"creator_id"`
-	CreatedAt time.Time    `json:"created_at"`
-	PlatformId uuid.UUID    `json:"platform_id"`
+	Id  uuid.UUID `db:"id"`
+	Username   string      `db:"username"`
+	Password string    `db:"password"`
+	CreatorId uuid.UUID    `db:"creator_id"`
+	CreatedAt time.Time    `db:"created_at"`
+	PlatformId uuid.UUID    `db:"platform_id"`
 }
 
 type FullUser struct {
 	User
-	VotesUp *int    `json:"votes_up"`
-	VotesDown *int    `json:"votes_down"`
-	PlatformName  string    `json:"name"`
-	PlatformURL  string    `json:"url"`
+	VotesUp *int    `db:"voteUp"`
+	VotesDown *int    `db:"votesDown"`
+	PlatformName  string    `db:"name"`
+	PlatformURL  string    `db:"url"`
 }
 
 func (r UserRepository) GetUser(ctx context.Context, id uuid.UUID) (*User, error) {
@@ -174,7 +174,7 @@ func (r UserRepository) GetUsersCount(ctx context.Context, pagination common.Pag
 	return &count, err
 }
 
-func (r UserRepository) CreateUser(ctx context.Context, user *User) (*User, error) {
+func (r UserRepository) CreateUser(ctx context.Context, user User) (*User, error) {
 	var userId uuid.UUID
 	err := r.pool.QueryRow(ctx, `
 		INSERT INTO users (id, username, password, platform_id, creator_id) 
@@ -192,17 +192,17 @@ func (r UserRepository) CreateUser(ctx context.Context, user *User) (*User, erro
 	return r.GetUser(ctx, userId)
 }
 
-func (r UserRepository) UpdateUser(ctx context.Context, user *User) (*User, error) {
+func (r UserRepository) UpdateUser(ctx context.Context, user User) (*User, error) {
 	_, err := r.pool.Exec(ctx, `
 		UPDATE users
 		SET
 		username = $1
 		, password = $2
 		, platform_id = $3
-		WHERE id = $4`, 
-		user.Username, 
+		WHERE id = $4`,
+		user.Username,
 		user.Password,
-		user.PlatformId, 
+		user.PlatformId,
 		user.Id,
 	);
 

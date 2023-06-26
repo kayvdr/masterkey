@@ -16,9 +16,9 @@ func NewPlatformRepository(pool *pgxpool.Pool) PlatformRepository {
 }
 
 type Platform struct {
-	Id  uuid.UUID `json:"id"`
-	Name string    `json:"name"`
-	URL string    `json:"url"`
+	Id  uuid.UUID `db:"id"`
+	Name string    `db:"name"`
+	URL string    `db:"url"`
 }
 
 func (r PlatformRepository) GetAllPlatforms(ctx context.Context) ([]*Platform, error) {

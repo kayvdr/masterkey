@@ -4,15 +4,8 @@ import (
 	"net/http"
 
 	"github.com/go-chi/render"
-	"github.com/google/uuid"
 	"github.com/on3k/shac-api/common/httperr"
 )
-
-type Platform struct {
-	Id  uuid.UUID `json:"id"`
-	Name   string      `json:"name"`
-	URL string    `json:"url"`
-}
 
 func (app Application) GetPlatforms(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()

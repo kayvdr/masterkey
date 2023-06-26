@@ -33,36 +33,27 @@ func main() {
 	}))
 
 	r.Route("/v1", func(r chi.Router) {
-
-		r.Group(func(r chi.Router) {
-			r.Route("/users", func(r chi.Router) {
-				r.Get("/", app.GetUsers)
-				r.Post("/", app.CreateUser)
-				r.Get("/{userId}", app.GetUser)
-				r.Post("/{userId}", app.UpdateUser)
-				r.Delete("/{userId}", app.DeleteUser)
-				r.Get("/{userId}/votes", app.GetUserVotes)
-			})
+		r.Route("/users", func(r chi.Router) {
+			r.Get("/", app.GetUsers)
+			r.Post("/", app.CreateUser)
+			r.Get("/{userId}", app.GetUser)
+			r.Patch("/{userId}", app.UpdateUser)
+			r.Delete("/{userId}", app.DeleteUser)
+			r.Get("/{userId}/votes", app.GetUserVotes)
 		})
 
-		r.Group(func(r chi.Router) {
-			r.Route("/creators", func(r chi.Router) {
-				r.Get("/{creatorId}/users", app.GetCreatorsUsers)
-				r.Get("/{creatorId}/votes", app.GetCreatorsVotes)
-			})
+		r.Route("/creators", func(r chi.Router) {
+			r.Get("/{creatorId}/users", app.GetCreatorsUsers)
+			r.Get("/{creatorId}/votes", app.GetCreatorsVotes)
 		})
 
-		r.Group(func(r chi.Router) {
-			r.Route("/platforms", func(r chi.Router) {
-				r.Get("/", app.GetPlatforms)
-			})
+		r.Route("/platforms", func(r chi.Router) {
+			r.Get("/", app.GetPlatforms)
 		})
 
-		r.Group(func(r chi.Router) {
-			r.Route("/votes", func(r chi.Router) {
-				r.Post("/", app.CreateVote)
-				r.Delete("/{voteId}", app.DeleteVote)
-			})
+		r.Route("/votes", func(r chi.Router) {
+			r.Post("/", app.CreateVote)
+			r.Delete("/{voteId}", app.DeleteVote)
 		})
 	})
 
