@@ -67,10 +67,10 @@ const Search = ({
       const fetchedPlatforms = await getPlatforms();
 
       const users = fetchedUsers?.items.map<FullUser>((user) => {
-        const time = user.created_at && getDiff(user.created_at);
+        const time = user.createdAt && getDiff(user.createdAt);
 
         const platform = fetchedPlatforms?.find(
-          (p) => p.id === user.platform_id
+          (p) => p.id === user.platformId
         );
 
         return {
@@ -83,10 +83,10 @@ const Search = ({
             icon: platform && logoMapping[platform.name],
             name: platform?.name,
           },
-          votesUp: user.votes_up ?? 0,
-          votesDown: user.votes_down ?? 0,
+          votesUp: user.votesUp ?? 0,
+          votesDown: user.votesDown ?? 0,
           time: time,
-          creatorId: user.creator_id,
+          creatorId: user.creatorId,
         };
       });
 

@@ -18,22 +18,22 @@ const SharedAccounts = () => {
       const fetchedUsers = await getUsersByCreatorId(session.user.id);
 
       const users = fetchedUsers?.items.map<FullUser>((user) => {
-        const time = user.created_at && getDiff(user.created_at);
+        const time = user.createdAt && getDiff(user.createdAt);
 
         return {
           id: user.id,
           username: user.username,
           password: user.password,
           platform: {
-            id: user.platform_id,
-            href: user.url,
-            icon: logoMapping[user.name],
-            name: user.name,
+            id: user.platformId,
+            href: user.platformUrl,
+            icon: logoMapping[user.platformName],
+            name: user.platformName,
           },
-          votesUp: user.votes_up ?? 0,
-          votesDown: user.votes_down ?? 0,
+          votesUp: user.votesUp ?? 0,
+          votesDown: user.votesDown ?? 0,
           time: time,
-          creatorId: user.creator_id,
+          creatorId: user.creatorId,
         };
       });
 

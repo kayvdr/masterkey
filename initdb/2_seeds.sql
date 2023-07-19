@@ -17,6 +17,7 @@ INSERT INTO platforms (id, name, url)VALUES
 ('1e96484e-d3fd-4d7e-9cf5-4faf5a1f02e3', 'Twitch', 'https://www.twitch.tv');
 
 INSERT INTO users (id, username, password,  creator_id, platform_id) VALUES 
+('dfefabe3-38d3-486b-a655-b776d4136a6c', 'ipo97678@zslsz.com', 'Passwort4', '7af9cfc7-f6fb-4de0-9ffe-1ca60a82bf1b','a755e64e-4b0f-4592-9dc1-01947fc278fc'),
 ('0b64e75d-1ff6-4396-9b70-531b4eee8e54', 'sam', 'JdnSk5d1D2', '7af9cfc7-f6fb-4de0-9ffe-1ca60a82bf1b','4e1a32db-9e0b-492d-bc8c-232359292fd9'),
 ('88511ad4-ac5d-4732-8901-d593865c2837', 'donald', 'MCt8KNkC+k', '7af9cfc7-f6fb-4de0-9ffe-1ca60a82bf1b','a8f71f23-8e04-42e5-ab69-5baf7b78aea0'),
 ('ee0b6875-aaaf-4f13-9676-e6417512d580', 'jamie', 'Nax&wm6ygB', '7af9cfc7-f6fb-4de0-9ffe-1ca60a82bf1b','6056b64e-c72c-4e15-a422-99f4af4f564b'),

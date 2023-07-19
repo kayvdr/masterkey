@@ -18,6 +18,19 @@ type User struct {
 	CreatorId uuid.UUID    `json:"creatorId"`
 }
 
+type FullUser struct {
+	Id  uuid.UUID `json:"id"`
+	Username   string      `json:"username"`
+	Password string    `json:"password"`
+	CreatedAt time.Time `json:"createdAt"`
+	PlatformId uuid.UUID    `json:"platformId"`
+	CreatorId uuid.UUID    `json:"creatorId"`
+	VotesUp int `json:"votesUp"`
+	VotesDown int `json:"votesDown"`
+	PlatformName string `json:"platformName"`
+	PlatformURL string `json:"platformURL"`
+}
+
 type CreateUserBody struct {
 	Username   string    `json:"username"`
 	Password   string    `json:"password"`
@@ -99,5 +112,30 @@ func (b *PatchUserBody) Model(userId uuid.UUID) repositories.User {
 		Username: b.Username,
 		Password: b.Password,
 		PlatformId: b.PlatformId,
+	}
+}
+
+func MapUser(dbItem *repositories.User) User {
+	return User{
+		Id: dbItem.Id,
+		Username: dbItem.Username,
+		Password: dbItem.Password,
+		CreatedAt: dbItem.CreatedAt,
+		PlatformId: dbItem.PlatformId,
+		CreatorId: dbItem.CreatorId,
+	}
+}
+
+func MapFullUser(dbItem *repositories.FullUser) FullUser {
+	return FullUser{
+		Id: dbItem.Id,
+		Username: dbItem.Username,
+		Password: dbItem.Password,
+		PlatformId: dbItem.PlatformId,
+		CreatorId: dbItem.CreatorId,
+		VotesUp: *dbItem.VotesUp,
+		VotesDown: *dbItem.VotesDown,
+		PlatformName: dbItem.PlatformName,
+		PlatformURL: dbItem.PlatformURL,
 	}
 }

@@ -11,23 +11,23 @@ export interface UserResponse {
   id?: string;
   username: string;
   password?: string;
-  platform_id: string;
-  votes_up?: number;
-  votes_down?: number;
-  created_at?: string;
+  platformId: string;
+  votesUp?: number;
+  votesDown?: number;
+  createdAt?: string;
 }
 
 export interface FullUserResponse {
   id?: string;
   username: string;
   password?: string;
-  platform_id: string;
-  votes_up?: number;
-  votes_down?: number;
-  created_at?: string;
-  name: string;
-  url: string;
-  creator_id: string;
+  platformId: string;
+  votesUp?: number;
+  votesDown?: number;
+  createdAt?: string;
+  platformName: string;
+  platformUrl: string;
+  creatorId: string;
 }
 
 export interface FullUser {
@@ -70,14 +70,14 @@ export interface FullVoteResponse {
   id?: string;
   value: "up" | "down";
   username: string;
-  platform_name: string;
+  platformName: string;
 }
 
 export interface VoteResponse {
   id?: string;
   value: "up" | "down";
-  user_id: string;
-  creator_id: string;
+  userId: string;
+  creatorId: string;
 }
 
 export interface Vote {

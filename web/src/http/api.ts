@@ -55,8 +55,8 @@ export const setUser = async (user: User) => {
     body: JSON.stringify({
       username: user.username,
       password: user.password,
-      platform_id: user.platform.id,
-      creator_id: user.creatorId,
+      platformId: user.platform.id,
+      creatorId: user.creatorId,
     }),
   });
 };
@@ -74,7 +74,7 @@ export const patchUser = async (user: User) => {
     body: JSON.stringify({
       username: user.username,
       password: user.password,
-      platform_id: user.platform.id,
+      platformId: user.platform.id,
     }),
   });
 };
@@ -112,8 +112,8 @@ export const setVote = async (vote: Vote) => {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       value: vote.value,
-      user_id: vote.userId,
-      creator_id: vote.creatorId,
+      userId: vote.userId,
+      creatorId: vote.creatorId,
     }),
   });
 };

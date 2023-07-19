@@ -59,8 +59,8 @@ const UserList = ({ users, setUsers }: Props, ref: Ref<RefType>) => {
       const typedVotes: Vote[] | undefined = votes?.map((vote) => ({
         id: vote.id,
         value: vote.value,
-        userId: vote.user_id,
-        creatorId: vote.creator_id,
+        userId: vote.userId,
+        creatorId: vote.creatorId,
       }));
 
       const existingVote = typedVotes?.find(

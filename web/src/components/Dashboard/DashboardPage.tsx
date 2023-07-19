@@ -50,11 +50,11 @@ const DashboardPage = () => {
       if (!session) return;
       const fetchedUsers = await getUsersByCreatorId(session.user.id);
       const groupedUsers = fetchedUsers?.items.reduce<List>((prev, curr) => {
-        const prevValue = prev[curr.name];
+        const prevValue = prev[curr.platformName];
 
         return {
           ...prev,
-          [curr.name]: prevValue ? prevValue + 1 : 1,
+          [curr.platformName]: prevValue ? prevValue + 1 : 1,
         };
       }, {});
 
@@ -175,7 +175,7 @@ const DashboardPage = () => {
               </div>
               <div className={styles.list}>
                 {sharings?.items &&
-                  Object.entries(sharings?.items).map(([name, count]) => {
+                  Object.entries(sharings.items).map(([name, count]) => {
                     const icon = logoMapping[name];
 
                     return (
@@ -215,7 +215,7 @@ const DashboardPage = () => {
               </div>
               <div className={styles.list}>
                 {votes?.items?.map((vote) => {
-                  const icon = logoMapping[vote.platform_name];
+                  const icon = logoMapping[vote.platformName];
 
                   return (
                     <div className={styles.listItem} key={vote.id}>

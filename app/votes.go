@@ -41,7 +41,7 @@ func (app Application) CreateVote(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	render.JSON(w, r, res)
+	render.JSON(w, r, domain.MapVote(res))
 }
 
 func (app Application) DeleteVote(w http.ResponseWriter, r *http.Request) {

@@ -8,7 +8,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/on3k/shac-api/common"
 	"github.com/on3k/shac-api/common/httperr"
-	"github.com/on3k/shac-api/repositories"
+	"github.com/on3k/shac-api/domain"
 )
 
 func (app Application) GetCreatorsUsers(w http.ResponseWriter, r *http.Request) {
@@ -30,15 +30,20 @@ func (app Application) GetCreatorsUsers(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	users, err := app.Repositories.User.GetUsersByCreator(ctx, pagination, creatorId)
+	res, err := app.Repositories.User.GetUsersByCreator(ctx, pagination, creatorId)
 	if err != nil {
 		render.Render(w, r, httperr.ErrInternalServer(err.Error()))
 		return
 	}
 
+	var users []domain.FullUser
+	for _, u := range res {
+		users = append(users, domain.MapFullUser(u))
+	} 
+
 	type Response struct {
 		Count int                 `json:"count"`
-		Items     []*repositories.FullUser `json:"items"`
+		Items     []domain.FullUser `json:"items"`
 	}
 
 	render.JSON(w, r, Response{Count: len(users), Items: users})
@@ -63,15 +68,20 @@ func (app Application) GetCreatorsVotes(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	votes, err := app.Repositories.Vote.GetVotesByCreator(ctx, pagination, creatorId)
+	res, err := app.Repositories.Vote.GetVotesByCreator(ctx, pagination, creatorId)
 	if err != nil {
 		render.Render(w, r, httperr.ErrInternalServer(err.Error()))
 		return
 	}
 
+	var votes []domain.FullVote
+	for _, v := range res {
+		votes = append(votes, domain.MapFullVote(v))
+	} 
+
 	type Response struct {
 		Count int                 `json:"count"`
-		Items     []*repositories.FullVote `json:"items"`
+		Items     []domain.FullVote `json:"items"`
 	}
 
 	render.JSON(w, r, Response{Count: len(votes), Items: votes})

@@ -10,7 +10,6 @@ import (
 	"github.com/on3k/shac-api/common"
 	"github.com/on3k/shac-api/common/httperr"
 	"github.com/on3k/shac-api/domain"
-	"github.com/on3k/shac-api/repositories"
 )
 
 func (app Application) GetUsers(w http.ResponseWriter, r *http.Request) {
@@ -22,7 +21,7 @@ func (app Application) GetUsers(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	users, err := app.Repositories.User.GetAllUsers(ctx, pagination)
+	res, err := app.Repositories.User.GetAllUsers(ctx, pagination)
 	if err != nil {
 		render.Render(w, r, httperr.ErrInternalServer(err.Error()))
 		return
@@ -30,14 +29,17 @@ func (app Application) GetUsers(w http.ResponseWriter, r *http.Request) {
 
 	count, _ := app.Repositories.User.GetUsersCount(ctx, pagination)
 
+	var users []domain.FullUser
+	for _, u := range res {
+		users = append(users, domain.MapFullUser(u))
+	} 
+
 	type Response struct {
 		Count int                 `json:"count"`
-		Items     []*repositories.FullUser `json:"items"`
+		Items     []domain.FullUser `json:"items"`
 	}
 
-	res := Response{Count: *count, Items: users}
-
-	render.JSON(w, r, res)
+	render.JSON(w, r, Response{Count: *count, Items: users})
 }
 
 func (app Application) GetUser(w http.ResponseWriter, r *http.Request) {
@@ -68,7 +70,7 @@ func (app Application) GetUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	render.JSON(w, r, mapUser(*res))
+	render.JSON(w, r, domain.MapUser(res))
 }
 
 func (app Application) GetUserVotes(w http.ResponseWriter, r *http.Request) {
@@ -99,7 +101,12 @@ func (app Application) GetUserVotes(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	render.JSON(w, r, res)
+	var votes []domain.Vote
+	for _, v := range res {
+		votes = append(votes, domain.MapVote(v))
+	} 
+
+	render.JSON(w, r, votes)
 }
 
 func (app Application) CreateUser(w http.ResponseWriter, r *http.Request) {
@@ -117,7 +124,7 @@ func (app Application) CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	render.JSON(w, r, res)
+	render.JSON(w, r, domain.MapUser(res))
 }
 
 func (app Application) UpdateUser(w http.ResponseWriter, r *http.Request) {
@@ -155,7 +162,7 @@ func (app Application) UpdateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	render.JSON(w, r, res)
+	render.JSON(w, r, domain.MapUser(res))
 }
 
 func (app Application) DeleteUser(w http.ResponseWriter, r *http.Request) {
@@ -188,15 +195,4 @@ func (app Application) DeleteUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	render.NoContent(w, r)
-}
-
-func mapUser(dbItem repositories.User) domain.User {
-	return domain.User{
-		Id: dbItem.Id,
-		Username: dbItem.Username,
-		Password: dbItem.Password,
-		CreatedAt: dbItem.CreatedAt,
-		PlatformId: dbItem.PlatformId,
-		CreatorId: dbItem.CreatorId,
-	}
 }

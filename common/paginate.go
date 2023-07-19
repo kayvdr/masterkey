@@ -61,12 +61,22 @@ func NewPagination(searchTerm string, page int, limit int, sort string, order st
 	}
 
 	return pagination{
-		searchTerm: searchTerm,
-		page:  page,
-		limit: limit,
-		sort: sort,
-		order: order,
+		searchTerm, page, limit, sort, order,
 	}, nil
+}
+
+func mapSort(sort string) string {
+	if sort == "votesUp" {
+		return "votes_up"
+	}
+	if sort == "votesDown" {
+		return "votes_down"
+	}
+	if sort == "createdAt" {
+		return "created_at"
+	}
+
+	return sort
 }
 
 func NewPaginationFromURL(urlValues url.Values) (Pagination, error) {
@@ -79,7 +89,10 @@ func NewPaginationFromURL(urlValues url.Values) (Pagination, error) {
 	if err != nil {
 		limit = 10
 	}
-	sort := urlValues.Get("sort")
+
+	rawSort := urlValues.Get("sort")
+
+	sort := mapSort(rawSort)
 	order := urlValues.Get("order")
 
 	return NewPagination(searchTerm, page, limit, sort, order)

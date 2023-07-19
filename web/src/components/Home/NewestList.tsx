@@ -8,7 +8,7 @@ const NewestList = () => {
 
   return (
     <section className="container">
-      <Search title="Just added" isPagination={false} sort="created_at" />
+      <Search title="Just added" isPagination={false} sort="createdAt" />
       <div className={styles.wrapper}>
         <Button onClick={() => navigate("/search")}>Show All</Button>
       </div>
