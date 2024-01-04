@@ -11,7 +11,7 @@ import (
 	"github.com/on3k/shac-api/domain"
 )
 
-func (app Application) GetCreatorsUsers(w http.ResponseWriter, r *http.Request) {
+func (app Application) GetCreatorsAccounts(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	param := chi.URLParam(r, "creatorId")
 	if param == "" {
@@ -30,23 +30,23 @@ func (app Application) GetCreatorsUsers(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	res, err := app.Repositories.User.GetUsersByCreator(ctx, pagination, creatorId)
+	res, err := app.Repositories.Account.GetAccountsByCreator(ctx, pagination, creatorId)
 	if err != nil {
 		render.Render(w, r, httperr.ErrInternalServer(err.Error()))
 		return
 	}
 
-	var users []domain.FullUser
+	var accounts []domain.FullAccounts
 	for _, u := range res {
-		users = append(users, domain.MapFullUser(u))
+		accounts = append(accounts, domain.MapFullAccounts(u))
 	} 
 
 	type Response struct {
 		Count int                 `json:"count"`
-		Items     []domain.FullUser `json:"items"`
+		Items     []domain.FullAccounts `json:"items"`
 	}
 
-	render.JSON(w, r, Response{Count: len(users), Items: users})
+	render.JSON(w, r, Response{Count: len(accounts), Items: accounts})
 }
 
 func (app Application) GetCreatorsVotes(w http.ResponseWriter, r *http.Request) {

@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import { RefObject, useEffect, useState } from "react";
-import { getPlatforms, getUsers } from "../../http/api";
-import { FullUser, Pagination, UserResponse } from "../../types";
+import { getAccounts, getPlatforms } from "../../http/api";
+import { AccountResponse, FullAccount, Pagination } from "../../types";
 import UserList, { RefType } from "../../ui/UserList";
 import {
   getDiff,
@@ -17,11 +17,11 @@ interface Props {
   title?: string;
   searchTerm?: string;
   isPagination?: boolean;
-  sort?: keyof UserResponse;
+  sort?: keyof AccountResponse;
   userListRef?: RefObject<RefType>;
 }
 
-const isKeyofUser = (value: string): value is keyof UserResponse =>
+const isKeyofUser = (value: string): value is keyof AccountResponse =>
   [
     "id",
     "username",
@@ -30,7 +30,7 @@ const isKeyofUser = (value: string): value is keyof UserResponse =>
     "votes_up",
     "votes_down",
     "created_at",
-  ].includes(value as keyof UserResponse);
+  ].includes(value as keyof AccountResponse);
 
 const Search = ({
   title,
@@ -39,12 +39,12 @@ const Search = ({
   sort,
   userListRef,
 }: Props) => {
-  const [users, setUsers] = useState<FullUser[]>();
+  const [users, setUsers] = useState<FullAccount[]>();
   const [count, setCount] = useState<number>();
   const [pagination, setPagination] = useState<Pagination>({
     limit: 12,
     page: 1,
-    sort: sort as keyof UserResponse,
+    sort: sort as keyof AccountResponse,
   });
 
   useEffect(() => {
@@ -59,14 +59,14 @@ const Search = ({
 
   useEffect(() => {
     const fetchUsers = async () => {
-      const fetchedUsers = await getUsers({
+      const fetchedUsers = await getAccounts({
         q: searchTerm ?? "",
         order: pagination.sort === "username" ? "ASC" : "DESC",
         ...pagination,
       });
       const fetchedPlatforms = await getPlatforms();
 
-      const users = fetchedUsers?.items.map<FullUser>((user) => {
+      const users = fetchedUsers?.items.map<FullAccount>((user) => {
         const time = user.createdAt && getDiff(user.createdAt);
 
         const platform = fetchedPlatforms?.find(
@@ -105,7 +105,7 @@ const Search = ({
           <select
             value={pagination.sort ?? ""}
             onChange={(e) => {
-              const value = e.target.value as keyof UserResponse;
+              const value = e.target.value as keyof AccountResponse;
               if (!isKeyofUser(value) || sort) return;
               setPagination({ ...pagination, sort: value });
               setSearchParams("sort", value);

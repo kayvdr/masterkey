@@ -21,13 +21,13 @@ func (app Application) CreateVote(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	exists, errExists := app.Repositories.User.ExistsUser(ctx, body.UserId)
+	exists, errExists := app.Repositories.Account.ExistsAccount(ctx, body.AccountId)
 	if errExists != nil {
 		render.Render(w, r, httperr.ErrInternalServer(errExists.Error()))
 		return
 	}
 	if !exists {
-		render.Render(w, r, httperr.ErrNotFound(fmt.Sprintf("user '%s' not found", body.UserId)))
+		render.Render(w, r, httperr.ErrNotFound(fmt.Sprintf("account '%s' not found", body.AccountId)))
 		return
 	}
 

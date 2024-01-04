@@ -2,12 +2,12 @@ import { FunctionComponent, SVGProps } from "react";
 
 export type Glyph = FunctionComponent<SVGProps<SVGSVGElement>>;
 
-export interface UsersResponse {
+export interface AccountsResponse {
   count: number;
-  items: UserResponse[];
+  items: AccountResponse[];
 }
 
-export interface UserResponse {
+export interface AccountResponse {
   id?: string;
   username: string;
   password?: string;
@@ -17,7 +17,7 @@ export interface UserResponse {
   createdAt?: string;
 }
 
-export interface FullUserResponse {
+export interface FullAccountResponse {
   id?: string;
   username: string;
   password?: string;
@@ -30,7 +30,7 @@ export interface FullUserResponse {
   creatorId: string;
 }
 
-export interface FullUser {
+export interface FullAccount {
   id?: string;
   username: string;
   password?: string;
@@ -46,7 +46,7 @@ export interface FullUser {
   creatorId?: string;
 }
 
-export interface User {
+export interface Account {
   id?: string;
   username: string;
   password?: string;
@@ -76,14 +76,14 @@ export interface FullVoteResponse {
 export interface VoteResponse {
   id?: string;
   value: "up" | "down";
-  userId: string;
+  accountId: string;
   creatorId: string;
 }
 
 export interface Vote {
   id?: string;
   value: "up" | "down";
-  userId: string;
+  accountId: string;
   creatorId: string;
 }
 
@@ -91,7 +91,7 @@ export interface Pagination {
   q?: string;
   limit: number;
   page: number;
-  sort: keyof UserResponse | undefined;
+  sort: keyof AccountResponse | undefined;
   order?: "ASC" | "DESC";
 }
 

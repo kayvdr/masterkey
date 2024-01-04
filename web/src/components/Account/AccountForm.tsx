@@ -1,8 +1,8 @@
 import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { getPlatforms, patchUser, setUser } from "../../http/api";
-import { CustomError, Platform, User } from "../../types";
+import { getPlatforms, patchAccount, setAccount } from "../../http/api";
+import { Account, CustomError, Platform } from "../../types";
 import Button from "../../ui/Button";
 import InputCheckBox from "../../ui/InputCheckBox";
 import InputField from "../../ui/InputField";
@@ -11,7 +11,7 @@ import { SessionContext } from "../AppRouter";
 import styles from "./AccountForm.module.css";
 
 interface Props {
-  user?: User;
+  user?: Account;
 }
 
 interface FormUser {
@@ -22,7 +22,7 @@ interface FormUser {
   honeypot: string;
 }
 
-const AddForm = ({ user }: Props) => {
+const AddForm = ({ user: account }: Props) => {
   const [platforms, setPlatforms] = useState<Platform[]>();
   const [error, setError] = useState<CustomError>();
   const [isSuccessful, setIsSuccessful] = useState(false);
@@ -35,8 +35,8 @@ const AddForm = ({ user }: Props) => {
     formState: { errors },
   } = useForm<FormUser>({
     defaultValues: {
-      username: user?.username,
-      password: user?.password,
+      username: account?.username,
+      password: account?.password,
     },
   });
 
@@ -45,7 +45,7 @@ const AddForm = ({ user }: Props) => {
       const fetchedPlatforms = await getPlatforms();
 
       setPlatforms(fetchedPlatforms);
-      reset({ platform: user?.platform.name?.toLowerCase() });
+      reset({ platform: account?.platform.name?.toLowerCase() });
     };
 
     fetchUsers();
@@ -65,9 +65,9 @@ const AddForm = ({ user }: Props) => {
     if (!platformId)
       return setError({ code: 404, message: "Platform not found" });
 
-    if (user) {
-      patchUser({
-        id: user.id,
+    if (account) {
+      patchAccount({
+        id: account.id,
         username,
         password,
         platform: {
@@ -81,7 +81,7 @@ const AddForm = ({ user }: Props) => {
         !response.ok ? setError(res.error) : setIsSuccessful(true);
       });
     } else {
-      setUser({
+      setAccount({
         username,
         password,
         platform: {
@@ -98,7 +98,7 @@ const AddForm = ({ user }: Props) => {
     }
 
     reset();
-    user && navigate(-1);
+    account && navigate(-1);
   };
 
   return (
@@ -137,7 +137,7 @@ const AddForm = ({ user }: Props) => {
           }}
           error={errors.password}
         />
-        {!user && (
+        {!account && (
           <InputCheckBox
             register={{
               ...register("privacy", {

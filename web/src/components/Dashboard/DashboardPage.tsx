@@ -2,7 +2,7 @@ import classNames from "classnames";
 import { format } from "date-fns";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getUsersByCreatorId, getVotesByCreatorId } from "../../http/api";
+import { getAccountsByCreatorId, getVotesByCreatorId } from "../../http/api";
 import { supabase } from "../../http/supabase";
 import { FullVoteResponse } from "../../types";
 import Button from "../../ui/Button";
@@ -48,7 +48,7 @@ const DashboardPage = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       if (!session) return;
-      const fetchedUsers = await getUsersByCreatorId(session.user.id);
+      const fetchedUsers = await getAccountsByCreatorId(session.user.id);
       const groupedUsers = fetchedUsers?.items.reduce<List>((prev, curr) => {
         const prevValue = prev[curr.platformName];
 

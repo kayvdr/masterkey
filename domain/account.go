@@ -9,7 +9,7 @@ import (
 	"github.com/on3k/shac-api/repositories"
 )
 
-type User struct {
+type Account struct {
 	Id  uuid.UUID `json:"id"`
 	Username   string      `json:"username"`
 	Password string    `json:"password"`
@@ -18,7 +18,7 @@ type User struct {
 	CreatorId uuid.UUID    `json:"creatorId"`
 }
 
-type FullUser struct {
+type FullAccounts struct {
 	Id  uuid.UUID `json:"id"`
 	Username   string      `json:"username"`
 	Password string    `json:"password"`
@@ -31,14 +31,14 @@ type FullUser struct {
 	PlatformURL string `json:"platformURL"`
 }
 
-type CreateUserBody struct {
+type CreateAccountBody struct {
 	Username   string    `json:"username"`
 	Password   string    `json:"password"`
 	PlatformId uuid.UUID `json:"platformId"`
 	CreatorId  uuid.UUID `json:"creatorId"`
 }
 
-func (b *CreateUserBody) Bind(r *http.Request) error {
+func (b *CreateAccountBody) Bind(r *http.Request) error {
 	if b.Username == "" {
 		return errors.New("name is required")
 	}
@@ -66,8 +66,8 @@ func (b *CreateUserBody) Bind(r *http.Request) error {
 	return nil
 }
 
-func (b *CreateUserBody) Model() repositories.User {
-	return repositories.User{
+func (b *CreateAccountBody) Model() repositories.Account {
+	return repositories.Account{
 		Username: b.Username,
 		Password: b.Password,
 		CreatorId: b.CreatorId,
@@ -75,14 +75,14 @@ func (b *CreateUserBody) Model() repositories.User {
 	}
 }
 
-type PatchUserBody struct {
+type PatchAccountBody struct {
 	Id         uuid.UUID `json:"id"`
 	Username   string    `json:"username"`
 	Password   string    `json:"password"`
 	PlatformId uuid.UUID `json:"platformId"`
 }
 
-func (b *PatchUserBody) Bind(r *http.Request) error {
+func (b *PatchAccountBody) Bind(r *http.Request) error {
 	if b.Username == "" {
 		return errors.New("name is required")
 	}
@@ -106,17 +106,17 @@ func (b *PatchUserBody) Bind(r *http.Request) error {
 	return nil
 }
 
-func (b *PatchUserBody) Model(userId uuid.UUID) repositories.User {
-	return repositories.User{
-		Id: userId,
+func (b *PatchAccountBody) Model(accountId uuid.UUID) repositories.Account {
+	return repositories.Account{
+		Id: accountId,
 		Username: b.Username,
 		Password: b.Password,
 		PlatformId: b.PlatformId,
 	}
 }
 
-func MapUser(dbItem *repositories.User) User {
-	return User{
+func MapAccount(dbItem *repositories.Account) Account {
+	return Account{
 		Id: dbItem.Id,
 		Username: dbItem.Username,
 		Password: dbItem.Password,
@@ -126,8 +126,8 @@ func MapUser(dbItem *repositories.User) User {
 	}
 }
 
-func MapFullUser(dbItem *repositories.FullUser) FullUser {
-	return FullUser{
+func MapFullAccounts(dbItem *repositories.FullAccount) FullAccounts {
+	return FullAccounts{
 		Id: dbItem.Id,
 		Username: dbItem.Username,
 		Password: dbItem.Password,

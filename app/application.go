@@ -13,7 +13,7 @@ type Application struct {
 }
 
 type Repositories struct {
-	User repositories.UserRepository
+	Account repositories.AccountRepository
 	Vote repositories.VoteRepository
 	Platform repositories.PlatformRepository
 }
@@ -30,7 +30,7 @@ func NewApplication(ctx context.Context, env *env.Env) Application {
 
 	return Application{
 		Repositories{
-			User: repositories.NewUserRepository(pool),
+			Account: repositories.NewAccountRepository(pool),
 			Vote: repositories.NewVoteRepository(pool),
 			Platform: repositories.NewPlatformRepository(pool),
 		},

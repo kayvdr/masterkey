@@ -1,5 +1,5 @@
 import { useLocation } from "react-router-dom";
-import { User } from "../../types";
+import { Account } from "../../types";
 import Footer from "../Footer";
 import Header from "../Header";
 import AddForm from "./AccountForm";
@@ -8,7 +8,7 @@ import styles from "./AccountPage.module.css";
 const EditAccountPage = () => {
   const { state } = useLocation();
 
-  const user: User | undefined = state?.user
+  const user: Account | undefined = state?.user
     ? JSON.parse(state?.user)
     : undefined;
 

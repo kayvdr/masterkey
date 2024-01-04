@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
-import { getUsersByCreatorId } from "../../http/api";
-import { FullUser } from "../../types";
+import { getAccountsByCreatorId } from "../../http/api";
+import { FullAccount } from "../../types";
 import UserList from "../../ui/UserList";
 import { getDiff, logoMapping } from "../../utils";
 import { SessionContext } from "../AppRouter";
@@ -9,15 +9,15 @@ import Header from "../Header";
 import styles from "../SharedAccounts/SharedAccountsPage.module.css";
 
 const SharedAccounts = () => {
-  const [users, setUsers] = useState<FullUser[]>();
+  const [users, setUsers] = useState<FullAccount[]>();
   const session = useContext(SessionContext);
 
   useEffect(() => {
     const fetchUsers = async () => {
       if (!session) return;
-      const fetchedUsers = await getUsersByCreatorId(session.user.id);
+      const fetchedUsers = await getAccountsByCreatorId(session.user.id);
 
-      const users = fetchedUsers?.items.map<FullUser>((user) => {
+      const users = fetchedUsers?.items.map<FullAccount>((user) => {
         const time = user.createdAt && getDiff(user.createdAt);
 
         return {

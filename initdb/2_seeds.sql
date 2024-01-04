@@ -16,7 +16,7 @@ INSERT INTO platforms (id, name, url)VALUES
 ('cee7ecfb-48eb-4d9d-af2a-82b191c4b0c4', 'Stack Overflow', 'https://www.stackoverflow.com'),
 ('1e96484e-d3fd-4d7e-9cf5-4faf5a1f02e3', 'Twitch', 'https://www.twitch.tv');
 
-INSERT INTO users (id, username, password,  creator_id, platform_id) VALUES 
+INSERT INTO accounts (id, username, password,  creator_id, platform_id) VALUES 
 ('dfefabe3-38d3-486b-a655-b776d4136a6c', 'ipo97678@zslsz.com', 'Passwort4', '7af9cfc7-f6fb-4de0-9ffe-1ca60a82bf1b','a755e64e-4b0f-4592-9dc1-01947fc278fc'),
 ('0b64e75d-1ff6-4396-9b70-531b4eee8e54', 'sam', 'JdnSk5d1D2', '7af9cfc7-f6fb-4de0-9ffe-1ca60a82bf1b','4e1a32db-9e0b-492d-bc8c-232359292fd9'),
 ('88511ad4-ac5d-4732-8901-d593865c2837', 'donald', 'MCt8KNkC+k', '7af9cfc7-f6fb-4de0-9ffe-1ca60a82bf1b','a8f71f23-8e04-42e5-ab69-5baf7b78aea0'),
@@ -40,7 +40,7 @@ INSERT INTO users (id, username, password,  creator_id, platform_id) VALUES
 ('3b4c07a4-8ecc-4dac-9b9e-1d92bb9b22d0', '6ix9ineReal', 'hrABqxA=H3', '7af9cfc7-f6fb-4de0-9ffe-1ca60a82bf1b','6056b64e-c72c-4e15-a422-99f4af4f564b'),
 ('a663ef39-93b7-4315-81df-4d3605407aa3', 'felip', 'Z!dpV8TvWJ', '7af9cfc7-f6fb-4de0-9ffe-1ca60a82bf1b','ea191b37-8878-40c8-9a21-01c7722be456');
 
-INSERT INTO votes (id, value, user_id, creator_id)VALUES 
+INSERT INTO votes (id, value, account_id, creator_id)VALUES 
 ('bd467f22-9a7f-44e0-a60c-61301f8071a1', 'up', '88511ad4-ac5d-4732-8901-d593865c2837', '7af9cfc7-f6fb-4de0-9ffe-1ca60a82bf1b'),
 ('c9bbb0cc-a117-4c62-beb1-d4eec93c03f0', 'down', '4f47c4bb-2e55-4988-acc4-6d3c2b905b0d', '7af9cfc7-f6fb-4de0-9ffe-1ca60a82bf1a'),
 ('fb899454-e123-4806-aaab-207a1fd6b60b', 'up', 'f19be2de-bb5c-46f7-a2b3-c5d57996b736', '7af9cfc7-f6fb-4de0-9ffe-1ca60a82bf1a'),

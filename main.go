@@ -33,17 +33,17 @@ func main() {
 	}))
 
 	r.Route("/v1", func(r chi.Router) {
-		r.Route("/users", func(r chi.Router) {
-			r.Get("/", app.GetUsers)
-			r.Post("/", app.CreateUser)
-			r.Get("/{userId}", app.GetUser)
-			r.Patch("/{userId}", app.UpdateUser)
-			r.Delete("/{userId}", app.DeleteUser)
-			r.Get("/{userId}/votes", app.GetUserVotes)
+		r.Route("/accounts", func(r chi.Router) {
+			r.Get("/", app.GetAccounts)
+			r.Post("/", app.CreateAccount)
+			r.Get("/{accountId}", app.GetAccount)
+			r.Patch("/{accountId}", app.UpdateAccount)
+			r.Delete("/{accountId}", app.DeleteAccount)
+			r.Get("/{accountId}/votes", app.GetAccountVotes)
 		})
 
 		r.Route("/creators", func(r chi.Router) {
-			r.Get("/{creatorId}/users", app.GetCreatorsUsers)
+			r.Get("/{creatorId}/accounts", app.GetCreatorsAccounts)
 			r.Get("/{creatorId}/votes", app.GetCreatorsVotes)
 		})
 

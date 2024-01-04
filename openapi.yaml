@@ -5,10 +5,10 @@ info:
     email: on3k.dev@gmail.com
   version: 0.0.1
 paths:
-  /users:
+  /accounta:
     get:
-      operationId: GetUsers
-      description: Returns all Users
+      operationId: GetAccounts
+      description: Returns all Accounts
       responses:
         "200":
           description: ""
@@ -17,7 +17,7 @@ paths:
               schema:
                 type: object
                 properties:
-                  users:
+                  accounts:
                     type: array
                     items:
                       type: object
@@ -50,8 +50,8 @@ paths:
                           example: http://www.instagram.com
 
     post:
-      operationId: CreateUser
-      description: Insert a new User
+      operationId: CreateAccount
+      description: Insert a new Account
       requestBody:
         required: true
         content:
@@ -107,10 +107,10 @@ paths:
         "400":
           description: Invalid request body. The message will vary depending on the cause.
 
-  /users/{userId}:
+  /account/{accountId}:
     get:
-      operationId: GetUsers
-      description: Returns single User by id
+      operationId: GetAccounts
+      description: Returns single Account by id
       responses:
         "200":
           description: ""
@@ -137,13 +137,13 @@ paths:
                     format: uuid
                     example: e0476273-83cd-4772-a4f9-f0280e3bb2af
         "404":
-          description: Returns an error if the provided user ID was not found.
+          description: Returns an error if the provided account ID was not found.
 
     patch:
-      operationId: UpdateUser
-      description: Update a user
+      operationId: UpdateAccount
+      description: Update a Account
       parameters:
-        - $ref: "#/components/parameters/userId"
+        - $ref: "#/components/parameters/accountId"
       requestBody:
         required: true
         content:
@@ -195,12 +195,12 @@ paths:
           description: Invalid request body. The message will vary depending on the cause.
 
     delete:
-      operationId: DeleteUser
-      description: Remove a user
+      operationId: DeleteAccount
+      description: Remove a Account
       parameters:
-        - $ref: "#/components/parameters/userId"
+        - $ref: "#/components/parameters/accountId"
         - in: path
-          name: userId
+          name: accountId
           required: true
           schema:
             type: string
@@ -211,10 +211,10 @@ paths:
         "404":
           description: User not found
 
-  /users/{userId}/votes:
+  /accounts/{accountId}/votes:
     get:
-      operationId: GetUserVotes
-      description: Return votes of users
+      operationId: GetAccountVotes
+      description: Return votes of Accounts
       responses:
         "200":
           description: ""
@@ -222,7 +222,7 @@ paths:
             application/json:
               schema:
                 properties:
-                  users:
+                  accounts:
                     type: array
                     items:
                       type: object
@@ -234,7 +234,7 @@ paths:
                         value:
                           type: string
                           example: up
-                        userId:
+                        accountId:
                           type: string
                           format: uuid
                           example: e0476273-83cd-4772-a4f9-f0280e3bb2af
@@ -243,12 +243,12 @@ paths:
                           format: uuid
                           example: e0476273-83cd-4772-a4f9-f0280e3bb2af
         "404":
-          description: Returns an error if the provided user ID was not found.
+          description: Returns an error if the provided account ID was not found.
 
-  /creators/{creatorId}/users:
+  /creators/{creatorId}/accounts:
     get:
-      operationId: GetCreatorsUsers
-      description: Returns all users by creator id
+      operationId: GetCreatorsAccounts
+      description: Returns all Accounts by creator id
       responses:
         "200":
           description: ""
@@ -257,7 +257,7 @@ paths:
               schema:
                 type: object
                 properties:
-                  users:
+                  accounts:
                     type: array
                     items:
                       type: object
@@ -301,7 +301,7 @@ paths:
               schema:
                 type: object
                 properties:
-                  users:
+                  accounts:
                     type: array
                     items:
                       type: object
@@ -331,7 +331,7 @@ paths:
             application/json:
               schema:
                 properties:
-                  users:
+                  accounts:
                     type: array
                     items:
                       type: object
@@ -359,13 +359,13 @@ paths:
               type: object
               required:
                 - value
-                - userId
+                - accountId
                 - creatorId
               properties:
                 value:
                   type: string
                   example: up
-                userId:
+                accountId:
                   type: string
                   format: uuid
                   example: e0476273-83cd-4772-a4f9-f0280e3bb2af
@@ -388,7 +388,7 @@ paths:
                   value:
                     type: string
                     example: up
-                  userId:
+                  accountId:
                     type: string
                     format: uuid
                     example: e0476273-83cd-4772-a4f9-f0280e3bb2af
@@ -419,8 +419,8 @@ paths:
 
 components:
   parameters:
-    userId:
-      name: userId
+    accountId:
+      name: accountId
       in: path
       required: true
       schema:

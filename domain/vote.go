@@ -11,7 +11,7 @@ import (
 type Vote struct {
 	Id         uuid.UUID `json:"id"`
 	Value   string    `json:"value"`
-	UserId   uuid.UUID    `json:"userId"`
+	AccountId   uuid.UUID    `json:"accountId"`
 	CreatorId  uuid.UUID `json:"creatorId"`
 }
 
@@ -25,7 +25,7 @@ type FullVote struct {
 type CreateVoteBody struct {
 	Id         uuid.UUID `json:"id"`
 	Value   string    `json:"value"`
-	UserId   uuid.UUID    `json:"userId"`
+	AccountId   uuid.UUID    `json:"accountId"`
 	CreatorId  uuid.UUID `json:"creatorId"`
 }
 
@@ -34,8 +34,8 @@ func (b *CreateVoteBody) Bind(r *http.Request) error {
 		return errors.New("value is not valid")
 	}
 
-	if b.UserId == uuid.Nil {
-		return errors.New("userId is required")
+	if b.AccountId == uuid.Nil {
+		return errors.New("accountId is required")
 	}
 
 	if b.CreatorId == uuid.Nil {
@@ -49,7 +49,7 @@ func (b *CreateVoteBody) Model() repositories.Vote {
 	return repositories.Vote{
 		Id: b.Id,
 		Value: b.Value,
-		UserId: b.UserId,
+		AccountId: b.AccountId,
 		CreatorId: b.CreatorId,
 	}
 }
@@ -58,7 +58,7 @@ func MapVote(dbItem *repositories.Vote) Vote {
 	return Vote{
 		Id: dbItem.Id,
 		Value: dbItem.Value,
-		UserId: dbItem.UserId,
+		AccountId: dbItem.AccountId,
 		CreatorId: dbItem.CreatorId,
 	}
 }

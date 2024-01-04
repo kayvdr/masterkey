@@ -17,7 +17,7 @@ type VoteRepository struct {
 type Vote struct {
 	Id  uuid.UUID `db:"id"`
 	Value string    `db:"value"`
-	UserId uuid.UUID    `db:"user_id"`
+	AccountId uuid.UUID    `db:"account_id"`
 	CreatorId uuid.UUID    `db:"creator_id"`
 }
 
@@ -28,7 +28,7 @@ type FullVote struct {
 	PlatformName string    `db:"platform_name"`
 }
 
-var ErrMultipleVotes = errors.New("multiple user votes are not valid")
+var ErrMultipleVotes = errors.New("multiple account votes are not valid")
 
 func NewVoteRepository(pool *pgxpool.Pool) VoteRepository {
 	return VoteRepository{pool}
@@ -36,10 +36,10 @@ func NewVoteRepository(pool *pgxpool.Pool) VoteRepository {
 
 func (r VoteRepository) GetVote(ctx context.Context, id uuid.UUID) (*Vote, error) {
 	vote := Vote{}
-	err := r.pool.QueryRow(ctx, `SELECT v.id, v.value, v.user_id, v.creator_id FROM votes AS v WHERE id = $1`, id).Scan(
+	err := r.pool.QueryRow(ctx, `SELECT v.id, v.value, v.account_id, v.creator_id FROM votes AS v WHERE id = $1`, id).Scan(
 		&vote.Id,
 		&vote.Value,
-		&vote.UserId,
+		&vote.AccountId,
 		&vote.CreatorId,
 	)
 	return &vote, err
@@ -48,15 +48,15 @@ func (r VoteRepository) GetVote(ctx context.Context, id uuid.UUID) (*Vote, error
 func (r VoteRepository) CreateVote(ctx context.Context, vote Vote) (*Vote, error) {
 	var voteId uuid.UUID
 	err := r.pool.QueryRow(ctx, `
-		INSERT INTO votes (id, value, user_id, creator_id)
+		INSERT INTO votes (id, value, account_id, creator_id)
 		SELECT gen_random_uuid(), $1, $2, $3
 		WHERE NOT EXISTS (
-			SELECT * FROM votes WHERE user_id=$2 AND creator_id=$3
+			SELECT * FROM votes WHERE account_id=$2 AND creator_id=$3
 		)
 		RETURNING id
 		`, 
 		vote.Value,
-		vote.UserId,
+		vote.AccountId,
 		vote.CreatorId,
 	).Scan(&voteId);
 
@@ -72,7 +72,7 @@ func (r VoteRepository) CreateVote(ctx context.Context, vote Vote) (*Vote, error
 func (r VoteRepository) GetVotesByCreator(ctx context.Context, pagination common.Pagination, creatorId uuid.UUID) ([]*FullVote, error) {
 	rows, err := r.pool.Query(ctx, `
 		SELECT v.id, v.value, u.username, p.name FROM votes AS v
-		INNER JOIN users AS u ON v.user_id = u.id
+		INNER JOIN accounts AS u ON v.account_id = u.id
 		INNER JOIN platforms AS p ON u.platform_id = p.id
 		WHERE v.creator_id = $1
 	`, creatorId)

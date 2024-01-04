@@ -2,12 +2,12 @@ import classNames from "classnames";
 import SvgArrowDown from "../components/icons/ArrowDown";
 import SvgArrowUp from "../components/icons/ArrowUp";
 import SvgUser from "../components/icons/User";
-import { FullUser } from "../types";
+import { FullAccount } from "../types";
 import Icon from "./Icon";
 import styles from "./UserItem.module.css";
 
 interface Props {
-  user: FullUser;
+  user: FullAccount;
   onClick: () => void;
 }
 

@@ -18,8 +18,8 @@ import SvgDelete from "../components/icons/Delete";
 import SvgEdit from "../components/icons/Edit";
 import SvgKey from "../components/icons/Key";
 import SvgUser from "../components/icons/User";
-import { deleteUser, deleteVote, getVote, setVote } from "../http/api";
-import { FullUser, Vote } from "../types";
+import { deleteAccount, deleteVote, getVote, setVote } from "../http/api";
+import { FullAccount, Vote } from "../types";
 import { logoMapping } from "../utils";
 import Icon from "./Icon";
 import Popup from "./Popup";
@@ -28,8 +28,8 @@ import itemStyles from "./UserItem.module.css";
 import styles from "./UserList.module.css";
 
 interface Props {
-  users: FullUser[];
-  setUsers: (data: FullUser[]) => void;
+  users: FullAccount[];
+  setUsers: (data: FullAccount[]) => void;
 }
 
 export interface RefType {
@@ -39,7 +39,7 @@ export interface RefType {
 const UserList = ({ users, setUsers }: Props, ref: Ref<RefType>) => {
   const details = useToggle();
   const popup = useToggle();
-  const [detailData, setDetailData] = useState<FullUser>();
+  const [detailData, setDetailData] = useState<FullAccount>();
   const [userVote, setUserVote] = useState<Vote>();
   const session = useContext(SessionContext);
   const navigate = useNavigate();
@@ -59,7 +59,7 @@ const UserList = ({ users, setUsers }: Props, ref: Ref<RefType>) => {
       const typedVotes: Vote[] | undefined = votes?.map((vote) => ({
         id: vote.id,
         value: vote.value,
-        userId: vote.userId,
+        accountId: vote.accountId,
         creatorId: vote.creatorId,
       }));
 
@@ -80,7 +80,7 @@ const UserList = ({ users, setUsers }: Props, ref: Ref<RefType>) => {
       ? await deleteVote(userVote.id)
       : await setVote({
           value: value === "votesUp" ? "up" : "down",
-          userId: detailData.id ?? "",
+          accountId: detailData.id ?? "",
           creatorId: session?.user.id ?? "",
         });
 
@@ -227,7 +227,7 @@ const UserList = ({ users, setUsers }: Props, ref: Ref<RefType>) => {
                       text="Are you sure you want to delete this user?"
                       onClose={popup.close}
                       onSubmit={() => {
-                        detailData?.id && deleteUser(detailData.id);
+                        detailData?.id && deleteAccount(detailData.id);
 
                         const deletedUserList = users.filter(
                           (u) => u.id !== detailData?.id
