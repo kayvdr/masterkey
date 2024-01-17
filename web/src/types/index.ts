@@ -2,62 +2,32 @@ import { FunctionComponent, SVGProps } from "react";
 
 export type Glyph = FunctionComponent<SVGProps<SVGSVGElement>>;
 
-export interface AccountsResponse {
+export interface Response<T> {
   count: number;
-  items: AccountResponse[];
-}
-
-export interface AccountResponse {
-  id?: string;
-  username: string;
-  password?: string;
-  platformId: string;
-  votesUp?: number;
-  votesDown?: number;
-  createdAt?: string;
-}
-
-export interface FullAccountResponse {
-  id?: string;
-  username: string;
-  password?: string;
-  platformId: string;
-  votesUp?: number;
-  votesDown?: number;
-  createdAt?: string;
-  platformName: string;
-  platformUrl: string;
-  creatorId: string;
-}
-
-export interface FullAccount {
-  id?: string;
-  username: string;
-  password?: string;
-  platform: {
-    id: string | undefined;
-    href: string | undefined;
-    icon: Glyph | undefined;
-    name: string | undefined;
-  };
-  votesUp: number;
-  votesDown: number;
-  time?: string;
-  creatorId?: string;
+  items: T;
 }
 
 export interface Account {
-  id?: string;
+  id: string;
   username: string;
-  password?: string;
-  platform: {
-    id: string | undefined;
-    href: string | undefined;
-    icon: Glyph | undefined;
-    name: string | undefined;
-  };
-  time?: string;
+  password: string;
+  votesUp: number;
+  votesDown: number;
+  createdAt: string;
+  creatorId: string;
+  platform: Platform;
+}
+
+export interface Accounts {
+  count: number;
+  items: Account[];
+}
+
+export interface AccountBody {
+  username: string;
+  password: string;
   creatorId?: string;
+  platformId: string;
 }
 
 export interface Platform {
@@ -66,23 +36,23 @@ export interface Platform {
   url: string;
 }
 
-export interface FullVoteResponse {
-  id?: string;
-  value: "up" | "down";
+type VoteValue = "up" | "down";
+
+export interface FullVote {
+  id: string;
+  value: VoteValue;
   username: string;
   platformName: string;
 }
 
-export interface VoteResponse {
-  id?: string;
-  value: "up" | "down";
-  accountId: string;
+export interface Vote {
+  id: string;
+  value: VoteValue;
   creatorId: string;
 }
 
-export interface Vote {
-  id?: string;
-  value: "up" | "down";
+export interface VoteBody {
+  value: VoteValue;
   accountId: string;
   creatorId: string;
 }
@@ -91,7 +61,7 @@ export interface Pagination {
   q?: string;
   limit: number;
   page: number;
-  sort: keyof AccountResponse | undefined;
+  sort: keyof Account | undefined;
   order?: "ASC" | "DESC";
 }
 

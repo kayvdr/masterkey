@@ -5,7 +5,7 @@ info:
     email: on3k.dev@gmail.com
   version: 0.0.1
 paths:
-  /accounta:
+  /accounts:
     get:
       operationId: GetAccounts
       description: Returns all Accounts
@@ -20,34 +20,7 @@ paths:
                   accounts:
                     type: array
                     items:
-                      type: object
-                      properties:
-                        id:
-                          type: string
-                          format: uuid
-                          example: e0476273-83cd-4772-a4f9-f0280e3bb2af
-                        username:
-                          type: string
-                          example: jondoe
-                        passord:
-                          type: string
-                          example: password123
-                        votesUp:
-                          type: integer
-                          example: 10
-                        votesDown:
-                          type: integer
-                          example: 5
-                        platformId:
-                          type: string
-                          format: uuid
-                          example: e0476273-83cd-4772-a4f9-f0280e3bb2af
-                        name:
-                          type: string
-                          example: instagram
-                        url:
-                          type: string
-                          example: http://www.instagram.com
+                      $ref: "#/components/schemas/Account"
 
     post:
       operationId: CreateAccount
@@ -84,30 +57,11 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  id:
-                    type: string
-                    format: uuid
-                    example: e0476273-83cd-4772-a4f9-f0280e3bb2af
-                  username:
-                    type: string
-                    example: jondoe
-                  passord:
-                    type: string
-                    example: password
-                  platformId:
-                    type: string
-                    format: uuid
-                    example: e0476273-83cd-4772-a4f9-f0280e3bb2af
-                  creatorId:
-                    type: string
-                    format: uuid
-                    example: e0476273-83cd-4772-a4f9-f0280e3bb2af
+                $ref: "#/components/schemas/Account"
         "400":
           description: Invalid request body. The message will vary depending on the cause.
 
-  /account/{accountId}:
+  /accounts/{accountId}:
     get:
       operationId: GetAccounts
       description: Returns single Account by id
@@ -117,25 +71,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  id:
-                    type: string
-                    example: e0476273-83cd-4772-a4f9-f0280e3bb2af
-                  username:
-                    type: string
-                    example: jondoe
-                  passord:
-                    type: string
-                    example: password
-                  platformId:
-                    type: string
-                    format: uuid
-                    example: e0476273-83cd-4772-a4f9-f0280e3bb2af
-                  creatorId:
-                    type: string
-                    format: uuid
-                    example: e0476273-83cd-4772-a4f9-f0280e3bb2af
+                $ref: "#/components/schemas/Account"
         "404":
           description: Returns an error if the provided account ID was not found.
 
@@ -171,26 +107,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  id:
-                    type: string
-                    format: uuid
-                    example: e0476273-83cd-4772-a4f9-f0280e3bb2af
-                  username:
-                    type: string
-                    example: jondoe
-                  passord:
-                    type: string
-                    example: password
-                  platformId:
-                    type: string
-                    format: uuid
-                    example: e0476273-83cd-4772-a4f9-f0280e3bb2af
-                  creatorId:
-                    type: string
-                    format: uuid
-                    example: e0476273-83cd-4772-a4f9-f0280e3bb2af
+                $ref: "#/components/schemas/Account"
         "400":
           description: Invalid request body. The message will vary depending on the cause.
 
@@ -225,23 +142,7 @@ paths:
                   accounts:
                     type: array
                     items:
-                      type: object
-                      properties:
-                        id:
-                          type: string
-                          format: uuid
-                          example: e0476273-83cd-4772-a4f9-f0280e3bb2af
-                        value:
-                          type: string
-                          example: up
-                        accountId:
-                          type: string
-                          format: uuid
-                          example: e0476273-83cd-4772-a4f9-f0280e3bb2af
-                        creatorId:
-                          type: string
-                          format: uuid
-                          example: e0476273-83cd-4772-a4f9-f0280e3bb2af
+                      $ref: "#/components/schemas/Vote"
         "404":
           description: Returns an error if the provided account ID was not found.
 
@@ -260,34 +161,7 @@ paths:
                   accounts:
                     type: array
                     items:
-                      type: object
-                      properties:
-                        id:
-                          type: string
-                          format: uuid
-                          example: e0476273-83cd-4772-a4f9-f0280e3bb2af
-                        username:
-                          type: string
-                          example: jondoe
-                        passord:
-                          type: string
-                          example: password123
-                        votesUp:
-                          type: integer
-                          example: 10
-                        votesDown:
-                          type: integer
-                          example: 5
-                        platformId:
-                          type: string
-                          format: uuid
-                          example: e0476273-83cd-4772-a4f9-f0280e3bb2af
-                        name:
-                          type: string
-                          example: instagram
-                        url:
-                          type: string
-                          example: http://www.instagram.com
+                      $ref: "#/components/schemas/Account"
 
   /creators/{creatorId}/votes:
     get:
@@ -334,18 +208,7 @@ paths:
                   accounts:
                     type: array
                     items:
-                      type: object
-                      properties:
-                        id:
-                          type: string
-                          format: uuid
-                          example: e0476273-83cd-4772-a4f9-f0280e3bb2af
-                        name:
-                          type: string
-                          example: Instagram
-                        url:
-                          type: string
-                          example: https://www.instagram.com
+                      $ref: "#/components/schemas/Platform"
 
   /votes:
     post:
@@ -375,27 +238,11 @@ paths:
                   example: e0476273-83cd-4772-a4f9-f0280e3bb2af
       responses:
         "200":
-          description: ""
+          description: Get vote
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  id:
-                    type: string
-                    format: uuid
-                    example: e0476273-83cd-4772-a4f9-f0280e3bb2af
-                  value:
-                    type: string
-                    example: up
-                  accountId:
-                    type: string
-                    format: uuid
-                    example: e0476273-83cd-4772-a4f9-f0280e3bb2af
-                  creatorId:
-                    type: string
-                    format: uuid
-                    example: e0476273-83cd-4772-a4f9-f0280e3bb2af
+                $ref: "#/components/schemas/Vote"
         "400":
           description: Invalid request body. The message will vary depending on the cause.
 
@@ -433,3 +280,60 @@ components:
       schema:
         type: string
         format: uuid
+  schemas:
+    Platform:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: e0476273-83cd-4772-a4f9-f0280e3bb2af
+        name:
+          type: string
+          example: instagram
+        url:
+          type: string
+          example: http://www.instagram.com
+    Account:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: e0476273-83cd-4772-a4f9-f0280e3bb2af
+        username:
+          type: string
+          example: jondoe
+        password:
+          type: string
+          example: password
+        createdAt:
+          type: string
+          format: uuid
+          example: e0476273-83cd-4772-a4f9-f0280e3bb2af
+        creatorId:
+          type: string
+          format: uuid
+          example: e0476273-83cd-4772-a4f9-f0280e3bb2af
+        votesUp:
+          type: integer
+          example: 10
+        votesDown:
+          type: integer
+          example: 5
+        platform:
+          $ref: "#/components/schemas/Platform"
+    Vote:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: e0476273-83cd-4772-a4f9-f0280e3bb2af
+        value:
+          type: string
+          example: up
+        creatorId:
+          type: string
+          format: uuid
+          example: e0476273-83cd-4772-a4f9-f0280e3bb2af

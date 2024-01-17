@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { getPlatforms, patchAccount, setAccount } from "../../http/api";
+import { getPlatforms, setAccount, updateAccount } from "../../http/api";
 import { Account, CustomError, Platform } from "../../types";
 import Button from "../../ui/Button";
 import InputCheckBox from "../../ui/InputCheckBox";
@@ -58,24 +58,18 @@ const AddForm = ({ user: account }: Props) => {
 
     const { username, password, platform } = data;
 
-    const platformId = platforms?.find(
+    const currPlatform = platforms?.find(
       ({ name }) => name.toLowerCase() === platform
     );
 
-    if (!platformId)
+    if (!currPlatform)
       return setError({ code: 404, message: "Platform not found" });
 
-    if (account) {
-      patchAccount({
-        id: account.id,
+    if (account?.id) {
+      updateAccount(account.id, {
         username,
         password,
-        platform: {
-          id: platformId.id,
-          href: undefined,
-          icon: undefined,
-          name: undefined,
-        },
+        platformId: currPlatform.id,
       }).then(async (response) => {
         const res = await response.json();
         !response.ok ? setError(res.error) : setIsSuccessful(true);
@@ -84,12 +78,7 @@ const AddForm = ({ user: account }: Props) => {
       setAccount({
         username,
         password,
-        platform: {
-          id: platformId.id,
-          href: undefined,
-          icon: undefined,
-          name: undefined,
-        },
+        platformId: currPlatform.id,
         creatorId: session?.user.id,
       }).then(async (response) => {
         const res = await response.json();

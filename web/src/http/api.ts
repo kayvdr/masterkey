@@ -1,12 +1,12 @@
 import {
   Account,
-  AccountResponse,
-  FullAccountResponse,
-  FullVoteResponse,
+  AccountBody,
+  FullVote,
   Pagination,
   Platform,
+  Response,
   Vote,
-  VoteResponse,
+  VoteBody,
 } from "../types";
 
 const baseUrl = "http://localhost:60001";
@@ -34,13 +34,19 @@ export const getAccounts = async (pagination?: Pagination) => {
     url = `${url}?${searchParams.toString()}`;
   }
 
-  return await fetchData<{ count: number; items: FullAccountResponse[] }>(url, {
+  return await fetchData<Response<Account[]>>(url, {
+    method: "GET",
+  });
+};
+
+export const getAccount = async (id: string) => {
+  return await fetchData<Account>(`${baseUrl}/v1/accounts/${id}`, {
     method: "GET",
   });
 };
 
 export const getAccountsByCreatorId = async (id: string) => {
-  return await fetchData<{ count: number; items: FullAccountResponse[] }>(
+  return await fetchData<Response<Account[]>>(
     `${baseUrl}/v1/creators/${id}/accounts`,
     {
       method: "GET",
@@ -48,33 +54,27 @@ export const getAccountsByCreatorId = async (id: string) => {
   );
 };
 
-export const setAccount = async (account: Account) => {
+export const setAccount = async (account: AccountBody) => {
   return await fetch(`${baseUrl}/v1/accounts`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       username: account.username,
       password: account.password,
-      platformId: account.platform.id,
+      platformId: account.platformId,
       creatorId: account.creatorId,
     }),
   });
 };
 
-export const getAccount = async (id: string) => {
-  return await fetchData<AccountResponse>(`${baseUrl}/v1/accounts/${id}`, {
-    method: "GET",
-  });
-};
-
-export const patchAccount = async (account: Account) => {
-  return await fetch(`${baseUrl}/v1/accounts/${account.id}`, {
-    method: "POST",
+export const updateAccount = async (id: string, body: AccountBody) => {
+  return await fetch(`${baseUrl}/v1/accounts/${id}`, {
+    method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      username: account.username,
-      password: account.password,
-      platformId: account.platform.id,
+      username: body.username,
+      password: body.password,
+      platformId: body.platformId,
     }),
   });
 };
@@ -92,13 +92,13 @@ export const getPlatforms = async () => {
 };
 
 export const getVote = async (id: string) => {
-  return await fetchData<VoteResponse[]>(`${baseUrl}/v1/accounts/${id}/votes`, {
+  return await fetchData<Vote[]>(`${baseUrl}/v1/accounts/${id}/votes`, {
     method: "GET",
   });
 };
 
 export const getVotesByCreatorId = async (id: string) => {
-  return await fetchData<{ count: number; items: FullVoteResponse[] }>(
+  return await fetchData<Response<FullVote[]>>(
     `${baseUrl}/v1/creators/${id}/votes`,
     {
       method: "GET",
@@ -106,7 +106,7 @@ export const getVotesByCreatorId = async (id: string) => {
   );
 };
 
-export const setVote = async (vote: Vote) => {
+export const setVote = async (vote: VoteBody) => {
   return await fetch(`${baseUrl}/v1/votes`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },

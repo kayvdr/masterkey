@@ -34,13 +34,11 @@ const Edit = ({ name, value, label }: Props) => {
   });
 
   const onSubmit = async (inputs: Type) => {
-    const { data, error } = await supabase.auth.updateUser({
+    const { error } = await supabase.auth.updateUser({
       [value]: inputs,
     });
 
     if (error) return setError(error.name, error);
-
-    console.log(data);
 
     reset();
     setEditToggle({ ...editToggle, [name]: false });

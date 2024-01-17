@@ -21,7 +21,7 @@ func (app Application) GetAccounts(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	res, err := app.Repositories.Account.GetAllAccounts(ctx, pagination)
+	res, err := app.Repositories.Account.GetAccounts(ctx, pagination)
 	if err != nil {
 		render.Render(w, r, httperr.ErrInternalServer(err.Error()))
 		return
@@ -29,14 +29,14 @@ func (app Application) GetAccounts(w http.ResponseWriter, r *http.Request) {
 
 	count, _ := app.Repositories.Account.GetAccountsCount(ctx, pagination)
 
-	var accounts []domain.FullAccounts
+	var accounts []domain.Account
 	for _, u := range res {
-		accounts = append(accounts, domain.MapFullAccounts(u))
+		accounts = append(accounts, domain.MapAccount(u))
 	} 
 
 	type Response struct {
 		Count int                 `json:"count"`
-		Items     []domain.FullAccounts `json:"items"`
+		Items     []domain.Account `json:"items"`
 	}
 
 	render.JSON(w, r, Response{Count: *count, Items: accounts})
@@ -49,14 +49,16 @@ func (app Application) GetAccount(w http.ResponseWriter, r *http.Request) {
 		render.Render(w, r, httperr.ErrBadRequest("missing parameter 'accountId'"))
 		return
 	}
+
 	accountId, err := uuid.Parse(param)
 	if err != nil {
 		render.Render(w, r, httperr.ErrBadRequest("invalid parameter accountId"))
 		return
 	}
-	exists, errExists := app.Repositories.Account.ExistsAccount(ctx, accountId)
-	if errExists != nil {
-		render.Render(w, r, httperr.ErrInternalServer(errExists.Error()))
+
+	exists, err := app.Repositories.Account.ExistsAccount(ctx, accountId)
+	if err != nil {
+		render.Render(w, r, httperr.ErrInternalServer(err.Error()))
 		return
 	}
 	if !exists {
@@ -80,14 +82,16 @@ func (app Application) GetAccountVotes(w http.ResponseWriter, r *http.Request) {
 		render.Render(w, r, httperr.ErrBadRequest("missing parameter 'accountId'"))
 		return
 	}
+
 	accountId, err := uuid.Parse(param)
 	if err != nil {
 		render.Render(w, r, httperr.ErrBadRequest("invalid parameter accountId"))
 		return
 	}
-	exists, errExists := app.Repositories.Account.ExistsAccount(ctx, accountId)
-	if errExists != nil {
-		render.Render(w, r, httperr.ErrInternalServer(errExists.Error()))
+
+	exists, err := app.Repositories.Account.ExistsAccount(ctx, accountId)
+	if err != nil {
+		render.Render(w, r, httperr.ErrInternalServer(err.Error()))
 		return
 	}
 	if !exists {
@@ -146,9 +150,9 @@ func (app Application) UpdateAccount(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	exists, errExists := app.Repositories.Account.ExistsAccount(ctx, accountId)
-	if errExists != nil {
-		render.Render(w, r, httperr.ErrInternalServer(errExists.Error()))
+	exists, err := app.Repositories.Account.ExistsAccount(ctx, accountId)
+	if err != nil {
+		render.Render(w, r, httperr.ErrInternalServer(err.Error()))
 		return
 	}
 	if !exists {
@@ -178,9 +182,9 @@ func (app Application) DeleteAccount(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	exists, errExists := app.Repositories.Account.ExistsAccount(ctx, accountId)
-	if errExists != nil {
-		render.Render(w, r, httperr.ErrInternalServer(errExists.Error()))
+	exists, err := app.Repositories.Account.ExistsAccount(ctx, accountId)
+	if err != nil {
+		render.Render(w, r, httperr.ErrInternalServer(err.Error()))
 		return
 	}
 	if !exists {

@@ -4,7 +4,7 @@ import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getAccountsByCreatorId, getVotesByCreatorId } from "../../http/api";
 import { supabase } from "../../http/supabase";
-import { FullVoteResponse } from "../../types";
+import { FullVote } from "../../types";
 import Button from "../../ui/Button";
 import Icon from "../../ui/Icon";
 import Popup from "../../ui/Popup";
@@ -35,7 +35,7 @@ interface FullUsersInfo {
 
 interface FullVotesInfo {
   count: number | undefined;
-  items: FullVoteResponse[] | undefined;
+  items: FullVote[] | undefined;
 }
 
 const DashboardPage = () => {
@@ -50,11 +50,11 @@ const DashboardPage = () => {
       if (!session) return;
       const fetchedUsers = await getAccountsByCreatorId(session.user.id);
       const groupedUsers = fetchedUsers?.items.reduce<List>((prev, curr) => {
-        const prevValue = prev[curr.platformName];
+        const prevValue = prev[curr.platform.name];
 
         return {
           ...prev,
-          [curr.platformName]: prevValue ? prevValue + 1 : 1,
+          [curr.platform.name]: prevValue ? prevValue + 1 : 1,
         };
       }, {});
 
@@ -171,7 +171,7 @@ const DashboardPage = () => {
               <h2 className={styles.subtitle}>Your sharings</h2>
               <div className={styles.total}>
                 <p className={styles.totalLabel}>Total</p>
-                <p className={styles.totalValue}>{sharings?.count}</p>
+                <p className={styles.totalValue}>{sharings?.count ?? 0}</p>
               </div>
               <div className={styles.list}>
                 {sharings?.items &&
@@ -196,14 +196,16 @@ const DashboardPage = () => {
                     );
                   })}
               </div>
-              <div className={styles.btnRow}>
-                <Button
-                  onClick={() => navigate("/youraccounts")}
-                  scheme="secondary"
-                >
-                  All shared accounts
-                </Button>
-              </div>
+              {sharings?.count && (
+                <div className={styles.btnRow}>
+                  <Button
+                    onClick={() => navigate("/youraccounts")}
+                    scheme="secondary"
+                  >
+                    All shared accounts
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
           <div className={styles.column}>

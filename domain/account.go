@@ -14,21 +14,10 @@ type Account struct {
 	Username   string      `json:"username"`
 	Password string    `json:"password"`
 	CreatedAt time.Time `json:"createdAt"`
-	PlatformId uuid.UUID    `json:"platformId"`
-	CreatorId uuid.UUID    `json:"creatorId"`
-}
-
-type FullAccounts struct {
-	Id  uuid.UUID `json:"id"`
-	Username   string      `json:"username"`
-	Password string    `json:"password"`
-	CreatedAt time.Time `json:"createdAt"`
-	PlatformId uuid.UUID    `json:"platformId"`
 	CreatorId uuid.UUID    `json:"creatorId"`
 	VotesUp int `json:"votesUp"`
 	VotesDown int `json:"votesDown"`
-	PlatformName string `json:"platformName"`
-	PlatformURL string `json:"platformURL"`
+	Platform Platform `json:"platform"`
 }
 
 type CreateAccountBody struct {
@@ -71,7 +60,7 @@ func (b *CreateAccountBody) Model() repositories.Account {
 		Username: b.Username,
 		Password: b.Password,
 		CreatorId: b.CreatorId,
-		PlatformId: b.PlatformId,
+		Platform: repositories.Platform{Id: b.PlatformId},
 	}
 }
 
@@ -111,7 +100,7 @@ func (b *PatchAccountBody) Model(accountId uuid.UUID) repositories.Account {
 		Id: accountId,
 		Username: b.Username,
 		Password: b.Password,
-		PlatformId: b.PlatformId,
+		Platform: repositories.Platform{Id: b.PlatformId},
 	}
 }
 
@@ -120,22 +109,14 @@ func MapAccount(dbItem *repositories.Account) Account {
 		Id: dbItem.Id,
 		Username: dbItem.Username,
 		Password: dbItem.Password,
-		CreatedAt: dbItem.CreatedAt,
-		PlatformId: dbItem.PlatformId,
-		CreatorId: dbItem.CreatorId,
-	}
-}
-
-func MapFullAccounts(dbItem *repositories.FullAccount) FullAccounts {
-	return FullAccounts{
-		Id: dbItem.Id,
-		Username: dbItem.Username,
-		Password: dbItem.Password,
-		PlatformId: dbItem.PlatformId,
-		CreatorId: dbItem.CreatorId,
 		VotesUp: *dbItem.VotesUp,
 		VotesDown: *dbItem.VotesDown,
-		PlatformName: dbItem.PlatformName,
-		PlatformURL: dbItem.PlatformURL,
+		CreatedAt: dbItem.CreatedAt,
+		Platform: Platform{
+			Id: dbItem.Platform.Id, 
+			Name: dbItem.Platform.Name,
+			URL: dbItem.Platform.URL,
+		},
+		CreatorId: dbItem.CreatorId,
 	}
 }

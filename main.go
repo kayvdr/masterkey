@@ -27,12 +27,14 @@ func main() {
 	r.Use(chiMiddleware.Timeout(60 * time.Second))
 	r.Use(cors.Handler(cors.Options{
 		AllowedOrigins: []string{"http://localhost:60005"},
-		AllowedMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedMethods: []string{"GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders: []string{"Accept", "Content-Type", "Authorization"},
 		MaxAge:         600,
 	}))
 
 	r.Route("/v1", func(r chi.Router) {
+		// TODO: Secure some api endpoint with authentication 
+
 		r.Route("/accounts", func(r chi.Router) {
 			r.Get("/", app.GetAccounts)
 			r.Post("/", app.CreateAccount)

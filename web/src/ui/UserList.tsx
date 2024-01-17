@@ -19,7 +19,7 @@ import SvgEdit from "../components/icons/Edit";
 import SvgKey from "../components/icons/Key";
 import SvgUser from "../components/icons/User";
 import { deleteAccount, deleteVote, getVote, setVote } from "../http/api";
-import { FullAccount, Vote } from "../types";
+import { Account, Vote } from "../types";
 import { logoMapping } from "../utils";
 import Icon from "./Icon";
 import Popup from "./Popup";
@@ -28,8 +28,8 @@ import itemStyles from "./UserItem.module.css";
 import styles from "./UserList.module.css";
 
 interface Props {
-  users: FullAccount[];
-  setUsers: (data: FullAccount[]) => void;
+  users: Account[];
+  setUsers: (data: Account[]) => void;
 }
 
 export interface RefType {
@@ -39,7 +39,7 @@ export interface RefType {
 const UserList = ({ users, setUsers }: Props, ref: Ref<RefType>) => {
   const details = useToggle();
   const popup = useToggle();
-  const [detailData, setDetailData] = useState<FullAccount>();
+  const [detailData, setDetailData] = useState<Account>();
   const [userVote, setUserVote] = useState<Vote>();
   const session = useContext(SessionContext);
   const navigate = useNavigate();
@@ -56,14 +56,7 @@ const UserList = ({ users, setUsers }: Props, ref: Ref<RefType>) => {
 
       const votes = await getVote(detailData.id);
 
-      const typedVotes: Vote[] | undefined = votes?.map((vote) => ({
-        id: vote.id,
-        value: vote.value,
-        accountId: vote.accountId,
-        creatorId: vote.creatorId,
-      }));
-
-      const existingVote = typedVotes?.find(
+      const existingVote = votes?.find(
         (vote) => vote.creatorId === session?.user.id
       );
 

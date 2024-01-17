@@ -10,23 +10,19 @@ import (
 
 type Vote struct {
 	Id         uuid.UUID `json:"id"`
-	Value   string    `json:"value"`
-	AccountId   uuid.UUID    `json:"accountId"`
+	Value   repositories.Value    `json:"value"`
 	CreatorId  uuid.UUID `json:"creatorId"`
 }
 
 type FullVote struct {
-	Id uuid.UUID `json:"id"`
-	Value  string    `json:"value"`
+	Vote
 	Username string `json:"username"`
 	PlatformName string `json:"platformName"`
 }
 
 type CreateVoteBody struct {
-	Id         uuid.UUID `json:"id"`
-	Value   string    `json:"value"`
+	Vote
 	AccountId   uuid.UUID    `json:"accountId"`
-	CreatorId  uuid.UUID `json:"creatorId"`
 }
 
 func (b *CreateVoteBody) Bind(r *http.Request) error {
@@ -58,15 +54,17 @@ func MapVote(dbItem *repositories.Vote) Vote {
 	return Vote{
 		Id: dbItem.Id,
 		Value: dbItem.Value,
-		AccountId: dbItem.AccountId,
 		CreatorId: dbItem.CreatorId,
 	}
 }
 
 func MapFullVote(dbItem *repositories.FullVote) FullVote {
 	return FullVote{
-		Id: dbItem.Id,
-		Value: dbItem.Value,
+		Vote: Vote{
+			Id: dbItem.Id, 
+			Value: dbItem.Value, 
+			CreatorId: dbItem.CreatorId,
+		},
 		Username: dbItem.Username,
 		PlatformName: dbItem.PlatformName,
 	}

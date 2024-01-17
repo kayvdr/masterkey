@@ -21,9 +21,9 @@ func (app Application) CreateVote(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	exists, errExists := app.Repositories.Account.ExistsAccount(ctx, body.AccountId)
-	if errExists != nil {
-		render.Render(w, r, httperr.ErrInternalServer(errExists.Error()))
+	exists, err := app.Repositories.Account.ExistsAccount(ctx, body.AccountId)
+	if err != nil {
+		render.Render(w, r, httperr.ErrInternalServer(err.Error()))
 		return
 	}
 	if !exists {
@@ -57,9 +57,9 @@ func (app Application) DeleteVote(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	exists, errExists := app.Repositories.Vote.ExistsVote(ctx, voteId)
-	if errExists != nil {
-		render.Render(w, r, httperr.ErrInternalServer(errExists.Error()))
+	exists, err := app.Repositories.Vote.ExistsVote(ctx, voteId)
+	if err != nil {
+		render.Render(w, r, httperr.ErrInternalServer(err.Error()))
 		return
 	}
 	if !exists {

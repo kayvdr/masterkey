@@ -10,22 +10,30 @@ import (
 	"github.com/on3k/shac-api/common"
 )
 
+type Value string
+
+const (
+    Up Value = "up"
+    Down Value = "down"
+)
+
 type VoteRepository struct {
 	pool  *pgxpool.Pool
 }
 
 type Vote struct {
 	Id  uuid.UUID `db:"id"`
-	Value string    `db:"value"`
+	Value Value    `db:"value"`
 	AccountId uuid.UUID    `db:"account_id"`
 	CreatorId uuid.UUID    `db:"creator_id"`
 }
 
 type FullVote struct {
 	Id  uuid.UUID `db:"id"`
-	Value string    `db:"value"`
+	Value Value    `db:"value"`
 	Username string    `db:"username"`
 	PlatformName string    `db:"platform_name"`
+	CreatorId uuid.UUID    `db:"creator_id"`
 }
 
 var ErrMultipleVotes = errors.New("multiple account votes are not valid")
@@ -36,7 +44,10 @@ func NewVoteRepository(pool *pgxpool.Pool) VoteRepository {
 
 func (r VoteRepository) GetVote(ctx context.Context, id uuid.UUID) (*Vote, error) {
 	vote := Vote{}
-	err := r.pool.QueryRow(ctx, `SELECT v.id, v.value, v.account_id, v.creator_id FROM votes AS v WHERE id = $1`, id).Scan(
+	err := r.pool.QueryRow(ctx, `
+		SELECT v.id, v.value, v.account_id, v.creator_id FROM votes AS v 
+		WHERE id = $1
+	`, id).Scan(
 		&vote.Id,
 		&vote.Value,
 		&vote.AccountId,
@@ -71,7 +82,7 @@ func (r VoteRepository) CreateVote(ctx context.Context, vote Vote) (*Vote, error
 
 func (r VoteRepository) GetVotesByCreator(ctx context.Context, pagination common.Pagination, creatorId uuid.UUID) ([]*FullVote, error) {
 	rows, err := r.pool.Query(ctx, `
-		SELECT v.id, v.value, u.username, p.name FROM votes AS v
+		SELECT v.id, v.value, v.creator_id, u.username, p.name FROM votes AS v
 		INNER JOIN accounts AS u ON v.account_id = u.id
 		INNER JOIN platforms AS p ON u.platform_id = p.id
 		WHERE v.creator_id = $1
@@ -88,6 +99,7 @@ func (r VoteRepository) GetVotesByCreator(ctx context.Context, pagination common
 		rows.Scan(
 			&vote.Id,
 			&vote.Value,
+			&vote.CreatorId,
 			&vote.Username,
 			&vote.PlatformName,
 		)

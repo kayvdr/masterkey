@@ -1,14 +1,9 @@
 import classNames from "classnames";
 import { RefObject, useEffect, useState } from "react";
-import { getAccounts, getPlatforms } from "../../http/api";
-import { AccountResponse, FullAccount, Pagination } from "../../types";
+import { getAccounts } from "../../http/api";
+import { Account, Pagination } from "../../types";
 import UserList, { RefType } from "../../ui/UserList";
-import {
-  getDiff,
-  getSearchParams,
-  logoMapping,
-  setSearchParams,
-} from "../../utils";
+import { getSearchParams, setSearchParams } from "../../utils";
 import SvgArrowLeft from "../icons/ArrowLeft";
 import SvgArrowRight from "../icons/ArrowRight";
 import styles from "./Search.module.css";
@@ -17,11 +12,11 @@ interface Props {
   title?: string;
   searchTerm?: string;
   isPagination?: boolean;
-  sort?: keyof AccountResponse;
+  sort?: keyof Account;
   userListRef?: RefObject<RefType>;
 }
 
-const isKeyofUser = (value: string): value is keyof AccountResponse =>
+const isKeyofUser = (value: string): value is keyof Account =>
   [
     "id",
     "username",
@@ -30,7 +25,7 @@ const isKeyofUser = (value: string): value is keyof AccountResponse =>
     "votes_up",
     "votes_down",
     "created_at",
-  ].includes(value as keyof AccountResponse);
+  ].includes(value as keyof Account);
 
 const Search = ({
   title,
@@ -39,12 +34,12 @@ const Search = ({
   sort,
   userListRef,
 }: Props) => {
-  const [users, setUsers] = useState<FullAccount[]>();
+  const [users, setUsers] = useState<Account[]>();
   const [count, setCount] = useState<number>();
   const [pagination, setPagination] = useState<Pagination>({
     limit: 12,
     page: 1,
-    sort: sort as keyof AccountResponse,
+    sort: sort,
   });
 
   useEffect(() => {
@@ -64,33 +59,8 @@ const Search = ({
         order: pagination.sort === "username" ? "ASC" : "DESC",
         ...pagination,
       });
-      const fetchedPlatforms = await getPlatforms();
 
-      const users = fetchedUsers?.items.map<FullAccount>((user) => {
-        const time = user.createdAt && getDiff(user.createdAt);
-
-        const platform = fetchedPlatforms?.find(
-          (p) => p.id === user.platformId
-        );
-
-        return {
-          id: user.id,
-          username: user.username,
-          password: user.password,
-          platform: {
-            id: platform?.id,
-            href: platform?.url,
-            icon: platform && logoMapping[platform.name],
-            name: platform?.name,
-          },
-          votesUp: user.votesUp ?? 0,
-          votesDown: user.votesDown ?? 0,
-          time: time,
-          creatorId: user.creatorId,
-        };
-      });
-
-      setUsers(users);
+      setUsers(fetchedUsers?.items);
       setCount(fetchedUsers?.count);
     };
 
@@ -105,7 +75,7 @@ const Search = ({
           <select
             value={pagination.sort ?? ""}
             onChange={(e) => {
-              const value = e.target.value as keyof AccountResponse;
+              const value = e.target.value as keyof Account;
               if (!isKeyofUser(value) || sort) return;
               setPagination({ ...pagination, sort: value });
               setSearchParams("sort", value);

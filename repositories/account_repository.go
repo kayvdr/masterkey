@@ -24,39 +24,45 @@ type Account struct {
 	Id  uuid.UUID `db:"id"`
 	Username   string      `db:"username"`
 	Password string    `db:"password"`
-	CreatorId uuid.UUID    `db:"creator_id"`
-	CreatedAt time.Time    `db:"created_at"`
-	PlatformId uuid.UUID    `db:"platform_id"`
-}
-
-type FullAccount struct {
-	Account
 	VotesUp *int    `db:"voteUp"`
 	VotesDown *int    `db:"votesDown"`
-	PlatformName  string    `db:"name"`
-	PlatformURL  string    `db:"url"`
+	CreatorId uuid.UUID    `db:"creator_id"`
+	CreatedAt time.Time    `db:"created_at"`
+	Platform  Platform    `db:"platform"`
 }
 
 func (r AccountRepository) GetAccount(ctx context.Context, id uuid.UUID) (*Account, error) {
 	account := Account{}
-	err := r.pool.QueryRow(ctx, `SELECT u.id, u.username, u.password, u.created_at, u.creator_id, u.platform_id FROM accounts AS u WHERE id = $1`, id).Scan(
+	err := r.pool.QueryRow(ctx, `
+		SELECT u.id, u.username, u.password,
+			(SELECT count(v.id) FROM votes AS v WHERE v.account_id = u.id AND v.value = 'up') AS votes_up, 
+			(SELECT count(v.id) FROM votes AS v WHERE v.account_id = u.id AND v.value = 'down') AS votes_down, 
+			u.created_at, u.creator_id, p.id, p.name, p.url 
+	 	FROM accounts AS u 
+		INNER JOIN platforms AS p ON u.platform_id = p.id 
+		WHERE u.id = $1
+	`, id).Scan(
 		&account.Id,
 		&account.Username,
 		&account.Password,
+		&account.VotesUp,
+		&account.VotesDown,
 		&account.CreatedAt,
 		&account.CreatorId,
-		&account.PlatformId,
+		&account.Platform.Id,
+		&account.Platform.Name,
+		&account.Platform.URL,
 	)
 	return &account, err
 }
 
-func (r AccountRepository) GetAllAccounts(ctx context.Context, pagination common.Pagination) ([]*FullAccount, error) {
-	params := fmt.Sprintf("ORDER BY %s LIMIT %s OFFSET %s", pagination.Sort() + " " + pagination.Order(), strconv.FormatInt(int64(pagination.Limit()), 10), strconv.FormatInt(int64(pagination.Offset()), 10))
+func (r AccountRepository) GetAccounts(ctx context.Context, pagination common.Pagination) ([]*Account, error) {
+	params := fmt.Sprintf("ORDER BY u.%s LIMIT %s OFFSET %s", pagination.Sort() + " " + pagination.Order(), strconv.FormatInt(int64(pagination.Limit()), 10), strconv.FormatInt(int64(pagination.Offset()), 10))
 	rows, err := r.pool.Query(ctx, `
 		SELECT u.id, u.username, u.password, 
 			(SELECT count(v.id) FROM votes AS v WHERE v.account_id = u.id AND v.value = 'up') AS votes_up, 
 			(SELECT count(v.id) FROM votes AS v WHERE v.account_id = u.id AND v.value = 'down') AS votes_down, 
-			u.created_at, u.creator_id, u.platform_id, p.name, p.url
+			u.created_at, u.creator_id, p.id, p.name, p.url
 		FROM accounts AS u 
 		INNER JOIN platforms AS p ON u.platform_id = p.id
 		WHERE ($1 = '' OR p.name ILIKE $1)
@@ -67,9 +73,9 @@ func (r AccountRepository) GetAllAccounts(ctx context.Context, pagination common
 	}
 	defer rows.Close()
 
-	accounts := []*FullAccount{}
+	accounts := []*Account{}
 	for rows.Next() {
-		account := &FullAccount{}
+		account := &Account{}
 		rows.Scan(
 			&account.Id,
 			&account.Username,
@@ -78,9 +84,9 @@ func (r AccountRepository) GetAllAccounts(ctx context.Context, pagination common
 			&account.VotesDown,
 			&account.CreatedAt,
 			&account.CreatorId,
-			&account.PlatformId,
-			&account.PlatformName,
-			&account.PlatformURL,
+			&account.Platform.Id,
+			&account.Platform.Name,
+			&account.Platform.URL,
 		)
 		accounts = append(accounts, account)
 	}
@@ -92,7 +98,7 @@ func (r AccountRepository) GetAllAccounts(ctx context.Context, pagination common
 	return accounts, nil
 }
 
-func (r AccountRepository) GetAccountsByCreator(ctx context.Context, pagination common.Pagination, accountId uuid.UUID) ([]*FullAccount, error) {
+func (r AccountRepository) GetAccountsByCreator(ctx context.Context, pagination common.Pagination, accountId uuid.UUID) ([]*Account, error) {
 	rows, err := r.pool.Query(ctx, `
 		SELECT u.id, u.username, u.password,
 			(SELECT count(v.id) FROM votes AS v WHERE v.account_id = u.id AND v.value = 'up') AS votes_up, 
@@ -108,9 +114,9 @@ func (r AccountRepository) GetAccountsByCreator(ctx context.Context, pagination 
 	}
 	defer rows.Close()
 
-	accounts := []*FullAccount{}
+	accounts := []*Account{}
 	for rows.Next() {
-		account := &FullAccount{}
+		account := &Account{}
 		rows.Scan(
 			&account.Id,
 			&account.Username,
@@ -119,9 +125,9 @@ func (r AccountRepository) GetAccountsByCreator(ctx context.Context, pagination 
 			&account.VotesDown,
 			&account.CreatedAt,
 			&account.CreatorId,
-			&account.PlatformId,
-			&account.PlatformName,
-			&account.PlatformURL,
+			&account.Platform.Id,
+			&account.Platform.Name,
+			&account.Platform.URL,
 		)
 		accounts = append(accounts, account)
 	}
@@ -182,7 +188,7 @@ func (r AccountRepository) CreateAccount(ctx context.Context, account Account) (
 		RETURNING id`, 
 		account.Username, 
 		account.Password,
-		account.PlatformId,
+		account.Platform.Id,
 		account.CreatorId,
 	).Scan(&accountId);
 
@@ -202,7 +208,7 @@ func (r AccountRepository) UpdateAccount(ctx context.Context, account Account) (
 		WHERE id = $4`,
 		account.Username,
 		account.Password,
-		account.PlatformId,
+		account.Platform.Id,
 		account.Id,
 	);
 
