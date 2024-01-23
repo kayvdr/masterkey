@@ -48,7 +48,7 @@ func NewPagination(searchTerm string, page int, limit int, sort string, order st
 			return nil, ErrPageSortValue
 		}
 	} else {
-		sort = "id"
+		sort = "u.id"
 	}
 
 	if len(order) > 0 {

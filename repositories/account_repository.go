@@ -57,7 +57,7 @@ func (r AccountRepository) GetAccount(ctx context.Context, id uuid.UUID) (*Accou
 }
 
 func (r AccountRepository) GetAccounts(ctx context.Context, pagination common.Pagination) ([]*Account, error) {
-	params := fmt.Sprintf("ORDER BY u.%s LIMIT %s OFFSET %s", pagination.Sort() + " " + pagination.Order(), strconv.FormatInt(int64(pagination.Limit()), 10), strconv.FormatInt(int64(pagination.Offset()), 10))
+	params := fmt.Sprintf("ORDER BY %s LIMIT %s OFFSET %s", pagination.Sort() + " " + pagination.Order(), strconv.FormatInt(int64(pagination.Limit()), 10), strconv.FormatInt(int64(pagination.Offset()), 10))
 	rows, err := r.pool.Query(ctx, `
 		SELECT u.id, u.username, u.password, 
 			(SELECT count(v.id) FROM votes AS v WHERE v.account_id = u.id AND v.value = 'up') AS votes_up, 
