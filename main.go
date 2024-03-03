@@ -2,71 +2,53 @@ package main
 
 import (
 	"context"
+	"embed"
 	"log"
 	"net/http"
-	"time"
 
 	"github.com/go-chi/chi"
-	chiMiddleware "github.com/go-chi/chi/middleware"
-	"github.com/go-chi/cors"
-	"github.com/on3k/shac-api/app"
+	chimiddleware "github.com/go-chi/chi/v5/middleware"
+	"github.com/on3k/shac-api/api"
 	"github.com/on3k/shac-api/common/env"
 )
 
+//go:embed web/dist
+var staticFiles embed.FS
+
 func main() {
-	ctx := context.Background()
-	env := env.NewEnv()
-	app := app.NewApplication(ctx, env)
+	env, err := env.NewEnv()
+	if err != nil {
+		panic(err)
+	}
 
 	r := chi.NewRouter()
+	r.Use(chimiddleware.RequestID)
+	r.Use(chimiddleware.RealIP)
+	r.Use(chimiddleware.Maybe(
+		chimiddleware.Logger,
+		func(r *http.Request) bool { return !env.IsProduction() }),
+	)
+	r.Use(chimiddleware.Recoverer)
+	// The server never sets Etag or Last-Modified headers, so revalidation
+	// requests can never be performed. Therefore no-store is used by default to
+	// prevent caching.
+	r.Use(chimiddleware.SetHeader("Cache-Control", "no-store"))
+	r.Use(chimiddleware.Compress(5))
 
-	r.Use(chiMiddleware.RequestID)
-	r.Use(chiMiddleware.RealIP)
-	r.Use(chiMiddleware.Logger)
-	r.Use(chiMiddleware.Recoverer)
-	r.Use(chiMiddleware.Timeout(60 * time.Second))
-	r.Use(cors.Handler(cors.Options{
-		AllowedOrigins: []string{"http://localhost:60005"},
-		AllowedMethods: []string{"GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"},
-		AllowedHeaders: []string{"Accept", "Content-Type", "Authorization"},
-		MaxAge:         600,
-	}))
+	// files, err := file.NewFileServer(staticFiles)
+	// if err != nil {
+	// 	panic(err)
+	// }
 
-	r.Route("/v1", func(r chi.Router) {
-		// TODO: Secure some api endpoint with authentication 
-
-		r.Route("/accounts", func(r chi.Router) {
-			r.Get("/", app.GetAccounts)
-			r.Post("/", app.CreateAccount)
-			r.Get("/{accountId}", app.GetAccount)
-			r.Patch("/{accountId}", app.UpdateAccount)
-			r.Delete("/{accountId}", app.DeleteAccount)
-			r.Get("/{accountId}/votes", app.GetAccountVotes)
-		})
-
-		r.Route("/creators", func(r chi.Router) {
-			r.Get("/{creatorId}/accounts", app.GetCreatorsAccounts)
-			r.Get("/{creatorId}/votes", app.GetCreatorsVotes)
-		})
-
-		r.Route("/platforms", func(r chi.Router) {
-			r.Get("/", app.GetPlatforms)
-		})
-
-		r.Route("/votes", func(r chi.Router) {
-			r.Post("/", app.CreateVote)
-			r.Delete("/{voteId}", app.DeleteVote)
-		})
-	})
-
-	port := env.Port
-	if port == "" {
-		port = "8080"
-		log.Printf("defaulting to port %s", port)
+	api, err := api.NewApplication(context.Background(), env)
+	if err != nil {
+		panic(err)
 	}
+	defer api.Close()
 
-	log.Printf("listening on port %s", port)
-	if err := http.ListenAndServe(":"+port, r); err != nil {
-		log.Fatal(err)
-	}
+	// r.Mount("/", files.Router())
+	r.Mount("/api/v1", api.Router(env))
+
+	log.Printf("listening on port %s", env.Port)
+	panic(http.ListenAndServe(":"+env.Port, r))
 }

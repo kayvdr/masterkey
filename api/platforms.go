@@ -1,10 +1,9 @@
-package app
+package api
 
 import (
 	"net/http"
 
 	"github.com/go-chi/render"
-	"github.com/on3k/shac-api/common/httperr"
 	"github.com/on3k/shac-api/domain"
 )
 
@@ -13,7 +12,7 @@ func (app Application) GetPlatforms(w http.ResponseWriter, r *http.Request) {
 
 	res, err := app.Repositories.Platform.GetPlatforms(ctx)
 	if err != nil {
-		render.Render(w, r, httperr.ErrInternalServer(err.Error()))
+		app.HTTPError.New(w, r, err)
 		return
 	}
 
