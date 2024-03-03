@@ -2,19 +2,30 @@ package domain
 
 import (
 	"github.com/google/uuid"
+	"github.com/on3k/shac-api/common/slices"
 	"github.com/on3k/shac-api/repositories"
 )
 
 type Platform struct {
-	Id         uuid.UUID `json:"id"`
+	ID         uuid.UUID `json:"id"`
 	Name   string    `json:"name"`
 	URL   string    `json:"url"`
 }
 
-func MapPlatform(dbItem *repositories.Platform) Platform {
+func NewPlatform(dbItem repositories.Platform) Platform {
 	return Platform{
-		Id: dbItem.Id,
+		ID: dbItem.ID,
 		Name: dbItem.Name,
 		URL: dbItem.URL,
+	}
+}
+
+type PlatformsResponse struct {
+	Platforms []Platform `json:"platforms"`
+}
+
+func NewPlatformsResponse(platforms []repositories.Platform) PlatformsResponse {
+	return PlatformsResponse{
+		Platforms: slices.Map(platforms, NewPlatform),
 	}
 }

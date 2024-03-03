@@ -3,9 +3,7 @@ package app
 import (
 	"net/http"
 
-	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
-	"github.com/google/uuid"
 	"github.com/on3k/shac-api/common"
 	"github.com/on3k/shac-api/common/httperr"
 	"github.com/on3k/shac-api/domain"
@@ -13,14 +11,9 @@ import (
 
 func (app Application) GetCreatorsAccounts(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	param := chi.URLParam(r, "creatorId")
-	if param == "" {
-		render.Render(w, r, httperr.ErrBadRequest("missing parameter 'creatorId'"))
-		return
-	}
-	creatorId, err := uuid.Parse(param)
+	creatorID, err := common.GetUUIDParamFromURL(r, "creatorId")
 	if err != nil {
-		render.Render(w, r, httperr.ErrBadRequest("invalid parameter creatorId"))
+		render.Render(w, r, httperr.ErrBadRequest(err.Error()))
 		return
 	}
 
@@ -30,7 +23,7 @@ func (app Application) GetCreatorsAccounts(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	res, err := app.Repositories.Account.GetAccountsByCreator(ctx, pagination, creatorId)
+	res, err := app.Repositories.Account.GetAccountsByCreator(ctx, pagination, creatorID)
 	if err != nil {
 		render.Render(w, r, httperr.ErrInternalServer(err.Error()))
 		return
@@ -38,7 +31,7 @@ func (app Application) GetCreatorsAccounts(w http.ResponseWriter, r *http.Reques
 
 	var accounts []domain.Account
 	for _, u := range res {
-		accounts = append(accounts, domain.MapAccount(u))
+		accounts = append(accounts, domain.NewAccount(u))
 	} 
 
 	type Response struct {
@@ -51,14 +44,9 @@ func (app Application) GetCreatorsAccounts(w http.ResponseWriter, r *http.Reques
 
 func (app Application) GetCreatorsVotes(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	param := chi.URLParam(r, "creatorId")
-	if param == "" {
-		render.Render(w, r, httperr.ErrBadRequest("missing parameter 'creatorId'"))
-		return
-	}
-	creatorId, err := uuid.Parse(param)
+	creatorID, err := common.GetUUIDParamFromURL(r, "creatorId")
 	if err != nil {
-		render.Render(w, r, httperr.ErrBadRequest("invalid parameter creatorId"))
+		render.Render(w, r, httperr.ErrBadRequest(err.Error()))
 		return
 	}
 
@@ -68,21 +56,11 @@ func (app Application) GetCreatorsVotes(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	res, err := app.Repositories.Vote.GetVotesByCreator(ctx, pagination, creatorId)
+	res, err := app.Repositories.Vote.GetVotesByCreator(ctx, pagination, creatorID)
 	if err != nil {
 		render.Render(w, r, httperr.ErrInternalServer(err.Error()))
 		return
 	}
 
-	var votes []domain.FullVote
-	for _, v := range res {
-		votes = append(votes, domain.MapFullVote(v))
-	} 
-
-	type Response struct {
-		Count int                 `json:"count"`
-		Items     []domain.FullVote `json:"items"`
-	}
-
-	render.JSON(w, r, Response{Count: len(votes), Items: votes})
+	render.JSON(w, r,  domain.NewVotesResponse(res, len(res)))
 }

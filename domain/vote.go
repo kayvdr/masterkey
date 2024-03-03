@@ -5,24 +5,14 @@ import (
 	"net/http"
 
 	"github.com/google/uuid"
+	"github.com/on3k/shac-api/common/slices"
 	"github.com/on3k/shac-api/repositories"
 )
 
-type Vote struct {
-	Id         uuid.UUID `json:"id"`
-	Value   repositories.Value    `json:"value"`
-	CreatorId  uuid.UUID `json:"creatorId"`
-}
-
-type FullVote struct {
-	Vote
-	Username string `json:"username"`
-	PlatformName string `json:"platformName"`
-}
-
 type CreateVoteBody struct {
-	Vote
-	AccountId   uuid.UUID    `json:"accountId"`
+	Value   repositories.Value    `json:"value"`
+	CreatorID  uuid.UUID `json:"creator_id"`
+	AccountID   uuid.UUID    `json:"account_id"`
 }
 
 func (b *CreateVoteBody) Bind(r *http.Request) error {
@@ -30,11 +20,11 @@ func (b *CreateVoteBody) Bind(r *http.Request) error {
 		return errors.New("value is not valid")
 	}
 
-	if b.AccountId == uuid.Nil {
+	if b.AccountID == uuid.Nil {
 		return errors.New("accountId is required")
 	}
 
-	if b.CreatorId == uuid.Nil {
+	if b.CreatorID == uuid.Nil {
 		return errors.New("creatorId is required")
 	}
 
@@ -43,29 +33,40 @@ func (b *CreateVoteBody) Bind(r *http.Request) error {
 
 func (b *CreateVoteBody) Model() repositories.Vote {
 	return repositories.Vote{
-		Id: b.Id,
 		Value: b.Value,
-		AccountId: b.AccountId,
-		CreatorId: b.CreatorId,
+		AccountID: b.AccountID,
+		CreatorID: b.CreatorID,
 	}
 }
 
-func MapVote(dbItem *repositories.Vote) Vote {
+type Vote struct {
+	CreateVoteBody
+	ID         uuid.UUID `json:"id"`
+	Username string `json:"username"`
+	PlatformName string `json:"platform_name"`
+}
+
+func NewVote(dbItem repositories.Vote) Vote {
 	return Vote{
-		Id: dbItem.Id,
-		Value: dbItem.Value,
-		CreatorId: dbItem.CreatorId,
-	}
-}
-
-func MapFullVote(dbItem *repositories.FullVote) FullVote {
-	return FullVote{
-		Vote: Vote{
-			Id: dbItem.Id, 
-			Value: dbItem.Value, 
-			CreatorId: dbItem.CreatorId,
+		CreateVoteBody: CreateVoteBody{
+			Value: dbItem.Value,
+			AccountID: dbItem.AccountID,
+			CreatorID: dbItem.CreatorID,
 		},
+		ID: dbItem.ID,
 		Username: dbItem.Username,
 		PlatformName: dbItem.PlatformName,
+	}
+}
+
+type VotesResponse struct {
+	Total int    `json:"total"`
+	Votes []Vote `json:"votes"`
+}
+
+func NewVotesResponse(votes []repositories.Vote, total int) VotesResponse {
+	return VotesResponse{
+		Total: total,
+		Votes: slices.Map(votes, NewVote),
 	}
 }

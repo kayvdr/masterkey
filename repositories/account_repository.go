@@ -2,11 +2,13 @@ package repositories
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"strconv"
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/on3k/shac-api/common"
 	"github.com/on3k/shac-api/common/pg"
@@ -21,219 +23,169 @@ func NewAccountRepository(pool *pgxpool.Pool) AccountRepository {
 }
 
 type Account struct {
-	Id  uuid.UUID `db:"id"`
+	ID  uuid.UUID `db:"id"`
 	Username   string      `db:"username"`
 	Password string    `db:"password"`
-	VotesUp *int    `db:"voteUp"`
-	VotesDown *int    `db:"votesDown"`
-	CreatorId uuid.UUID    `db:"creator_id"`
+	VotesUp int    `db:"votes_up"`
+	VotesDown int    `db:"votes_down"`
+	CreatorID uuid.UUID    `db:"creator_id"`
 	CreatedAt time.Time    `db:"created_at"`
-	Platform  Platform    `db:"platform"`
+	PlatformID  uuid.UUID    `db:"platform_id"`
+	PlatformName  string    `db:"platform_name"`
+	PlatformURL  string    `db:"platform_url"`
 }
 
-func (r AccountRepository) GetAccount(ctx context.Context, id uuid.UUID) (*Account, error) {
-	account := Account{}
-	err := r.pool.QueryRow(ctx, `
-		SELECT u.id, u.username, u.password,
-			(SELECT count(v.id) FROM votes AS v WHERE v.account_id = u.id AND v.value = 'up') AS votes_up, 
-			(SELECT count(v.id) FROM votes AS v WHERE v.account_id = u.id AND v.value = 'down') AS votes_down, 
-			u.created_at, u.creator_id, p.id, p.name, p.url 
-	 	FROM accounts AS u 
-		INNER JOIN platforms AS p ON u.platform_id = p.id 
-		WHERE u.id = $1
-	`, id).Scan(
-		&account.Id,
-		&account.Username,
-		&account.Password,
-		&account.VotesUp,
-		&account.VotesDown,
-		&account.CreatedAt,
-		&account.CreatorId,
-		&account.Platform.Id,
-		&account.Platform.Name,
-		&account.Platform.URL,
-	)
-	return &account, err
+var ErrAccountNotFound = errors.New("account not found")
+
+func (r AccountRepository) GetAccount(ctx context.Context, accountID uuid.UUID) (*Account, error) {
+	return queryAccount(ctx, r.pool, accountID)
 }
 
-func (r AccountRepository) GetAccounts(ctx context.Context, pagination common.Pagination) ([]*Account, error) {
+func (r AccountRepository) GetAccounts(ctx context.Context, pagination common.Pagination) ([]Account, error) {
 	params := fmt.Sprintf("ORDER BY %s LIMIT %s OFFSET %s", pagination.Sort() + " " + pagination.Order(), strconv.FormatInt(int64(pagination.Limit()), 10), strconv.FormatInt(int64(pagination.Offset()), 10))
 	rows, err := r.pool.Query(ctx, `
 		SELECT u.id, u.username, u.password, 
 			(SELECT count(v.id) FROM votes AS v WHERE v.account_id = u.id AND v.value = 'up') AS votes_up, 
 			(SELECT count(v.id) FROM votes AS v WHERE v.account_id = u.id AND v.value = 'down') AS votes_down, 
-			u.created_at, u.creator_id, p.id, p.name, p.url
+			u.created_at, u.creator_id, p.id AS platform_id, p.name AS platform_name, p.url  AS platform_url
 		FROM accounts AS u 
 		INNER JOIN platforms AS p ON u.platform_id = p.id
 		WHERE ($1 = '' OR p.name ILIKE $1)
 	`+params, pg.ILIKE(pagination.SearchTerm()))
-
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
 
-	accounts := []*Account{}
-	for rows.Next() {
-		account := &Account{}
-		rows.Scan(
-			&account.Id,
-			&account.Username,
-			&account.Password,
-			&account.VotesUp,
-			&account.VotesDown,
-			&account.CreatedAt,
-			&account.CreatorId,
-			&account.Platform.Id,
-			&account.Platform.Name,
-			&account.Platform.URL,
-		)
-		accounts = append(accounts, account)
-	}
-
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-
-	return accounts, nil
+	return pgx.CollectRows(rows, pgx.RowToStructByName[Account])
 }
 
-func (r AccountRepository) GetAccountsByCreator(ctx context.Context, pagination common.Pagination, accountId uuid.UUID) ([]*Account, error) {
+func (r AccountRepository) GetAccountsByCreator(ctx context.Context, pagination common.Pagination, accountID uuid.UUID) ([]Account, error) {
 	rows, err := r.pool.Query(ctx, `
 		SELECT u.id, u.username, u.password,
 			(SELECT count(v.id) FROM votes AS v WHERE v.account_id = u.id AND v.value = 'up') AS votes_up, 
 			(SELECT count(v.id) FROM votes AS v WHERE v.account_id = u.id AND v.value = 'down') AS votes_down, 
-		u.created_at, u.creator_id, u.platform_id, p.name, p.url
+			u.created_at, u.creator_id, p.id AS platform_id, p.name AS platform_name, p.url  AS platform_url
 		FROM accounts AS u 
 		INNER JOIN platforms AS p ON u.platform_id = p.id
 		WHERE creator_id = $1
-	`, accountId)
+	`, accountID)
 
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
 
-	accounts := []*Account{}
-	for rows.Next() {
-		account := &Account{}
-		rows.Scan(
-			&account.Id,
-			&account.Username,
-			&account.Password,
-			&account.VotesUp,
-			&account.VotesDown,
-			&account.CreatedAt,
-			&account.CreatorId,
-			&account.Platform.Id,
-			&account.Platform.Name,
-			&account.Platform.URL,
-		)
-		accounts = append(accounts, account)
-	}
-
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-
-	return accounts, nil
+	return pgx.CollectRows(rows, pgx.RowToStructByName[Account])
 }
 
-func (r AccountRepository) GetAccountVotes(ctx context.Context, accountId uuid.UUID) ([]*Vote, error) {
+func (r AccountRepository) GetAccountVotes(ctx context.Context, accountID uuid.UUID) ([]Vote, error) {
 	rows, err := r.pool.Query(ctx, `
-		SELECT * FROM votes
+		SELECT v.id, v.value, v.account_id, v.creator_id, a.username, p.name AS platform_name FROM votes v
+		INNER JOIN accounts AS a ON v.account_id = a.id
+		INNER JOIN platforms AS p ON a.platform_id = p.id
 		WHERE account_id = $1
-	`, accountId)
+	`, accountID)
 
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
-
-	votes := []*Vote{}
-	for rows.Next() {
-		vote := &Vote{}
-		rows.Scan(
-			&vote.Id,
-			&vote.Value,
-			&vote.AccountId,
-			&vote.CreatorId,
-		)
-		votes = append(votes, vote)
-	}
-
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-
-	return votes, nil
+	
+	return pgx.CollectRows(rows, pgx.RowToStructByName[Vote])
 }
 
-func (r AccountRepository) GetAccountsCount(ctx context.Context, pagination common.Pagination) (*int, error) {
-	var count int
-	err := r.pool.QueryRow(ctx, `SELECT count(*)
-	FROM accounts AS u 
-	INNER JOIN platforms AS p ON u.platform_id = p.id
-	WHERE ($1 = '' OR p.name ILIKE $1)`, pg.ILIKE(pagination.SearchTerm())).Scan(
-		&count,
-	)
-	return &count, err
+func (r AccountRepository) GetAccountsCount(ctx context.Context, pagination common.Pagination) (count int, err error) {
+	err = r.pool.QueryRow(ctx, `
+		SELECT count(*)
+		FROM accounts AS u 
+		INNER JOIN platforms AS p ON u.platform_id = p.id
+		WHERE ($1 = '' OR p.name ILIKE $1)
+	`, pg.ILIKE(pagination.SearchTerm()),
+	).Scan(&count)
+	return
 }
 
-func (r AccountRepository) CreateAccount(ctx context.Context, account Account) (*Account, error) {
-	var accountId uuid.UUID
-	err := r.pool.QueryRow(ctx, `
-		INSERT INTO accounts (id, username, password, platform_id, creator_id) 
-		VALUES (gen_random_uuid(), $1, $2, $3, $4)
-		RETURNING id`, 
-		account.Username, 
-		account.Password,
-		account.Platform.Id,
-		account.CreatorId,
-	).Scan(&accountId);
+func (r AccountRepository) CreateAccount(ctx context.Context, account Account) (a *Account, err error) {
+	err = pgx.BeginFunc(ctx, r.pool, func(tx pgx.Tx) (err error) {
+		var accountID uuid.UUID
+		err = tx.QueryRow(ctx, `
+			INSERT INTO accounts (id, username, password, platform_id, creator_id) 
+			VALUES (gen_random_uuid(), $1, $2, $3, $4)
+			RETURNING id`, 
+			account.Username, 
+			account.Password,
+			account.PlatformID,
+			account.CreatorID,
+		).Scan(&accountID);
 
-	if err != nil {
-		return nil, err
-	}
-	return r.GetAccount(ctx, accountId)
+		if err != nil {
+			return
+		}
+		a, err = queryAccount(ctx,tx, accountID)
+		return
+	})
+
+	return
 }
 
-func (r AccountRepository) UpdateAccount(ctx context.Context, account Account) (*Account, error) {
-	_, err := r.pool.Exec(ctx, `
-		UPDATE accounts
-		SET
-		username = $1
-		, password = $2
-		, platform_id = $3
-		WHERE id = $4`,
-		account.Username,
-		account.Password,
-		account.Platform.Id,
-		account.Id,
-	);
+func (r AccountRepository) UpdateAccount(ctx context.Context, account Account, accountID uuid.UUID) (a *Account, err error) {
+	err = pgx.BeginFunc(ctx, r.pool, func(tx pgx.Tx) (err error) {
+		_, err = r.pool.Exec(ctx, `
+			UPDATE accounts
+			SET
+			username = $1
+			, password = $2
+			, platform_id = $3
+			WHERE id = $4`,
+			account.Username,
+			account.Password,
+			account.PlatformID,
+			account.ID,
+		);
 
-	if err != nil {
-		return nil, err
-	}
-	return r.GetAccount(ctx, account.Id)
+		if err != nil {
+			return
+		}
+		a, err = queryAccount(ctx,tx, accountID)
+		return
+	})
+
+	return
 }
 
-func (r AccountRepository) ExistsAccount(ctx context.Context, accountId uuid.UUID) (bool, error) {
-	exists := false
-	err := r.pool.QueryRow(ctx, `
-		SELECT EXISTS (SELECT NULL FROM accounts WHERE id = $1)
-	`, accountId).Scan(&exists)
-	return exists, err
+func (r AccountRepository) ExistsAccount(ctx context.Context, accountID uuid.UUID) (exists bool, err error) {
+	err = r.pool.QueryRow(ctx, `SELECT EXISTS (SELECT NULL FROM accounts WHERE id = $1)`, accountID).Scan(&exists)
+	return
 }
 
-func (r AccountRepository) DeleteAccount(ctx context.Context, accountId uuid.UUID) (bool, error) {
+func (r AccountRepository) DeleteAccount(ctx context.Context, accountID uuid.UUID) (bool, error) {
 	_, err := r.pool.Exec(ctx, `
 		DELETE FROM accounts 
 		WHERE id = $1
-	`, accountId)
+	`, accountID)
 
 	if err != nil {
 		return false, err
 	}
 	return true, nil
+}
+
+func queryAccount(ctx context.Context, querier pg.Querier, accountID uuid.UUID) (a *Account, err error) {
+	rows, err := querier.Query(ctx, `
+	SELECT u.id, u.username, u.password,
+		(SELECT count(v.id) FROM votes AS v WHERE v.account_id = u.id AND v.value = 'up') AS votes_up, 
+		(SELECT count(v.id) FROM votes AS v WHERE v.account_id = u.id AND v.value = 'down') AS votes_down, 
+		u.created_at, u.creator_id, p.id AS platform_id, p.name AS platform_name, p.url as platform_url 
+	FROM accounts AS u 
+	INNER JOIN platforms AS p ON u.platform_id = p.id 
+	WHERE u.id = $1
+	`, accountID)
+	if err != nil {
+		return
+	}
+
+	a, err = pgx.CollectOneRow(rows, pgx.RowToAddrOfStructByName[Account])
+	if err == pgx.ErrNoRows {
+		return nil, ErrAccountNotFound
+	}
+
+	return
 }

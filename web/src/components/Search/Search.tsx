@@ -1,8 +1,9 @@
 import classNames from "classnames";
-import { RefObject, useEffect, useState } from "react";
+import { useEffect } from "react";
+import useListFilters from "../../hooks/useListFilters";
 import { getAccounts } from "../../http/api";
-import { Account, Pagination } from "../../types";
-import UserList, { RefType } from "../../ui/UserList";
+import { Account } from "../../types";
+import AccountList from "../../ui/AccountList";
 import { getSearchParams, setSearchParams } from "../../utils";
 import SvgArrowLeft from "../icons/ArrowLeft";
 import SvgArrowRight from "../icons/ArrowRight";
@@ -13,10 +14,9 @@ interface Props {
   searchTerm?: string;
   isPagination?: boolean;
   sort?: keyof Account;
-  userListRef?: RefObject<RefType>;
 }
 
-const isKeyofUser = (value: string): value is keyof Account =>
+const isKeyofAccount = (value: string): value is keyof Account =>
   [
     "id",
     "username",
@@ -27,61 +27,48 @@ const isKeyofUser = (value: string): value is keyof Account =>
     "created_at",
   ].includes(value as keyof Account);
 
-const Search = ({
-  title,
-  searchTerm,
-  isPagination = true,
-  sort,
-  userListRef,
-}: Props) => {
-  const [users, setUsers] = useState<Account[]>();
-  const [count, setCount] = useState<number>();
-  const [pagination, setPagination] = useState<Pagination>({
-    limit: 12,
-    page: 1,
-    sort: sort,
+const Search = ({ title, searchTerm, isPagination = true, sort }: Props) => {
+  const filters = useListFilters();
+
+  const {
+    data: accounts,
+    isLoading,
+    mutate,
+  } = getAccounts({
+    q: searchTerm ?? "",
+    order: filters.state.sort === "username" ? "ASC" : "DESC",
+    ...filters.state,
   });
 
   useEffect(() => {
     const searchQuery = getSearchParams("sort");
     if (!searchQuery || sort) return;
 
-    isKeyofUser(searchQuery) &&
-      setPagination({ ...pagination, sort: searchQuery });
+    isKeyofAccount(searchQuery) && filters.setSort(searchQuery);
   }, []);
 
-  let pages = count && Math.ceil(count / pagination.limit);
-
-  useEffect(() => {
-    const fetchUsers = async () => {
-      const fetchedUsers = await getAccounts({
-        q: searchTerm ?? "",
-        order: pagination.sort === "username" ? "ASC" : "DESC",
-        ...pagination,
-      });
-
-      setUsers(fetchedUsers?.items);
-      setCount(fetchedUsers?.count);
-    };
-
-    fetchUsers();
-  }, [pagination, searchTerm]);
+  const pages =
+    accounts?.count && Math.ceil(accounts.count / filters.state.limit);
 
   return (
     <>
-      <div className={styles.searchRow}>
-        {title ? <h1 className={styles.rowTitle}>{title}</h1> : <div></div>}
+      <div
+        className={classNames(styles.searchRow, {
+          [styles.searchRowRight]: !title,
+        })}
+      >
+        {title && <h1 className={styles.rowTitle}>{title}</h1>}
         <div className={styles.filter}>
           <select
-            value={pagination.sort ?? ""}
+            value={filters.state.sort ?? ""}
             onChange={(e) => {
               const value = e.target.value as keyof Account;
-              if (!isKeyofUser(value) || sort) return;
-              setPagination({ ...pagination, sort: value });
+              if (!isKeyofAccount(value) || sort) return;
+              filters.setSort(value);
               setSearchParams("sort", value);
             }}
             className={classNames(styles.sortSelect, {
-              [styles.selectActive]: !!pagination.sort,
+              [styles.selectActive]: !!filters.state.sort,
             })}
             disabled={!!sort}
           >
@@ -95,25 +82,19 @@ const Search = ({
           </select>
         </div>
       </div>
-      <div>
-        {users?.length === 0 && <div>No Accounts found</div>}
-        {users && (
-          <UserList
-            ref={userListRef}
-            users={users}
-            setUsers={(data) => setUsers(data)}
-          />
-        )}
-      </div>
+      {accounts && (
+        <>
+          {isLoading && <p>ladet</p>}
+          {accounts.count === 0 && !isLoading && <div>No Accounts found</div>}
+          <AccountList accounts={accounts.items} mutate={mutate} />
+        </>
+      )}
       {isPagination && (
         <div className={styles.pagination}>
           <button
             className={styles.paginationPrev}
-            onClick={() => (
-              setPagination({ ...pagination, page: pagination.page - 1 }),
-              userListRef?.current?.toggleDetails()
-            )}
-            disabled={pagination.page <= 1}
+            onClick={filters.prevPage}
+            disabled={filters.state.page <= 1}
           >
             <SvgArrowLeft
               className={classNames(styles.icon, styles.iconPagination)}
@@ -122,12 +103,9 @@ const Search = ({
           {[...Array(pages).keys()].map((p) => (
             <button
               className={classNames(styles.paginationBtn, {
-                [styles.paginationActive]: pagination.page === p + 1,
+                [styles.paginationActive]: filters.state.page === p + 1,
               })}
-              onClick={() => (
-                setPagination({ ...pagination, page: p + 1 }),
-                userListRef?.current?.toggleDetails()
-              )}
+              onClick={() => filters.setPage(p + 1)}
               key={p}
             >
               {p + 1}
@@ -135,11 +113,10 @@ const Search = ({
           ))}
           <button
             className={styles.paginationNext}
-            onClick={() => (
-              setPagination({ ...pagination, page: pagination.page + 1 }),
-              userListRef?.current?.toggleDetails()
-            )}
-            disabled={pagination.limit * pagination.page >= (count ?? 0)}
+            onClick={filters.nextPage}
+            disabled={
+              filters.state.limit * filters.state.page >= (accounts?.count ?? 0)
+            }
           >
             <SvgArrowRight
               className={classNames(styles.icon, styles.iconPagination)}

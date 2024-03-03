@@ -21,16 +21,6 @@ func (app Application) CreateVote(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	exists, err := app.Repositories.Account.ExistsAccount(ctx, body.AccountId)
-	if err != nil {
-		render.Render(w, r, httperr.ErrInternalServer(err.Error()))
-		return
-	}
-	if !exists {
-		render.Render(w, r, httperr.ErrNotFound(fmt.Sprintf("account '%s' not found", body.AccountId)))
-		return
-	}
-
 	res, err := app.Repositories.Vote.CreateVote(ctx, body.Model())
 	if err == repositories.ErrMultipleVotes {
 		render.Render(w, r, httperr.ErrBadRequest(err.Error()))
@@ -41,7 +31,8 @@ func (app Application) CreateVote(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	render.JSON(w, r, domain.MapVote(res))
+	render.Status(r, http.StatusCreated)
+	render.JSON(w, r, domain.NewVote(*res))
 }
 
 func (app Application) DeleteVote(w http.ResponseWriter, r *http.Request) {

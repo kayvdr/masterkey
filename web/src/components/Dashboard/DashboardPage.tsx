@@ -2,6 +2,7 @@ import classNames from "classnames";
 import { format } from "date-fns";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import useToggle from "../../hooks/useToggle";
 import { getAccountsByCreatorId, getVotesByCreatorId } from "../../http/api";
 import { supabase } from "../../http/supabase";
 import { FullVote } from "../../types";
@@ -12,7 +13,6 @@ import { logoMapping } from "../../utils";
 import { SessionContext } from "../AppRouter";
 import Footer from "../Footer";
 import Header from "../Header";
-import useToggle from "../hooks/useToggle";
 import SvgArrowDown from "../icons/ArrowDown";
 import SvgArrowUp from "../icons/ArrowUp";
 import styles from "./DashboardPage.module.css";
@@ -46,7 +46,7 @@ const DashboardPage = () => {
   const [votes, setVotes] = useState<FullVotesInfo>();
 
   useEffect(() => {
-    const fetchUsers = async () => {
+    const fetchAccounts = async () => {
       if (!session) return;
       const fetchedUsers = await getAccountsByCreatorId(session.user.id);
       const groupedUsers = fetchedUsers?.items.reduce<List>((prev, curr) => {
@@ -67,7 +67,7 @@ const DashboardPage = () => {
       setVotes({ count: fetchedVotes?.count, items: fetchedVotes?.items });
     };
 
-    fetchUsers();
+    fetchAccounts();
     fetchVotes();
   }, []);
 

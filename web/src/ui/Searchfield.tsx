@@ -1,18 +1,16 @@
-import { FormEvent, RefObject, useEffect, useRef, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import SvgClose from "../components/icons/Close";
 import SvgSearch from "../components/icons/Search";
 import { getSearchParams, setSearchParams } from "../utils";
 import Button from "./Button";
 import Icon from "./Icon";
 import styles from "./Searchfield.module.css";
-import { RefType } from "./UserList";
 
 interface Props {
-  userListRef?: RefObject<RefType>;
   onSubmit: (value: string) => void;
 }
 
-const Searchfield = ({ userListRef, onSubmit }: Props) => {
+const Searchfield = ({ onSubmit }: Props) => {
   const [searchTerm, setSearchTerm] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -55,12 +53,7 @@ const Searchfield = ({ userListRef, onSubmit }: Props) => {
             </button>
           )}
         </div>
-        <Button
-          type="submit"
-          onClick={() => userListRef?.current?.toggleDetails()}
-        >
-          Search
-        </Button>
+        <Button type="submit">Search</Button>
       </div>
     </form>
   );

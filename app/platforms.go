@@ -11,16 +11,11 @@ import (
 func (app Application) GetPlatforms(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
-	res, err := app.Repositories.Platform.GetAllPlatforms(ctx)
+	res, err := app.Repositories.Platform.GetPlatforms(ctx)
 	if err != nil {
 		render.Render(w, r, httperr.ErrInternalServer(err.Error()))
 		return
 	}
 
-	var platforms []domain.Platform
-	for _, p := range res {
-		platforms = append(platforms, domain.MapPlatform(p))
-	} 
-
-	render.JSON(w, r, platforms)
+	render.JSON(w, r, domain.NewPlatformsResponse(res))
 }

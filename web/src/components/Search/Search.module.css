@@ -5,6 +5,10 @@
   margin-bottom: 1.5em;
 }
 
+.searchRowRight {
+  justify-content: flex-end;
+}
+
 .rowTitle {
   margin-bottom: 0;
 }

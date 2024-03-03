@@ -8,6 +8,7 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/on3k/shac-api/common"
+	"github.com/on3k/shac-api/common/pg"
 )
 
 type Value string
@@ -22,20 +23,15 @@ type VoteRepository struct {
 }
 
 type Vote struct {
-	Id  uuid.UUID `db:"id"`
-	Value Value    `db:"value"`
-	AccountId uuid.UUID    `db:"account_id"`
-	CreatorId uuid.UUID    `db:"creator_id"`
-}
-
-type FullVote struct {
-	Id  uuid.UUID `db:"id"`
+	ID  uuid.UUID `db:"id"`
 	Value Value    `db:"value"`
 	Username string    `db:"username"`
 	PlatformName string    `db:"platform_name"`
-	CreatorId uuid.UUID    `db:"creator_id"`
+	AccountID uuid.UUID    `db:"account_id"`
+	CreatorID uuid.UUID    `db:"creator_id"`
 }
 
+var ErrVoteNotFound = errors.New("Vote not found")
 var ErrMultipleVotes = errors.New("multiple account votes are not valid")
 
 func NewVoteRepository(pool *pgxpool.Pool) VoteRepository {
@@ -43,92 +39,86 @@ func NewVoteRepository(pool *pgxpool.Pool) VoteRepository {
 }
 
 func (r VoteRepository) GetVote(ctx context.Context, id uuid.UUID) (*Vote, error) {
-	vote := Vote{}
-	err := r.pool.QueryRow(ctx, `
-		SELECT v.id, v.value, v.account_id, v.creator_id FROM votes AS v 
-		WHERE id = $1
-	`, id).Scan(
-		&vote.Id,
-		&vote.Value,
-		&vote.AccountId,
-		&vote.CreatorId,
-	)
-	return &vote, err
+	return queryVote(ctx, r.pool, id)
 }
 
-func (r VoteRepository) CreateVote(ctx context.Context, vote Vote) (*Vote, error) {
-	var voteId uuid.UUID
-	err := r.pool.QueryRow(ctx, `
-		INSERT INTO votes (id, value, account_id, creator_id)
-		SELECT gen_random_uuid(), $1, $2, $3
-		WHERE NOT EXISTS (
-			SELECT * FROM votes WHERE account_id=$2 AND creator_id=$3
-		)
-		RETURNING id
-		`, 
-		vote.Value,
-		vote.AccountId,
-		vote.CreatorId,
-	).Scan(&voteId);
+func (r VoteRepository) CreateVote(ctx context.Context, vote Vote) (v *Vote, err error) {
+	err = pgx.BeginFunc(ctx, r.pool, func(tx pgx.Tx) (err error) {
+		var voteID uuid.UUID
+		err = r.pool.QueryRow(ctx, `
+			INSERT INTO votes (id, value, account_id, creator_id)
+			SELECT gen_random_uuid(), $1, $2, $3
+			WHERE NOT EXISTS (
+				SELECT * FROM votes WHERE account_id=$2 AND creator_id=$3
+			)
+			RETURNING id
+			`, 
+			vote.Value,
+			vote.AccountID,
+			vote.CreatorID,
+		).Scan(&voteID);
 
-	if err == pgx.ErrNoRows {
-		return nil, ErrMultipleVotes
-	}
-	if err != nil {
-		return nil, err
-	}
-	return r.GetVote(ctx, voteId)
+		if err == pgx.ErrNoRows {
+			err = ErrMultipleVotes
+			return
+		}
+		if err != nil {
+			return
+		}
+		v, err = queryVote(ctx,tx, voteID)
+		return
+	})
+
+	return
 }
 
-func (r VoteRepository) GetVotesByCreator(ctx context.Context, pagination common.Pagination, creatorId uuid.UUID) ([]*FullVote, error) {
+func (r VoteRepository) GetVotesByCreator(ctx context.Context, pagination common.Pagination, creatorId uuid.UUID) ([]Vote, error) {
 	rows, err := r.pool.Query(ctx, `
-		SELECT v.id, v.value, v.creator_id, u.username, p.name FROM votes AS v
-		INNER JOIN accounts AS u ON v.account_id = u.id
-		INNER JOIN platforms AS p ON u.platform_id = p.id
+		SELECT v.id, v.value, v.creator_id, a.id AS account_id, a.username, p.name AS platform_name FROM votes AS v
+		INNER JOIN accounts AS a ON v.account_id = a.id
+		INNER JOIN platforms AS p ON a.platform_id = p.id
 		WHERE v.creator_id = $1
 	`, creatorId)
 
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
 
-	votes := []*FullVote{}
-	for rows.Next() {
-		vote := &FullVote{}
-		rows.Scan(
-			&vote.Id,
-			&vote.Value,
-			&vote.CreatorId,
-			&vote.Username,
-			&vote.PlatformName,
-		)
-		votes = append(votes, vote)
-	}
-
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-
-	return votes, nil
+	return pgx.CollectRows(rows, pgx.RowToStructByName[Vote])
 }
 
-func (r VoteRepository) ExistsVote(ctx context.Context, voteId uuid.UUID) (bool, error) {
-	exists := false
-	err := r.pool.QueryRow(ctx, `
-		SELECT EXISTS (SELECT NULL FROM votes WHERE id = $1)
-	`, voteId).Scan(&exists)
-	return exists, err
+func (r VoteRepository) ExistsVote(ctx context.Context, voteID uuid.UUID) (exists bool, err error) {
+	err = r.pool.QueryRow(ctx, `SELECT EXISTS (SELECT NULL FROM votes WHERE id = $1)`, voteID).Scan(&exists)
+	return
 }
 
-func (r VoteRepository) DeleteVote(ctx context.Context, voteId uuid.UUID) (bool, error) {
+func (r VoteRepository) DeleteVote(ctx context.Context, voteID uuid.UUID) (bool, error) {
 	_, err := r.pool.Exec(ctx, `
 		DELETE FROM votes 
 		WHERE id = $1
-	`, voteId)
+	`, voteID)
 
 	if err != nil {
 		return false, err
 	}
 	return true, nil
+}
+
+func queryVote(ctx context.Context, querier pg.Querier, voteID uuid.UUID) (v *Vote, err error) {
+	rows, err := querier.Query(ctx, `
+		SELECT v.id, v.value, v.creator_id, a.id AS account_id, a.username, p.name AS platform_name FROM votes AS v
+		INNER JOIN accounts AS a ON v.account_id = a.id
+		INNER JOIN platforms AS p ON a.platform_id = p.id
+		WHERE v.id = $1
+	`, voteID)
+	if err != nil {
+		return
+	}
+
+	v, err = pgx.CollectOneRow(rows, pgx.RowToAddrOfStructByName[Vote])
+	if err == pgx.ErrNoRows {
+		return nil, ErrVoteNotFound
+	}
+
+	return
 }

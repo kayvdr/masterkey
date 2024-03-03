@@ -1,15 +1,8 @@
 import classNames from "classnames";
-import {
-  Ref,
-  forwardRef,
-  useContext,
-  useEffect,
-  useImperativeHandle,
-  useState,
-} from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { KeyedMutator } from "swr";
 import { SessionContext } from "../components/AppRouter";
-import useToggle from "../components/hooks/useToggle";
 import SvgArrowDown from "../components/icons/ArrowDown";
 import SvgArrowUp from "../components/icons/ArrowUp";
 import SvgClose from "../components/icons/Close";
@@ -18,37 +11,31 @@ import SvgDelete from "../components/icons/Delete";
 import SvgEdit from "../components/icons/Edit";
 import SvgKey from "../components/icons/Key";
 import SvgUser from "../components/icons/User";
+import { useOnClickOutside } from "../hooks/useOnClickOutside";
+import useToggle from "../hooks/useToggle";
 import { deleteAccount, deleteVote, getVote, setVote } from "../http/api";
-import { Account, Vote } from "../types";
+import { Account, Paginated, Vote } from "../types";
 import { logoMapping } from "../utils";
+import AccountItem from "./AccountItem";
+import itemStyles from "./AccountItem.module.css";
+import styles from "./AccountList.module.css";
 import Icon from "./Icon";
 import Popup from "./Popup";
-import UserItem from "./UserItem";
-import itemStyles from "./UserItem.module.css";
-import styles from "./UserList.module.css";
 
 interface Props {
-  users: Account[];
-  setUsers: (data: Account[]) => void;
+  accounts: Account[];
+  mutate: KeyedMutator<Paginated<Account[]>>;
 }
 
-export interface RefType {
-  toggleDetails: () => void;
-}
-
-const UserList = ({ users, setUsers }: Props, ref: Ref<RefType>) => {
+const AccountList = ({ accounts, mutate }: Props) => {
   const details = useToggle();
   const popup = useToggle();
   const [detailData, setDetailData] = useState<Account>();
-  const [userVote, setUserVote] = useState<Vote>();
+  const [accountVote, setUserVote] = useState<Vote>();
   const session = useContext(SessionContext);
   const navigate = useNavigate();
-
-  useImperativeHandle(ref, () => ({
-    toggleDetails() {
-      details.close();
-    },
-  }));
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  useOnClickOutside(wrapperRef, details.close);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -56,11 +43,11 @@ const UserList = ({ users, setUsers }: Props, ref: Ref<RefType>) => {
 
       const votes = await getVote(detailData.id);
 
-      const existingVote = votes?.find(
-        (vote) => vote.creatorId === session?.user.id
-      );
+      // const existingVote = votes?.find(
+      //   (vote) => vote.creatorId === session?.user.id
+      // );
 
-      setUserVote(existingVote);
+      // setUserVote(existingVote);
     };
 
     fetchData();
@@ -69,28 +56,29 @@ const UserList = ({ users, setUsers }: Props, ref: Ref<RefType>) => {
   const handleVote = async (value: "votesUp" | "votesDown") => {
     if (!detailData) return;
 
-    userVote?.id
-      ? await deleteVote(userVote.id)
+    accountVote?.id
+      ? await deleteVote(accountVote.id)
       : await setVote({
           value: value === "votesUp" ? "up" : "down",
           accountId: detailData.id ?? "",
           creatorId: session?.user.id ?? "",
         });
 
-    setUsers(
-      users.map((user) =>
-        user.id === detailData.id
+    mutate({
+      items: accounts.map((a) =>
+        a.id === detailData.id
           ? {
-              ...user,
-              [value]: userVote?.id ? user[value] - 1 : user[value] + 1,
+              ...a,
+              [value]: accountVote?.id ? a[value] - 1 : a[value] + 1,
             }
-          : user
-      )
-    );
+          : a
+      ),
+      count: 0,
+    });
 
     setDetailData({
       ...detailData,
-      [value]: userVote?.id ? detailData[value] - 1 : detailData[value] + 1,
+      [value]: accountVote?.id ? detailData[value] - 1 : detailData[value] + 1,
     });
   };
 
@@ -98,13 +86,13 @@ const UserList = ({ users, setUsers }: Props, ref: Ref<RefType>) => {
     detailData?.platform.name && logoMapping[detailData.platform.name];
 
   return (
-    <div className={styles.wrapper}>
+    <div className={styles.wrapper} ref={wrapperRef}>
       <div className={styles.list}>
-        {users.map((user) => (
-          <UserItem
-            user={user}
-            onClick={() => (setDetailData(user), details.open())}
-            key={user.id}
+        {accounts.map((a) => (
+          <AccountItem
+            key={a.id}
+            account={a}
+            onClick={() => (setDetailData(a), details.open())}
           />
         ))}
       </div>
@@ -156,7 +144,7 @@ const UserList = ({ users, setUsers }: Props, ref: Ref<RefType>) => {
             <div className={styles.voteItem}>
               <button
                 className={classNames(styles.btn, {
-                  [styles.btnActive]: userVote?.value === "up",
+                  [styles.btnActive]: accountVote?.value === "up",
                 })}
                 onClick={async () => {
                   if (!session) {
@@ -166,14 +154,14 @@ const UserList = ({ users, setUsers }: Props, ref: Ref<RefType>) => {
 
                   handleVote("votesUp");
                 }}
-                disabled={userVote?.value === "down"}
+                disabled={accountVote?.value === "down"}
               >
                 <Icon glyph={SvgArrowUp} className={itemStyles.iconGreen} />
                 <p className={itemStyles.textSmall}>{detailData?.votesUp}</p>
               </button>
               <button
                 className={classNames(styles.btn, {
-                  [styles.btnActive]: userVote?.value === "down",
+                  [styles.btnActive]: accountVote?.value === "down",
                 })}
                 onClick={async () => {
                   if (!detailData) return;
@@ -185,7 +173,7 @@ const UserList = ({ users, setUsers }: Props, ref: Ref<RefType>) => {
 
                   handleVote("votesDown");
                 }}
-                disabled={userVote?.value === "up"}
+                disabled={accountVote?.value === "up"}
               >
                 <Icon glyph={SvgArrowDown} className={itemStyles.iconRed} />
                 <p className={itemStyles.textSmall}>{detailData?.votesDown}</p>
@@ -222,11 +210,11 @@ const UserList = ({ users, setUsers }: Props, ref: Ref<RefType>) => {
                       onSubmit={() => {
                         detailData?.id && deleteAccount(detailData.id);
 
-                        const deletedUserList = users.filter(
+                        const deletedAccountList = accounts.filter(
                           (u) => u.id !== detailData?.id
                         );
 
-                        setUsers(deletedUserList);
+                        mutate({ items: deletedAccountList, count: 0 });
 
                         popup.close();
                         setDetailData(undefined);
@@ -244,4 +232,4 @@ const UserList = ({ users, setUsers }: Props, ref: Ref<RefType>) => {
   );
 };
 
-export default forwardRef(UserList);
+export default AccountList;

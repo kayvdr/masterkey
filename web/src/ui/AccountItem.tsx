@@ -4,15 +4,15 @@ import SvgArrowUp from "../components/icons/ArrowUp";
 import SvgUser from "../components/icons/User";
 import { Account } from "../types";
 import { getDiff, logoMapping } from "../utils";
+import styles from "./AccountItem.module.css";
 import Icon from "./Icon";
-import styles from "./UserItem.module.css";
 
 interface Props {
-  user: Account;
+  account: Account;
   onClick: () => void;
 }
 
-const UserItem = ({ user, onClick }: Props) => {
+const AccountItem = ({ account: user, onClick }: Props) => {
   const icon = logoMapping[user.platform.name];
 
   return (
@@ -60,4 +60,4 @@ const UserItem = ({ user, onClick }: Props) => {
   );
 };
 
-export default UserItem;
+export default AccountItem;

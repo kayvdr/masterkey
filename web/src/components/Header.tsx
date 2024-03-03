@@ -1,6 +1,7 @@
 import classNames from "classnames";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import useToggle from "../hooks/useToggle";
 import { supabase } from "../http/supabase";
 import btnStyles from "../ui/Button.module.css";
 import Icon from "../ui/Icon";
@@ -11,14 +12,9 @@ import SvgUser from "./icons/User";
 
 const Header = () => {
   const navigate = useNavigate();
-  const [navActive, setNavActive] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
+  const nav = useToggle();
   const [accountOpen, setAccountOpen] = useState(false);
   const session = useContext(SessionContext);
-
-  useEffect(() => {
-    setNavActive(document.body.clientWidth < 992);
-  }, []);
 
   return (
     <header className={styles.header}>
@@ -26,19 +22,17 @@ const Header = () => {
         <Icon glyph={SvgLogo} className={styles.logo} />
       </button>
       <div className={styles.nav}>
-        {navActive && (
-          <button
-            className={classNames(styles.navToggle, {
-              [styles.navToggleActive]: isOpen,
-            })}
-            onClick={() => setIsOpen(!isOpen)}
-          >
-            <span className={styles.navToggleIcon}></span>
-          </button>
-        )}
+        <button
+          className={classNames(styles.navToggle, {
+            [styles.navToggleActive]: nav.isOpen,
+          })}
+          onClick={nav.toggle}
+        >
+          <span className={styles.navToggleIcon}></span>
+        </button>
         <nav
           className={classNames(styles.navbar, {
-            [styles.navbarActive]: isOpen || !navActive,
+            [styles.navbarActive]: nav.isOpen,
           })}
         >
           <NavLink

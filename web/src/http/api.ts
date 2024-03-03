@@ -1,125 +1,72 @@
+import useSWR from "swr";
+import wretch from "wretch";
+import QueryStringAddon from "wretch/addons/queryString";
 import {
   Account,
   AccountBody,
   FullVote,
-  Pagination,
+  ListFilters,
+  Paginated,
   Platform,
-  Response,
   Vote,
   VoteBody,
 } from "../types";
 
-const baseUrl = "http://localhost:60001";
+interface FetcherOptions {
+  url: string;
+  query?: object;
+  signal?: AbortSignal;
+}
 
-const fetchData = async <Response>(
-  url: string,
-  options: RequestInit
-): Promise<Response | undefined> => {
-  const response = await fetch(url, options);
-  if (response.status !== 200) return;
-  return await response.json();
-};
+const api = wretch().addon(QueryStringAddon).url("http://localhost:60001/v1");
 
-export const getAccounts = async (pagination?: Pagination) => {
-  let url = `${baseUrl}/v1/accounts`;
+const fetcher = <Response>({ url, query, signal }: FetcherOptions) =>
+  api
+    .options({ signal })
+    .url(url)
+    .query(query ?? {})
+    .get()
+    .json<Response>();
 
-  if (pagination) {
-    const searchParams = new URLSearchParams();
-    pagination.q && searchParams.set("q", pagination.q);
-    searchParams.set("limit", String(pagination.limit));
-    searchParams.set("page", String(pagination.page));
-    pagination.sort && searchParams.set("sort", String(pagination.sort));
-    pagination.sort && searchParams.set("order", String(pagination.order));
-
-    url = `${url}?${searchParams.toString()}`;
-  }
-
-  return await fetchData<Response<Account[]>>(url, {
-    method: "GET",
-  });
-};
-
-export const getAccount = async (id: string) => {
-  return await fetchData<Account>(`${baseUrl}/v1/accounts/${id}`, {
-    method: "GET",
-  });
-};
-
-export const getAccountsByCreatorId = async (id: string) => {
-  return await fetchData<Response<Account[]>>(
-    `${baseUrl}/v1/creators/${id}/accounts`,
-    {
-      method: "GET",
-    }
+export const getAccounts = (filters?: ListFilters) =>
+  useSWR({ url: `/accounts`, query: filters }, (opts) =>
+    fetcher<Paginated<Account[]>>(opts)
   );
-};
 
-export const setAccount = async (account: AccountBody) => {
-  return await fetch(`${baseUrl}/v1/accounts`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      username: account.username,
-      password: account.password,
-      platformId: account.platformId,
-      creatorId: account.creatorId,
-    }),
-  });
-};
-
-export const updateAccount = async (id: string, body: AccountBody) => {
-  return await fetch(`${baseUrl}/v1/accounts/${id}`, {
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      username: body.username,
-      password: body.password,
-      platformId: body.platformId,
-    }),
-  });
-};
-
-export const deleteAccount = async (id: string) => {
-  return await fetchData(`${baseUrl}/v1/accounts/${id}`, {
-    method: "DELETE",
-  });
-};
-
-export const getPlatforms = async () => {
-  return await fetchData<Platform[]>(`${baseUrl}/v1/platforms`, {
-    method: "GET",
-  });
-};
-
-export const getVote = async (id: string) => {
-  return await fetchData<Vote[]>(`${baseUrl}/v1/accounts/${id}/votes`, {
-    method: "GET",
-  });
-};
-
-export const getVotesByCreatorId = async (id: string) => {
-  return await fetchData<Response<FullVote[]>>(
-    `${baseUrl}/v1/creators/${id}/votes`,
-    {
-      method: "GET",
-    }
+export const getAccount = (id: string) =>
+  useSWR(id ? { url: `/accounts/${id}` } : null, (opts) =>
+    fetcher<Account>(opts)
   );
-};
 
-export const setVote = async (vote: VoteBody) => {
-  return await fetch(`${baseUrl}/v1/votes`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      value: vote.value,
-      accountId: vote.accountId,
-      creatorId: vote.creatorId,
-    }),
-  });
-};
+export const getAccountsByCreatorId = (id: string) =>
+  useSWR(id ? { url: `/creators/${id}/accounts` } : null, (opts) =>
+    fetcher<Paginated<Account[]>>(opts)
+  );
 
-export const deleteVote = async (id: string) => {
-  return await fetchData(`${baseUrl}/v1/votes/${id}`, {
-    method: "DELETE",
-  });
-};
+export const setAccount = (body: AccountBody) =>
+  api.url(`/accounts`).post(body).json<Account>();
+
+export const updateAccount = (id: string, body: AccountBody) =>
+  api.url(`/accounts/${id}`).patch(body).json<Account>();
+
+export const deleteAccount = (id: string) =>
+  api.url(`/accounts/${id}`).delete().res();
+
+export const getPlatforms = () =>
+  useSWR({ url: `/platforms` }, (opts) => fetcher<Platform[]>(opts));
+
+export const getVote = (id: string) =>
+  useSWR(id ? { url: `/accounts/${id}/votes` } : null, (opts) =>
+    fetcher<Vote[]>(opts)
+  );
+
+export const getVotesByCreatorId = (id: string) =>
+  useSWR(id ? { url: `/creators/${id}/votes` } : null, (opts) =>
+    fetcher<Paginated<FullVote[]>>(opts)
+  );
+
+export const setVote = (body: VoteBody) =>
+  api.url(`/votes`).post(body).json<Vote>();
+
+export const deleteVote = (id: string) =>
+  api.url(`/votes/${id}`).delete().res();

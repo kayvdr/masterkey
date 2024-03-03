@@ -1,6 +1,8 @@
 import { Session } from "@supabase/supabase-js";
 import { createContext } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import useAuth from "../hooks/useAuth";
+import ScrollTop from "../hooks/useScrolltop";
 import AddAccountPage from "./Account/AddAccountPage";
 import EditAccountPage from "./Account/EditAccountPage";
 import LoginPage from "./Auth/LoginPage";
@@ -12,15 +14,11 @@ import NotFoundPage from "./NotFound/NotFoundPage";
 import PrivacyPage from "./Privacy/PrivacyPage";
 import SearchPage from "./Search/SearchPage";
 import SharedAccounts from "./SharedAccounts/SharedAccountsPage";
-import useAuth from "./hooks/useAuth";
-import ScrollTop from "./hooks/useScrolltop";
 
 export const SessionContext = createContext<Session | null>(null);
 
 const AppRouter = () => {
-  const { loaded, session } = useAuth();
-
-  if (!loaded) return null;
+  const { session } = useAuth();
 
   return (
     <BrowserRouter>

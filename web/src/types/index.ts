@@ -2,9 +2,17 @@ import { FunctionComponent, SVGProps } from "react";
 
 export type Glyph = FunctionComponent<SVGProps<SVGSVGElement>>;
 
-export interface Response<T> {
+export interface Paginated<T> {
   count: number;
   items: T;
+}
+
+export interface ListFilters {
+  q?: string;
+  page: number;
+  limit: number;
+  sort: keyof Account | undefined;
+  order?: "ASC" | "DESC";
 }
 
 export interface Account {
@@ -55,14 +63,6 @@ export interface VoteBody {
   value: VoteValue;
   accountId: string;
   creatorId: string;
-}
-
-export interface Pagination {
-  q?: string;
-  limit: number;
-  page: number;
-  sort: keyof Account | undefined;
-  order?: "ASC" | "DESC";
 }
 
 export interface CustomError {
