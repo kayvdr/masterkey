@@ -21,7 +21,6 @@ paths:
                     type: array
                     items:
                       $ref: "#/components/schemas/Account"
-
     post:
       operationId: CreateAccount
       description: Insert a new Account
@@ -30,27 +29,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              required:
-                - username
-                - password
-                - platformId
-                - creatorId
-              properties:
-                username:
-                  type: string
-                  example: jondoe
-                password:
-                  type: string
-                  example: password
-                platformId:
-                  type: string
-                  format: uuid
-                  example: e0476273-83cd-4772-a4f9-f0280e3bb2af
-                creatorId:
-                  type: string
-                  format: uuid
-                  example: e0476273-83cd-4772-a4f9-f0280e3bb2af
+              $ref: "#/components/schemas/AccountPostBody"
       responses:
         "200":
           description: ""
@@ -79,28 +58,13 @@ paths:
       operationId: UpdateAccount
       description: Update a Account
       parameters:
-        - $ref: "#/components/parameters/accountId"
+        - $ref: "#/components/parameters/AccountId"
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              required:
-                - username
-                - password
-                - platformId
-              properties:
-                username:
-                  type: string
-                  example: jondoe
-                password:
-                  type: string
-                  example: password
-                platformId:
-                  type: string
-                  format: uuid
-                  example: e0476273-83cd-4772-a4f9-f0280e3bb2af
+              $ref: "#/components/schemas/AccountPatchBody"
       responses:
         "200":
           description: ""
@@ -115,13 +79,7 @@ paths:
       operationId: DeleteAccount
       description: Remove a Account
       parameters:
-        - $ref: "#/components/parameters/accountId"
-        - in: path
-          name: accountId
-          required: true
-          schema:
-            type: string
-            format: uuid
+        - $ref: "#/components/parameters/AccountId"
       responses:
         "204":
           description: Successful operation
@@ -139,7 +97,7 @@ paths:
             application/json:
               schema:
                 properties:
-                  accounts:
+                  votes:
                     type: array
                     items:
                       $ref: "#/components/schemas/Vote"
@@ -175,24 +133,10 @@ paths:
               schema:
                 type: object
                 properties:
-                  accounts:
+                  votes:
                     type: array
                     items:
-                      type: object
-                      properties:
-                        id:
-                          type: string
-                          format: uuid
-                          example: e0476273-83cd-4772-a4f9-f0280e3bb2af
-                        username:
-                          type: string
-                          example: jondoe
-                        passord:
-                          type: string
-                          example: password123
-                        PlatformName:
-                          type: string
-                          example: instagram
+                      $ref: "#/components/schemas/Vote"
 
   /platforms:
     get:
@@ -205,7 +149,7 @@ paths:
             application/json:
               schema:
                 properties:
-                  accounts:
+                  platforms:
                     type: array
                     items:
                       $ref: "#/components/schemas/Platform"
@@ -219,23 +163,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              required:
-                - value
-                - accountId
-                - creatorId
-              properties:
-                value:
-                  type: string
-                  example: up
-                accountId:
-                  type: string
-                  format: uuid
-                  example: e0476273-83cd-4772-a4f9-f0280e3bb2af
-                creatorId:
-                  type: string
-                  format: uuid
-                  example: e0476273-83cd-4772-a4f9-f0280e3bb2af
+              $ref: "#/components/schemas/VoteBody"
       responses:
         "200":
           description: Get vote
@@ -251,13 +179,7 @@ paths:
       operationId: DeleteVote
       description: Remove a vote
       parameters:
-        - $ref: "#/components/parameters/voteId"
-        - in: path
-          name: voteId
-          required: true
-          schema:
-            type: string
-            format: uuid
+        - $ref: "#/components/parameters/VoteId"
       responses:
         "204":
           description: Successful operation
@@ -266,34 +188,21 @@ paths:
 
 components:
   parameters:
-    accountId:
-      name: accountId
+    AccountId:
+      name: account_id
       in: path
       required: true
       schema:
         type: string
         format: uuid
-    voteId:
-      name: voteId
+    VoteId:
+      name: vote_id
       in: path
       required: true
       schema:
         type: string
         format: uuid
   schemas:
-    Platform:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          example: e0476273-83cd-4772-a4f9-f0280e3bb2af
-        name:
-          type: string
-          example: instagram
-        url:
-          type: string
-          example: http://www.instagram.com
     Account:
       type: object
       properties:
@@ -307,22 +216,62 @@ components:
         password:
           type: string
           example: password
-        createdAt:
+        created_at:
           type: string
           format: uuid
           example: e0476273-83cd-4772-a4f9-f0280e3bb2af
-        creatorId:
+        creator_id:
           type: string
           format: uuid
           example: e0476273-83cd-4772-a4f9-f0280e3bb2af
-        votesUp:
+        votes_up:
           type: integer
           example: 10
-        votesDown:
+        votes_down:
           type: integer
           example: 5
-        platform:
-          $ref: "#/components/schemas/Platform"
+        platform_id:
+          type: string
+          format: uuid
+          example: e0476273-83cd-4772-a4f9-f0280e3bb2af
+        platform_name:
+          type: string
+          example: instagram
+        platform_url:
+          type: string
+          example: http://www.instagram.com
+    AccountPatchBody:
+      type: object
+      required:
+        - username
+        - password
+        - platform_id
+      properties:
+        username:
+          type: string
+          example: jondoe
+        password:
+          type: string
+          example: password
+        platform_id:
+          type: string
+          format: uuid
+          example: e0476273-83cd-4772-a4f9-f0280e3bb2af
+    AccountPostBody:
+      type: object
+      required:
+        - username
+        - password
+        - platform_id
+        - creator_id
+      allOf:
+        - $ref: "#/components/schemas/AccountPatchBody"
+        - type: object
+          properties:
+            creator_id:
+              type: string
+              format: uuid
+              example: e0476273-83cd-4772-a4f9-f0280e3bb2af
     Vote:
       type: object
       properties:
@@ -333,7 +282,48 @@ components:
         value:
           type: string
           example: up
+        creator_id:
+          type: string
+          format: uuid
+          example: e0476273-83cd-4772-a4f9-f0280e3bb2af
+        account_id:
+          type: string
+          format: uuid
+          example: e0476273-83cd-4772-a4f9-f0280e3bb2af
+        username:
+          type: string
+          example: jondoe
+        platform_name:
+          type: string
+          example: Facebook
+    VoteBody:
+      type: object
+      required:
+        - value
+        - accountId
+        - creatorId
+      properties:
+        value:
+          type: string
+          example: up
+        accountId:
+          type: string
+          format: uuid
+          example: e0476273-83cd-4772-a4f9-f0280e3bb2af
         creatorId:
           type: string
           format: uuid
           example: e0476273-83cd-4772-a4f9-f0280e3bb2af
+    Platform:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: e0476273-83cd-4772-a4f9-f0280e3bb2af
+        name:
+          type: string
+          example: instagram
+        url:
+          type: string
+          example: http://www.instagram.com
