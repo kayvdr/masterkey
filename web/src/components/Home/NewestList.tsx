@@ -4,7 +4,7 @@ import styles from "./NewestList.module.css";
 
 const NewestList = () => (
   <section className="container">
-    <Search title="Just added" isPagination={false} sort="createdAt" />
+    <Search title="Just added" isPagination={false} sort="created_at" />
     <div className={styles.wrapper}>
       <LinkButton to="/search">Show All</LinkButton>
     </div>

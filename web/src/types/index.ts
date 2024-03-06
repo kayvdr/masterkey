@@ -2,11 +2,6 @@ import { FunctionComponent, SVGProps } from "react";
 
 export type Glyph = FunctionComponent<SVGProps<SVGSVGElement>>;
 
-export interface Paginated<T> {
-  count: number;
-  items: T;
-}
-
 export interface ListFilters {
   q?: string;
   page: number;
@@ -15,54 +10,41 @@ export interface ListFilters {
   order?: "ASC" | "DESC";
 }
 
-export interface Account {
+export interface AccountPatchBody {
+  username: string;
+  password: string;
+  platform_id: string;
+}
+
+export interface AccountPostBody extends AccountPatchBody {
+  creator_id: string;
+}
+
+export interface Account extends AccountPostBody {
+  id: string;
+  votes_up: number;
+  votes_down: number;
+  created_at: string;
+  platform_name: string;
+  platform_url: string;
+}
+
+export interface VoteBody {
+  value: "up" | "down";
+  account_id: string;
+  creator_id: string;
+}
+
+export interface Vote extends VoteBody {
   id: string;
   username: string;
-  password: string;
-  votesUp: number;
-  votesDown: number;
-  createdAt: string;
-  creatorId: string;
-  platform: Platform;
-}
-
-export interface Accounts {
-  count: number;
-  items: Account[];
-}
-
-export interface AccountBody {
-  username: string;
-  password: string;
-  creatorId?: string;
-  platformId: string;
+  platform_name: string;
 }
 
 export interface Platform {
   id: string;
   name: string;
   url: string;
-}
-
-type VoteValue = "up" | "down";
-
-export interface FullVote {
-  id: string;
-  value: VoteValue;
-  username: string;
-  platformName: string;
-}
-
-export interface Vote {
-  id: string;
-  value: VoteValue;
-  creatorId: string;
-}
-
-export interface VoteBody {
-  value: VoteValue;
-  accountId: string;
-  creatorId: string;
 }
 
 export interface CustomError {

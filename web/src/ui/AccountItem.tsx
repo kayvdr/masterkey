@@ -13,14 +13,14 @@ interface Props {
 }
 
 const AccountItem = ({ account: user, onClick }: Props) => {
-  const icon = logoMapping[user.platform.name];
+  const icon = logoMapping[user.platform_name];
 
   return (
     <>
       <button className={styles.row} onClick={onClick}>
         {icon && (
           <a
-            href={user.platform.url}
+            href={user.platform_url}
             className={styles.platform}
             target="_blank"
           >
@@ -40,19 +40,19 @@ const AccountItem = ({ account: user, onClick }: Props) => {
           <div className={styles.vote}>
             <Icon glyph={SvgArrowUp} className={styles.iconGreen} />
             <p className={classNames(styles.textSmall, styles.voteText)}>
-              {user.votesUp}
+              {user.votes_up}
             </p>
           </div>
           <div className={styles.vote}>
             <Icon glyph={SvgArrowDown} className={styles.iconRed} />
             <p className={classNames(styles.textSmall, styles.voteText)}>
-              {user.votesDown}
+              {user.votes_down}
             </p>
           </div>
         </div>
         <div className={styles.date}>
           <p className={classNames(styles.textSmall)}>
-            {getDiff(user.createdAt)}
+            {getDiff(user.created_at)}
           </p>
         </div>
       </button>

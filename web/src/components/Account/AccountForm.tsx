@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { getPlatforms, setAccount, updateAccount } from "../../http/api";
+import { createAccount, getPlatforms, updateAccount } from "../../http/api";
 import { Account, CustomError, Platform } from "../../types";
 import Button from "../../ui/Button";
 import InputCheckBox from "../../ui/InputCheckBox";
@@ -25,7 +25,6 @@ interface FormUser {
 const AddForm = ({ user: account }: Props) => {
   const [platforms, setPlatforms] = useState<Platform[]>();
   const [error, setError] = useState<CustomError>();
-  const [isSuccessful, setIsSuccessful] = useState(false);
   const session = useContext(SessionContext);
   const navigate = useNavigate();
   const {
@@ -42,10 +41,10 @@ const AddForm = ({ user: account }: Props) => {
 
   useEffect(() => {
     const fetchUsers = async () => {
-      const fetchedPlatforms = await getPlatforms();
+      const { data } = getPlatforms();
 
-      setPlatforms(fetchedPlatforms);
-      reset({ platform: account?.platform.name?.toLowerCase() });
+      setPlatforms(data?.platforms);
+      reset({ platform: account?.platform_name?.toLowerCase() });
     };
 
     fetchUsers();
@@ -69,21 +68,16 @@ const AddForm = ({ user: account }: Props) => {
       updateAccount(account.id, {
         username,
         password,
-        platformId: currPlatform.id,
-      }).then(async (response) => {
-        const res = await response.json();
-        !response.ok ? setError(res.error) : setIsSuccessful(true);
+        platform_id: currPlatform.id,
       });
     } else {
-      setAccount({
-        username,
-        password,
-        platformId: currPlatform.id,
-        creatorId: session?.user.id,
-      }).then(async (response) => {
-        const res = await response.json();
-        !response.ok ? setError(res.error) : setIsSuccessful(true);
-      });
+      session &&
+        createAccount({
+          username,
+          password,
+          platform_id: currPlatform.id,
+          creator_id: session?.user.id,
+        });
     }
 
     reset();
@@ -94,9 +88,9 @@ const AddForm = ({ user: account }: Props) => {
     <div className={styles.formWrapper}>
       <h2 className={styles.subtitle}>Please enter the following data.</h2>
       <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
-        {isSuccessful && (
+        {/* {isSuccessful && (
           <div className={styles.success}>Added successfully!</div>
-        )}
+        )} */}
         {error && <div className={styles.fail}>{error.message}</div>}
         <Select
           placeholder="Choose platform..."

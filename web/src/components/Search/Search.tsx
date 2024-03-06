@@ -16,39 +16,28 @@ interface Props {
   sort?: keyof Account;
 }
 
-const isKeyofAccount = (value: string): value is keyof Account =>
-  [
-    "id",
-    "username",
-    "password",
-    "platform_id",
-    "votes_up",
-    "votes_down",
-    "created_at",
-  ].includes(value as keyof Account);
+const isKeyofAccount = (value: string | null): value is keyof Account =>
+  ["username", "votes_up", "votes_down", "created_at"].includes(
+    value as keyof Account
+  );
 
 const Search = ({ title, searchTerm, isPagination = true, sort }: Props) => {
   const filters = useListFilters();
 
-  const {
-    data: accounts,
-    isLoading,
-    mutate,
-  } = getAccounts({
+  const { data, isLoading, mutate } = getAccounts({
     q: searchTerm ?? "",
     order: filters.state.sort === "username" ? "ASC" : "DESC",
     ...filters.state,
   });
 
   useEffect(() => {
-    const searchQuery = getSearchParams("sort");
-    if (!searchQuery || sort) return;
+    const querySort = getSearchParams("sort");
 
-    isKeyofAccount(searchQuery) && filters.setSort(searchQuery);
+    !querySort && sort && filters.setSort(sort);
+    isKeyofAccount(querySort) && filters.setSort(querySort);
   }, []);
 
-  const pages =
-    accounts?.count && Math.ceil(accounts.count / filters.state.limit);
+  const pages = data?.total && Math.ceil(data?.total / filters.state.limit);
 
   return (
     <>
@@ -62,7 +51,7 @@ const Search = ({ title, searchTerm, isPagination = true, sort }: Props) => {
           <select
             value={filters.state.sort ?? ""}
             onChange={(e) => {
-              const value = e.target.value as keyof Account;
+              const value = e.target.value;
               if (!isKeyofAccount(value) || sort) return;
               filters.setSort(value);
               setSearchParams("sort", value);
@@ -82,11 +71,11 @@ const Search = ({ title, searchTerm, isPagination = true, sort }: Props) => {
           </select>
         </div>
       </div>
-      {accounts && (
+      {data?.accounts && (
         <>
           {isLoading && <p>ladet</p>}
-          {accounts.count === 0 && !isLoading && <div>No Accounts found</div>}
-          <AccountList accounts={accounts.items} mutate={mutate} />
+          {data?.total === 0 && !isLoading && <div>No Accounts found</div>}
+          <AccountList accounts={data.accounts} mutate={mutate} />
         </>
       )}
       {isPagination && (
@@ -115,7 +104,7 @@ const Search = ({ title, searchTerm, isPagination = true, sort }: Props) => {
             className={styles.paginationNext}
             onClick={filters.nextPage}
             disabled={
-              filters.state.limit * filters.state.page >= (accounts?.count ?? 0)
+              filters.state.limit * filters.state.page >= (data?.total ?? 0)
             }
           >
             <SvgArrowRight

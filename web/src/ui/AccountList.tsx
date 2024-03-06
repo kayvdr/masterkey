@@ -13,8 +13,13 @@ import SvgKey from "../components/icons/Key";
 import SvgUser from "../components/icons/User";
 import { useOnClickOutside } from "../hooks/useOnClickOutside";
 import useToggle from "../hooks/useToggle";
-import { deleteAccount, deleteVote, getVote, setVote } from "../http/api";
-import { Account, Paginated, Vote } from "../types";
+import {
+  createVote,
+  deleteAccount,
+  deleteVote,
+  getVotesByAccountId,
+} from "../http/api";
+import { Account, Vote } from "../types";
 import { logoMapping } from "../utils";
 import AccountItem from "./AccountItem";
 import itemStyles from "./AccountItem.module.css";
@@ -24,7 +29,10 @@ import Popup from "./Popup";
 
 interface Props {
   accounts: Account[];
-  mutate: KeyedMutator<Paginated<Account[]>>;
+  mutate: KeyedMutator<{
+    total: number;
+    accounts: Account[];
+  }>;
 }
 
 const AccountList = ({ accounts, mutate }: Props) => {
@@ -41,31 +49,31 @@ const AccountList = ({ accounts, mutate }: Props) => {
     const fetchData = async () => {
       if (!detailData?.id) return;
 
-      const votes = await getVote(detailData.id);
+      const { data } = getVotesByAccountId(detailData.id);
 
-      // const existingVote = votes?.find(
-      //   (vote) => vote.creatorId === session?.user.id
-      // );
+      const existingVote = data?.votes.find(
+        (vote) => vote.creator_id === session?.user.id
+      );
 
-      // setUserVote(existingVote);
+      setUserVote(existingVote);
     };
 
     fetchData();
   }, [detailData]);
 
-  const handleVote = async (value: "votesUp" | "votesDown") => {
+  const handleVote = async (value: "votes_up" | "votes_down") => {
     if (!detailData) return;
 
     accountVote?.id
       ? await deleteVote(accountVote.id)
-      : await setVote({
-          value: value === "votesUp" ? "up" : "down",
-          accountId: detailData.id ?? "",
-          creatorId: session?.user.id ?? "",
+      : await createVote({
+          value: value === "votes_up" ? "up" : "down",
+          account_id: detailData.id ?? "",
+          creator_id: session?.user.id ?? "",
         });
 
     mutate({
-      items: accounts.map((a) =>
+      accounts: accounts.map((a) =>
         a.id === detailData.id
           ? {
               ...a,
@@ -73,7 +81,7 @@ const AccountList = ({ accounts, mutate }: Props) => {
             }
           : a
       ),
-      count: 0,
+      total: 0,
     });
 
     setDetailData({
@@ -83,7 +91,7 @@ const AccountList = ({ accounts, mutate }: Props) => {
   };
 
   const platformIcon =
-    detailData?.platform.name && logoMapping[detailData.platform.name];
+    detailData?.platform_name && logoMapping[detailData.platform_name];
 
   return (
     <div className={styles.wrapper} ref={wrapperRef}>
@@ -109,7 +117,7 @@ const AccountList = ({ accounts, mutate }: Props) => {
               {platformIcon && (
                 <Icon glyph={platformIcon} className={styles.platformIcon} />
               )}
-              <p className={styles.platformText}>{detailData?.platform.name}</p>
+              <p className={styles.platformText}>{detailData?.platform_name}</p>
             </div>
             <div className={styles.item}>
               <div className={styles.data}>
@@ -152,12 +160,12 @@ const AccountList = ({ accounts, mutate }: Props) => {
                     return;
                   }
 
-                  handleVote("votesUp");
+                  handleVote("votes_up");
                 }}
                 disabled={accountVote?.value === "down"}
               >
                 <Icon glyph={SvgArrowUp} className={itemStyles.iconGreen} />
-                <p className={itemStyles.textSmall}>{detailData?.votesUp}</p>
+                <p className={itemStyles.textSmall}>{detailData?.votes_up}</p>
               </button>
               <button
                 className={classNames(styles.btn, {
@@ -171,15 +179,15 @@ const AccountList = ({ accounts, mutate }: Props) => {
                     return;
                   }
 
-                  handleVote("votesDown");
+                  handleVote("votes_down");
                 }}
                 disabled={accountVote?.value === "up"}
               >
                 <Icon glyph={SvgArrowDown} className={itemStyles.iconRed} />
-                <p className={itemStyles.textSmall}>{detailData?.votesDown}</p>
+                <p className={itemStyles.textSmall}>{detailData?.votes_down}</p>
               </button>
             </div>
-            {detailData?.creatorId === session?.user.id && (
+            {detailData?.creator_id === session?.user.id && (
               <>
                 <div>
                   <button
@@ -214,7 +222,10 @@ const AccountList = ({ accounts, mutate }: Props) => {
                           (u) => u.id !== detailData?.id
                         );
 
-                        mutate({ items: deletedAccountList, count: 0 });
+                        mutate({
+                          accounts: deletedAccountList,
+                          total: deletedAccountList.length,
+                        });
 
                         popup.close();
                         setDetailData(undefined);

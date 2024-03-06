@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import useToggle from "../../hooks/useToggle";
 import { getAccountsByCreatorId, getVotesByCreatorId } from "../../http/api";
 import { supabase } from "../../http/supabase";
-import { FullVote } from "../../types";
+import { Vote } from "../../types";
 import Button from "../../ui/Button";
 import Icon from "../../ui/Icon";
 import Popup from "../../ui/Popup";
@@ -35,7 +35,7 @@ interface FullUsersInfo {
 
 interface FullVotesInfo {
   count: number | undefined;
-  items: FullVote[] | undefined;
+  items: Vote[] | undefined;
 }
 
 const DashboardPage = () => {
@@ -48,23 +48,23 @@ const DashboardPage = () => {
   useEffect(() => {
     const fetchAccounts = async () => {
       if (!session) return;
-      const fetchedUsers = await getAccountsByCreatorId(session.user.id);
-      const groupedUsers = fetchedUsers?.items.reduce<List>((prev, curr) => {
-        const prevValue = prev[curr.platform.name];
+      const { data } = getAccountsByCreatorId(session.user.id);
+      const groupedUsers = data?.accounts.reduce<List>((prev, curr) => {
+        const prevValue = prev[curr.platform_name];
 
         return {
           ...prev,
-          [curr.platform.name]: prevValue ? prevValue + 1 : 1,
+          [curr.platform_name]: prevValue ? prevValue + 1 : 1,
         };
       }, {});
 
-      setSharings({ count: fetchedUsers?.count, items: groupedUsers });
+      setSharings({ count: data?.total, items: groupedUsers });
     };
     const fetchVotes = async () => {
       if (!session) return;
-      const fetchedVotes = await getVotesByCreatorId(session.user.id);
+      const { data } = getVotesByCreatorId(session.user.id);
 
-      setVotes({ count: fetchedVotes?.count, items: fetchedVotes?.items });
+      setVotes({ count: data?.total, items: data?.votes });
     };
 
     fetchAccounts();
@@ -217,7 +217,7 @@ const DashboardPage = () => {
               </div>
               <div className={styles.list}>
                 {votes?.items?.map((vote) => {
-                  const icon = logoMapping[vote.platformName];
+                  const icon = logoMapping[vote.platform_name];
 
                   return (
                     <div className={styles.listItem} key={vote.id}>

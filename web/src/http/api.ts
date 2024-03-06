@@ -3,10 +3,9 @@ import wretch from "wretch";
 import QueryStringAddon from "wretch/addons/queryString";
 import {
   Account,
-  AccountBody,
-  FullVote,
+  AccountPatchBody,
+  AccountPostBody,
   ListFilters,
-  Paginated,
   Platform,
   Vote,
   VoteBody,
@@ -18,7 +17,7 @@ interface FetcherOptions {
   signal?: AbortSignal;
 }
 
-const api = wretch().addon(QueryStringAddon).url("http://localhost:60001/v1");
+const api = wretch().addon(QueryStringAddon).url("/api/v1");
 
 const fetcher = <Response>({ url, query, signal }: FetcherOptions) =>
   api
@@ -30,7 +29,7 @@ const fetcher = <Response>({ url, query, signal }: FetcherOptions) =>
 
 export const getAccounts = (filters?: ListFilters) =>
   useSWR({ url: `/accounts`, query: filters }, (opts) =>
-    fetcher<Paginated<Account[]>>(opts)
+    fetcher<{ total: number; accounts: Account[] }>(opts)
   );
 
 export const getAccount = (id: string) =>
@@ -40,32 +39,34 @@ export const getAccount = (id: string) =>
 
 export const getAccountsByCreatorId = (id: string) =>
   useSWR(id ? { url: `/creators/${id}/accounts` } : null, (opts) =>
-    fetcher<Paginated<Account[]>>(opts)
+    fetcher<{ total: number; accounts: Account[] }>(opts)
   );
 
-export const setAccount = (body: AccountBody) =>
+export const createAccount = (body: AccountPostBody) =>
   api.url(`/accounts`).post(body).json<Account>();
 
-export const updateAccount = (id: string, body: AccountBody) =>
+export const updateAccount = (id: string, body: AccountPatchBody) =>
   api.url(`/accounts/${id}`).patch(body).json<Account>();
 
 export const deleteAccount = (id: string) =>
   api.url(`/accounts/${id}`).delete().res();
 
 export const getPlatforms = () =>
-  useSWR({ url: `/platforms` }, (opts) => fetcher<Platform[]>(opts));
+  useSWR({ url: `/platforms` }, (opts) =>
+    fetcher<{ platforms: Platform[] }>(opts)
+  );
 
-export const getVote = (id: string) =>
+export const getVotesByAccountId = (id: string) =>
   useSWR(id ? { url: `/accounts/${id}/votes` } : null, (opts) =>
-    fetcher<Vote[]>(opts)
+    fetcher<{ total: number; votes: Vote[] }>(opts)
   );
 
 export const getVotesByCreatorId = (id: string) =>
   useSWR(id ? { url: `/creators/${id}/votes` } : null, (opts) =>
-    fetcher<Paginated<FullVote[]>>(opts)
+    fetcher<{ total: number; votes: Vote[] }>(opts)
   );
 
-export const setVote = (body: VoteBody) =>
+export const createVote = (body: VoteBody) =>
   api.url(`/votes`).post(body).json<Vote>();
 
 export const deleteVote = (id: string) =>

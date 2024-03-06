@@ -1,5 +1,5 @@
 services:
-  service:
+  server:
     build:
       context: .
       dockerfile: Dockerfile
@@ -16,7 +16,7 @@ services:
       - default
 
   db:
-    image: postgres:14-alpine
+    image: postgres:15-alpine
     environment:
       POSTGRES_PASSWORD: postgres
       PGUSER: postgres
