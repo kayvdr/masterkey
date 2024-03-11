@@ -77,13 +77,14 @@ func (r AccountRepository) GetAccountsByCreator(ctx context.Context, pagination 
 	return pgx.CollectRows(rows, pgx.RowToStructByName[Account])
 }
 
-func (r AccountRepository) GetAccountVotes(ctx context.Context, accountID uuid.UUID) ([]Vote, error) {
+func (r AccountRepository) GetAccountVotes(ctx context.Context, accountID uuid.UUID, creatorID uuid.NullUUID) ([]Vote, error) {
 	rows, err := r.pool.Query(ctx, `
 		SELECT v.id, v.value, v.account_id, v.creator_id, a.username, p.name AS platform_name FROM votes v
 		INNER JOIN accounts AS a ON v.account_id = a.id
 		INNER JOIN platforms AS p ON a.platform_id = p.id
-		WHERE account_id = $1
-	`, accountID)
+		WHERE v.account_id = $1
+			AND (v.creator_id = $2 OR ($2 IS NULL AND v.creator_id IS NOT NULL))
+	`, accountID, creatorID)
 
 	if err != nil {
 		return nil, err
@@ -138,7 +139,7 @@ func (r AccountRepository) UpdateAccount(ctx context.Context, account Account, a
 			account.Username,
 			account.Password,
 			account.PlatformID,
-			account.ID,
+			accountID,
 		);
 
 		if err != nil {
