@@ -27,7 +27,6 @@ const Search = ({ title, searchTerm, isPagination = true, sort }: Props) => {
 
   const { data, isLoading, mutate } = getAccounts({
     q: searchTerm ?? "",
-    order: filters.state.sort === "username" ? "ASC" : "DESC",
     ...filters.state,
   });
 

@@ -39,7 +39,6 @@ const useListFilters = (
   const initialState: ListFilters = {
     page: 1,
     limit: 10,
-    order: "ASC",
     sort: undefined,
   };
 

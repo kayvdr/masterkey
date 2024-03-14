@@ -29,7 +29,7 @@ var ErrPageLimitToHigh = errors.New("the maximum limit is 100")
 var ErrPageSortValue = errors.New("sort value not valid")
 var ErrPageOrderValue = errors.New("order value not valid")
 
-func NewPagination(searchTerm string, page int, limit int, sort string, order string) (Pagination, error) {
+func NewPagination(searchTerm string, page int, limit int, sort string) (Pagination, error) {
 	if page < 1 {
 		return nil, ErrPageToSmall
 	}
@@ -51,32 +51,15 @@ func NewPagination(searchTerm string, page int, limit int, sort string, order st
 		sort = "u.id"
 	}
 
-	if len(order) > 0 {
-		values := []string{"ASC", "DESC"}
-		if !Contains(values, order) {
-			return nil, ErrPageOrderValue
-		}
-	} else {
+	order := "DESC"
+	if sort == "username" {
 		order = "ASC"
+		sort = "LOWER(username)"
 	}
 
 	return pagination{
 		searchTerm, page, limit, sort, order,
 	}, nil
-}
-
-func mapSort(sort string) string {
-	if sort == "votesUp" {
-		return "votes_up"
-	}
-	if sort == "votesDown" {
-		return "votes_down"
-	}
-	if sort == "createdAt" {
-		return "created_at"
-	}
-
-	return sort
 }
 
 func NewPaginationFromURL(urlValues url.Values) (Pagination, error) {
@@ -90,12 +73,9 @@ func NewPaginationFromURL(urlValues url.Values) (Pagination, error) {
 		limit = 10
 	}
 
-	rawSort := urlValues.Get("sort")
+	sort := urlValues.Get("sort")
 
-	sort := mapSort(rawSort)
-	order := urlValues.Get("order")
-
-	return NewPagination(searchTerm, page, limit, sort, order)
+	return NewPagination(searchTerm, page, limit, sort)
 }
 
 func (p pagination) Page() int {

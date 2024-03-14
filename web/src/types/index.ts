@@ -7,7 +7,6 @@ export interface ListFilters {
   page: number;
   limit: number;
   sort: keyof Account | undefined;
-  order?: "ASC" | "DESC";
 }
 
 export interface AccountPatchBody {
