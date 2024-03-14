@@ -1,11 +1,13 @@
 import classNames from "classnames";
 import { PropsWithChildren } from "react";
 import styles from "../ui/Button.module.css";
+import { Loading } from "./Loading";
 
 type Props = PropsWithChildren<{
   type?: "button" | "submit";
   onClick?: () => void;
   fullWidth?: boolean;
+  isLoading?: boolean;
   scheme?: "primary" | "secondary";
 }>;
 
@@ -14,6 +16,7 @@ const Button = ({
   onClick,
   fullWidth = false,
   scheme = "primary",
+  isLoading,
   children,
 }: Props) => (
   <button
@@ -25,6 +28,7 @@ const Button = ({
     })}
     onClick={onClick}
   >
+    {isLoading && <Loading size="small" scheme="dark" />}
     {children}
   </button>
 );

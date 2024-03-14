@@ -1,0 +1,29 @@
+.loader {
+  border: 0.5em solid var(--ci-light-grey);
+  border-top: 0.5em solid var(--ci-green);
+  border-radius: 50%;
+  width: 3em;
+  height: 3em;
+  animation: spin 2s linear infinite;
+}
+
+.small {
+  width: 1.25em;
+  height: 1.25em;
+  border-width: 0.25em;
+  margin-right: 0.25em;
+}
+
+.dark {
+  border-color: var(--ci-light-grey);
+  border-top-color: var(--ci-dark-grey);
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

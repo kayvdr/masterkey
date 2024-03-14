@@ -2,13 +2,13 @@ import { useLocation } from "react-router-dom";
 import { Account } from "../../types";
 import Footer from "../Footer";
 import Header from "../Header";
-import AddForm from "./AccountForm";
-import styles from "./AccountPage.module.css";
+import EditForm from "./EditForm";
+import styles from "./Page.module.css";
 
 const EditAccountPage = () => {
   const { state } = useLocation();
 
-  const user: Account | undefined = state?.user
+  const account: Account | undefined = state?.user
     ? JSON.parse(state?.user)
     : undefined;
 
@@ -21,7 +21,7 @@ const EditAccountPage = () => {
         </div>
       </section>
       <section className="container">
-        <AddForm user={user} />
+        {account && <EditForm account={account} />}
       </section>
       <Footer />
     </>

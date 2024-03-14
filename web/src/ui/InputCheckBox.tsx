@@ -20,6 +20,7 @@ const InputCheckBox = ({ text, error, register }: Props) => (
         {text}
       </span>
     </label>
+    {error && <div className={styles.inputError}>{error.message}</div>}
   </div>
 );
 

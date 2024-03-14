@@ -15,7 +15,7 @@ const Select = ({ placeholder, error, register, options }: Props) => (
         {placeholder}
       </option>
       {options?.map((p) => (
-        <option key={p.id} value={p.name.toLowerCase()}>
+        <option key={p.id} value={p.id}>
           {p.name}
         </option>
       ))}

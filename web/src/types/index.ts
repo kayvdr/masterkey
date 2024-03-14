@@ -29,8 +29,10 @@ export interface Account extends AccountPostBody {
   platform_url: string;
 }
 
+export type VoteValue = "up" | "down";
+
 export interface VoteBody {
-  value: "up" | "down";
+  value: VoteValue;
   account_id: string;
   creator_id: string;
 }

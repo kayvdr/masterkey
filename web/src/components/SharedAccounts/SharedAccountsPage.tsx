@@ -1,25 +1,14 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { getAccountsByCreatorId } from "../../http/api";
-import { Account } from "../../types";
-import AccountList from "../../ui/AccountList";
+import AccountList from "../Account/AccountList";
 import { SessionContext } from "../AppRouter";
 import Footer from "../Footer";
 import Header from "../Header";
 import styles from "../SharedAccounts/SharedAccountsPage.module.css";
 
 const SharedAccounts = () => {
-  const [accounts, setAccounts] = useState<Account[]>();
   const session = useContext(SessionContext);
-
-  useEffect(() => {
-    const fetchAccounts = async () => {
-      if (!session) return;
-      const fetchedUsers = await getAccountsByCreatorId(session.user.id);
-      fetchedUsers && setAccounts(fetchedUsers.items);
-    };
-
-    fetchAccounts();
-  }, []);
+  const { data, mutate } = getAccountsByCreatorId(session?.user.id);
 
   return (
     <>
@@ -31,8 +20,8 @@ const SharedAccounts = () => {
       </section>
       <section>
         <div className="container">
-          {accounts && (
-            <AccountList accounts={accounts} setAccounts={setAccounts} />
+          {data?.accounts && (
+            <AccountList accounts={data.accounts} mutate={mutate} />
           )}
         </div>
       </section>

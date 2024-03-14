@@ -22,7 +22,7 @@
 }
 
 .success,
-.fail {
+.error {
   width: 100%;
   padding: 0.5em;
   text-align: center;
@@ -35,7 +35,7 @@
   background-color: var(--ci-green);
 }
 
-.fail {
+.error {
   background-color: var(--ci-red);
 }
 

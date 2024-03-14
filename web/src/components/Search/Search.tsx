@@ -3,8 +3,9 @@ import { useEffect } from "react";
 import useListFilters from "../../hooks/useListFilters";
 import { getAccounts } from "../../http/api";
 import { Account } from "../../types";
-import AccountList from "../../ui/AccountList";
+import { Loading } from "../../ui/Loading";
 import { getSearchParams, setSearchParams } from "../../utils";
+import AccountList from "../Account/AccountList";
 import SvgArrowLeft from "../icons/ArrowLeft";
 import SvgArrowRight from "../icons/ArrowRight";
 import styles from "./Search.module.css";
@@ -73,7 +74,7 @@ const Search = ({ title, searchTerm, isPagination = true, sort }: Props) => {
       </div>
       {data?.accounts && (
         <>
-          {isLoading && <p>ladet</p>}
+          {isLoading && <Loading />}
           {data?.total === 0 && !isLoading && <div>No Accounts found</div>}
           <AccountList accounts={data.accounts} mutate={mutate} />
         </>

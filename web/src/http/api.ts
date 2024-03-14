@@ -32,12 +32,12 @@ export const getAccounts = (filters?: ListFilters) =>
     fetcher<{ total: number; accounts: Account[] }>(opts)
   );
 
-export const getAccount = (id: string) =>
+export const getAccount = (id: string | undefined) =>
   useSWR(id ? { url: `/accounts/${id}` } : null, (opts) =>
     fetcher<Account>(opts)
   );
 
-export const getAccountsByCreatorId = (id: string) =>
+export const getAccountsByCreatorId = (id: string | undefined) =>
   useSWR(id ? { url: `/creators/${id}/accounts` } : null, (opts) =>
     fetcher<{ total: number; accounts: Account[] }>(opts)
   );
@@ -56,12 +56,12 @@ export const getPlatforms = () =>
     fetcher<{ platforms: Platform[] }>(opts)
   );
 
-export const getVotesByAccountId = (id: string) =>
+export const getVotesByAccountId = (id: string | undefined) =>
   useSWR(id ? { url: `/accounts/${id}/votes` } : null, (opts) =>
     fetcher<{ total: number; votes: Vote[] }>(opts)
   );
 
-export const getVotesByCreatorId = (id: string) =>
+export const getVotesByCreatorId = (id: string | undefined) =>
   useSWR(id ? { url: `/creators/${id}/votes` } : null, (opts) =>
     fetcher<{ total: number; votes: Vote[] }>(opts)
   );

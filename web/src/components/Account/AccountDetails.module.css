@@ -1,11 +1,3 @@
-.wrapper {
-  display: flex;
-}
-
-.list {
-  width: 100%;
-}
-
 .details {
   width: 40%;
   margin-left: 2.5em;
@@ -84,6 +76,19 @@
   margin-top: 2em;
 }
 
+.iconGreen,
+.iconRed {
+  width: 0.8em;
+}
+
+.iconGreen {
+  fill: #228b22;
+}
+
+.iconRed {
+  fill: #ff3131;
+}
+
 .btn {
   display: flex;
   align-items: center;
@@ -112,4 +117,15 @@
 
 .deleteBtn {
   color: var(--ci-red);
+}
+
+.text {
+  margin: 0;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.textSmall {
+  margin: 0 0 0 0.5em;
+  font-size: 0.8em;
 }
