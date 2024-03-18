@@ -48,7 +48,7 @@ func NewPagination(searchTerm string, page int, limit int, sort string) (Paginat
 			return nil, ErrPageSortValue
 		}
 	} else {
-		sort = "u.id"
+		sort = "a.id"
 	}
 
 	order := "DESC"

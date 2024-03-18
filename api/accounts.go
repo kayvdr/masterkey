@@ -59,17 +59,7 @@ func (app Application) GetCreatorsAccounts(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	var accounts []domain.Account
-	for _, u := range res {
-		accounts = append(accounts, domain.NewAccount(u))
-	} 
-
-	type Response struct {
-		Count int                 `json:"count"`
-		Items     []domain.Account `json:"items"`
-	}
-
-	render.JSON(w, r, Response{Count: len(accounts), Items: accounts})
+	render.JSON(w, r, domain.NewAccountsResponse(res, len(res)))
 }
 
 
