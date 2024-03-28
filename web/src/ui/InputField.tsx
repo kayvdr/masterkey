@@ -1,4 +1,3 @@
-import classNames from "classnames";
 import { FieldError } from "react-hook-form";
 import styles from "./InputField.module.css";
 
@@ -7,7 +6,6 @@ interface Props {
   error: FieldError | undefined;
   register: any;
   value?: string;
-  className?: { field?: string; input?: string };
   type?: "text" | "email" | "password";
 }
 
@@ -16,14 +14,13 @@ const InputField = ({
   error,
   register,
   value,
-  className,
   type = "text",
 }: Props) => (
-  <div className={classNames(styles.field, className?.field)}>
+  <div className={styles.field}>
     <input
       type={type}
       placeholder={placeholder}
-      className={classNames(styles.input, className?.input)}
+      className={styles.input}
       value={value}
       {...register}
     />

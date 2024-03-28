@@ -1,7 +1,7 @@
 import { NavLink } from "react-router-dom";
-import { Glyph } from "../types";
+import { Glyph } from "../../types";
+import Icon from "../../ui/Icon";
 import styles from "./Box.module.css";
-import Icon from "./Icon";
 
 interface Props {
   glyph: Glyph;

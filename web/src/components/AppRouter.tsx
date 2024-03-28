@@ -7,11 +7,11 @@ import AddAccountPage from "./Account/AddAccountPage";
 import EditAccountPage from "./Account/EditAccountPage";
 import LoginPage from "./Auth/LoginPage";
 import RegisterPage from "./Auth/RegisterPage";
-import DashboardPage from "./Dashboard/DashboardPage";
 import HomePage from "./Home/HomePage";
 import ImprintPage from "./Imprint/ImprintPage";
 import NotFoundPage from "./NotFound/NotFoundPage";
 import PrivacyPage from "./Privacy/PrivacyPage";
+import DashboardPage from "./Profile/Profile";
 import SearchPage from "./Search/SearchPage";
 import SharedAccounts from "./SharedAccounts/SharedAccountsPage";
 
@@ -25,18 +25,12 @@ const AppRouter = () => {
       <ScrollTop />
       <SessionContext.Provider value={session}>
         <Routes>
-          <Route
-            path="/youraccounts"
-            element={
-              session ? <SharedAccounts /> : <Navigate to="/login" replace />
-            }
-          />
-          <Route
-            path="/dashboard"
-            element={
-              session ? <DashboardPage /> : <Navigate to="/login" replace />
-            }
-          />
+          {session && (
+            <>
+              <Route path="/youraccounts" element={<SharedAccounts />} />
+              <Route path="/dashboard" element={<DashboardPage />} />
+            </>
+          )}
           <Route path="/privacy" element={<PrivacyPage />} />
           <Route path="/imprint" element={<ImprintPage />} />
           <Route path="/add" element={<AddAccountPage />} />

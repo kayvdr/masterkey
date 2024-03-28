@@ -4,8 +4,8 @@ import { supabase } from "../../http/supabase";
 import Button from "../../ui/Button";
 import Icon from "../../ui/Icon";
 import InputField from "../../ui/InputField";
-import styles from "../Dashboard/DashboardPage.module.css";
 import SvgEdit from "../icons/Edit";
+import styles from "./Profile.module.css";
 
 interface Props {
   name: string;

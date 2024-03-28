@@ -1,4 +1,3 @@
-import Box from "../../ui/Box";
 import SvgDropbox from "../icons/Dropbox";
 import SvgEvernote from "../icons/Evernote";
 import SvgFacebook from "../icons/Facebook";
@@ -7,6 +6,7 @@ import SvgInstagram from "../icons/Instagram";
 import SvgSnapchat from "../icons/Snapchat";
 import SvgTikTok from "../icons/Tiktok";
 import SvgTinder from "../icons/Tinder";
+import Box from "./Box";
 import styles from "./FavoritePlatforms.module.css";
 
 const FavoritePlatforms = () => (

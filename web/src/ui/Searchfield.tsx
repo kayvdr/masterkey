@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import SvgClose from "../components/icons/Close";
 import SvgSearch from "../components/icons/Search";
 import { getSearchParams, setSearchParams } from "../utils";
@@ -20,15 +20,8 @@ const Searchfield = ({ onSubmit }: Props) => {
     searchQuery && onSubmit(searchQuery);
   }, []);
 
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-
-    onSubmit(searchTerm);
-    setSearchParams("q", searchTerm);
-  };
-
   return (
-    <form className={styles.form} onSubmit={handleSubmit}>
+    <form className={styles.form}>
       <div className={styles.field}>
         <div className={styles.inputField}>
           <Icon glyph={SvgSearch} className={styles.searchIcon} />
@@ -53,7 +46,15 @@ const Searchfield = ({ onSubmit }: Props) => {
             </button>
           )}
         </div>
-        <Button type="submit">Search</Button>
+        <Button
+          type="submit"
+          onClick={() => {
+            onSubmit(searchTerm);
+            setSearchParams("q", searchTerm);
+          }}
+        >
+          Search
+        </Button>
       </div>
     </form>
   );

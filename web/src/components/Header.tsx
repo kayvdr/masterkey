@@ -1,108 +1,64 @@
-import classNames from "classnames";
-import { useContext, useState } from "react";
+import { Session } from "@supabase/supabase-js";
+import { useContext, useRef } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import { useOnClickOutside } from "../hooks/useOnClickOutside";
 import useToggle from "../hooks/useToggle";
 import { supabase } from "../http/supabase";
-import btnStyles from "../ui/Button.module.css";
-import Icon from "../ui/Icon";
 import { SessionContext } from "./AppRouter";
 import styles from "./Header.module.css";
-import SvgLogo from "./icons/Logo";
-import SvgUser from "./icons/User";
 
 const Header = () => {
-  const navigate = useNavigate();
-  const nav = useToggle();
-  const [accountOpen, setAccountOpen] = useState(false);
   const session = useContext(SessionContext);
 
   return (
     <header className={styles.header}>
-      <button className={styles.logo} onClick={() => navigate("/")}>
-        <Icon glyph={SvgLogo} className={styles.logo} />
-      </button>
-      <div className={styles.nav}>
-        <button
-          className={classNames(styles.navToggle, {
-            [styles.navToggleActive]: nav.isOpen,
-          })}
-          onClick={nav.toggle}
-        >
-          <span className={styles.navToggleIcon}></span>
-        </button>
-        <nav
-          className={classNames(styles.navbar, {
-            [styles.navbarActive]: nav.isOpen,
-          })}
-        >
-          <NavLink
-            className={({ isActive }) =>
-              classNames(styles.navItem, { [styles.navActive]: isActive })
-            }
-            to="/search"
-          >
-            Search
-          </NavLink>
-          <NavLink
-            className={({ isActive }) =>
-              classNames(styles.navItem, { [styles.navActive]: isActive })
-            }
-            to="/add"
-          >
-            Add Account
-          </NavLink>
-
-          {!session ? (
-            <NavLink
-              className={({ isActive }) =>
-                classNames(btnStyles.btn, styles.navBtn, {
-                  [styles.navActive]: isActive,
-                })
-              }
-              to="/login"
-            >
-              Login
-            </NavLink>
-          ) : (
-            <>
-              <NavLink
-                className={({ isActive }) =>
-                  classNames(styles.navItem, { [styles.navActive]: isActive })
-                }
-                to="/dashboard"
-              >
-                Dashboard
-              </NavLink>
-              <div className={styles.account}>
-                <button
-                  className={styles.accountBtn}
-                  onClick={() => setAccountOpen(!accountOpen)}
-                >
-                  <Icon glyph={SvgUser} className={styles.accountIcon} />
-                </button>
-                {accountOpen && (
-                  <div className={styles.accountDropdown}>
-                    <NavLink className={styles.dropdownBtn} to="/dashboard">
-                      Profile
-                    </NavLink>
-                    <NavLink className={styles.dropdownBtn} to="/youraccounts">
-                      Your Accounts
-                    </NavLink>
-                    <div className={styles.separator}></div>
-                    <button
-                      className={styles.dropdownBtn}
-                      onClick={() => supabase.auth.signOut()}
-                    >
-                      Logout
-                    </button>
-                  </div>
-                )}
-              </div>
-            </>
-          )}
-        </nav>
-      </div>
+      <NavLink className={styles.logo} to="/">
+        Shac
+      </NavLink>
+      {!session ? (
+        <NavLink className={styles.btn} to="/login">
+          Login
+        </NavLink>
+      ) : (
+        <Account session={session} />
+      )}
     </header>
+  );
+};
+
+interface Props {
+  session: Session | null;
+}
+
+const Account = ({ session }: Props) => {
+  const dropdown = useToggle();
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  useOnClickOutside(wrapperRef, dropdown.close);
+  const navigate = useNavigate();
+
+  return (
+    <div className={styles.account} ref={wrapperRef}>
+      <button className={styles.accountBtn} onClick={dropdown.toggle}>
+        {session?.user.email?.charAt(0).toUpperCase()}
+      </button>
+      {dropdown.isOpen && (
+        <div className={styles.accountDropdown}>
+          <NavLink className={styles.dropdownBtn} to="/dashboard">
+            Profile
+          </NavLink>
+          <NavLink className={styles.dropdownBtn} to="/youraccounts">
+            Your Accounts
+          </NavLink>
+          <div className={styles.separator}></div>
+          <button
+            className={styles.dropdownBtn}
+            onClick={() => (supabase.auth.signOut(), navigate("/"))}
+          >
+            Logout
+          </button>
+        </div>
+      )}
+    </div>
   );
 };
 

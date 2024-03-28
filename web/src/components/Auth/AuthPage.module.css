@@ -54,7 +54,7 @@
 
 .btn {
   padding: 0.4em 2em;
-  border-radius: 0.65em;
+  border-radius: 0.5em;
   margin-bottom: 0.75em;
   background-color: var(--ci-light-grey);
   border: 2px solid #c9c9c9;

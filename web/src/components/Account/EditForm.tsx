@@ -4,8 +4,10 @@ import { useNavigate } from "react-router-dom";
 import { getPlatforms, updateAccount } from "../../http/api";
 import { Account } from "../../types";
 import Button from "../../ui/Button";
+import ErrorText from "../../ui/ErrorText";
 import InputField from "../../ui/InputField";
 import Select from "../../ui/Select";
+import SuccessText from "../../ui/SuccessText";
 import { SessionContext } from "../AppRouter";
 import styles from "./Form.module.css";
 
@@ -40,10 +42,10 @@ const EditForm = ({ account }: Props) => {
       <h2 className={styles.subtitle}>Please enter the following data.</h2>
       <form className={styles.form}>
         {isSubmitSuccessful && !error && (
-          <div className={styles.success}>Edited successfully!</div>
+          <SuccessText text="Edited successfully!" />
         )}
         {error && !isSubmitting && (
-          <div className={styles.error}>An unknown error has occurred.</div>
+          <ErrorText text="An unknown error has occurred." />
         )}
         <Select
           placeholder="Choose platform..."
@@ -80,7 +82,6 @@ const EditForm = ({ account }: Props) => {
             isLoading={isSubmitting}
             onClick={handleSubmit((body) => {
               if (!session) return;
-              console.log(body);
 
               updateAccount(account.id, {
                 username: body.username,

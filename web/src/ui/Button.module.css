@@ -1,11 +1,12 @@
 .btn {
-  padding: 0.6em 2em;
-  border-radius: 0.65em;
+  padding: 0.5em 2em;
+  border-radius: 0.5em;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: background-color 0.5s;
   color: white;
+  height: 2.5em;
 }
 
 .fullWidth {

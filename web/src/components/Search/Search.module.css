@@ -19,7 +19,7 @@
 
 .sortSelect {
   background-color: var(--ci-light-grey);
-  border-radius: 0.65em;
+  border-radius: 0.5em;
   padding: 0.5em 1em;
   width: 10em;
   border: 0;

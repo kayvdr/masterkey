@@ -1,0 +1,55 @@
+.wrapper {
+  width: 100%;
+  max-width: 50em;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.title {
+  margin-bottom: 1em;
+}
+
+.item {
+  padding: 0.75em 0;
+  border-bottom: 1px solid var(--ci-light-grey);
+}
+
+.modalWrapper {
+  margin-top: 1em;
+}
+
+.labelRow,
+.valueRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1em;
+}
+
+.labelRow {
+  align-items: flex-start;
+}
+
+.valueRow {
+  align-items: center;
+}
+
+.label {
+  margin-top: 0;
+  margin-bottom: 0.5em;
+  color: var(--ci-dark-grey);
+}
+
+.value {
+  font-size: 0.9em;
+  color: var(--ci-grey);
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.btn {
+  color: var(--ci-grey);
+  text-decoration: underline;
+  font-size: 0.9em;
+  font-weight: 600;
+}
