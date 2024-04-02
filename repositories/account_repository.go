@@ -77,6 +77,25 @@ func (r AccountRepository) GetAccountsByCreator(ctx context.Context, pagination 
 	return pgx.CollectRows(rows, pgx.RowToStructByName[Account])
 }
 
+func (r AccountRepository) GetAccountsByVotes(ctx context.Context, pagination common.Pagination, accountID uuid.UUID) ([]Account, error) {
+	rows, err := r.pool.Query(ctx, `
+	SELECT a.id, a.username, a.password,
+		(SELECT count(v.id) FROM votes AS v WHERE v.account_id = a.id AND v.value = 'up') AS votes_up, 
+		(SELECT count(v.id) FROM votes AS v WHERE v.account_id = a.id AND v.value = 'down') AS votes_down, 
+		a.created_at, a.creator_id, p.id AS platform_id, p.name AS platform_name, p.url  AS platform_url
+	FROM accounts AS a 
+	INNER JOIN platforms AS p ON a.platform_id = p.id
+	Inner Join votes v On v.account_id = a.id
+	WHERE v.creator_id = $1
+	`, accountID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return pgx.CollectRows(rows, pgx.RowToStructByName[Account])
+}
+
 func (r AccountRepository) GetAccountVotes(ctx context.Context, accountID uuid.UUID, creatorID uuid.NullUUID) ([]Vote, error) {
 	rows, err := r.pool.Query(ctx, `
 		SELECT v.id, v.value, v.account_id, v.creator_id, a.username, p.name AS platform_name FROM votes v

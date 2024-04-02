@@ -121,10 +121,10 @@ paths:
                     items:
                       $ref: "#/components/schemas/Account"
 
-  /creators/{creatorId}/votes:
+  /creators/{creatorId}/accounts/votes:
     get:
-      operationId: GetCreatorsVotes
-      description: Returns all votes by creator id
+      operationId: GetCreatorsAccountsByVote
+      description: Returns all accounts where creator voted
       responses:
         "200":
           description: ""
@@ -133,10 +133,10 @@ paths:
               schema:
                 type: object
                 properties:
-                  votes:
+                  accounts:
                     type: array
                     items:
-                      $ref: "#/components/schemas/Vote"
+                      $ref: "#/components/schemas/Account"
 
   /platforms:
     get:

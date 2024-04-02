@@ -37,8 +37,6 @@ func (app Application) GetAccounts(w http.ResponseWriter, r *http.Request) {
 	render.JSON(w, r, domain.NewAccountsResponse(res, count))
 }
 
-
-
 func (app Application) GetCreatorsAccounts(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	creatorID, err := common.GetUUIDParamFromURL(r, "creatorId")
@@ -62,6 +60,28 @@ func (app Application) GetCreatorsAccounts(w http.ResponseWriter, r *http.Reques
 	render.JSON(w, r, domain.NewAccountsResponse(res, len(res)))
 }
 
+func (app Application) GetCreatorsAccountsByVote(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	creatorID, err := common.GetUUIDParamFromURL(r, "creatorId")
+	if err != nil {
+		app.HTTPError.New(w, r, httperror.New(http.StatusBadRequest, err))
+		return
+	}
+
+	pagination, err := common.NewPaginationFromURL(r.URL.Query())
+	if err != nil {
+		app.HTTPError.New(w, r, httperror.New(http.StatusBadRequest, err))
+		return
+	}
+
+	res, err := app.Repositories.Account.GetAccountsByVotes(ctx, pagination, creatorID)
+	if err != nil {
+		app.HTTPError.New(w, r, err)
+		return
+	}
+
+	render.JSON(w, r, domain.NewAccountsResponse(res, len(res)))
+}
 
 func (app Application) GetAccount(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()

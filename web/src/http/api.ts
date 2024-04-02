@@ -62,8 +62,8 @@ export const getVotesByAccountId = (id: string | undefined) =>
   );
 
 export const getVotesByCreatorId = (id: string | undefined) =>
-  useSWR(id ? { url: `/creators/${id}/votes` } : null, (opts) =>
-    fetcher<{ total: number; votes: Vote[] }>(opts)
+  useSWR(id ? { url: `/creators/${id}/accounts/votes` } : null, (opts) =>
+    fetcher<{ total: number; accounts: Account[] }>(opts)
   );
 
 export const createVote = (body: VoteBody) =>

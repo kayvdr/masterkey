@@ -14,7 +14,7 @@ interface FormUser {
   email: string;
 }
 
-const DashboardPage = () => {
+const Profile = () => {
   const session = useContext(SessionContext);
   const emailModal = useToggle();
   const passworModal = useToggle();
@@ -184,4 +184,4 @@ const Item = ({
   );
 };
 
-export default DashboardPage;
+export default Profile;

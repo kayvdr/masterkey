@@ -1,4 +1,5 @@
 import { Session } from "@supabase/supabase-js";
+import classNames from "classnames";
 import { useContext, useRef } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useOnClickOutside } from "../hooks/useOnClickOutside";
@@ -16,9 +17,7 @@ const Header = () => {
         Shac
       </NavLink>
       {!session ? (
-        <NavLink className={styles.btn} to="/login">
-          Login
-        </NavLink>
+        <NavLink to="/login">Login</NavLink>
       ) : (
         <Account session={session} />
       )}
@@ -42,16 +41,19 @@ const Account = ({ session }: Props) => {
         {session?.user.email?.charAt(0).toUpperCase()}
       </button>
       {dropdown.isOpen && (
-        <div className={styles.accountDropdown}>
-          <NavLink className={styles.dropdownBtn} to="/dashboard">
+        <div className={styles.dropdown}>
+          <NavLink className={styles.dropdownBtn} to="/profile">
             Profile
           </NavLink>
-          <NavLink className={styles.dropdownBtn} to="/youraccounts">
+          <NavLink className={styles.dropdownBtn} to="/accounts">
             Your Accounts
+          </NavLink>
+          <NavLink className={styles.dropdownBtn} to="/votes">
+            Your Votes
           </NavLink>
           <div className={styles.separator}></div>
           <button
-            className={styles.dropdownBtn}
+            className={classNames(styles.dropdownBtn, styles.logout)}
             onClick={() => (supabase.auth.signOut(), navigate("/"))}
           >
             Logout

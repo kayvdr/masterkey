@@ -68,7 +68,7 @@ func (app *Application) Router(env *env.Env) http.Handler {
 
 	r.Route("/creators", func(r chi.Router) {
 		r.Get("/{creatorId}/accounts", app.GetCreatorsAccounts)
-		r.Get("/{creatorId}/votes", app.GetCreatorsVotes)
+		r.Get("/{creatorId}/accounts/votes", app.GetCreatorsAccountsByVote)
 	})
 
 	r.Route("/platforms", func(r chi.Router) {

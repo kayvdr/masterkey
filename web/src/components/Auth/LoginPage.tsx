@@ -38,68 +38,67 @@ const LoginPage = () => {
     }
 
     reset();
-    navigate("/dashboard");
+    navigate("/profile");
   };
 
   return (
-    <>
-      <section className={styles["loginSection"]}>
-        <div className={styles.wrapper}>
-          <h1 className={styles.title}>Login</h1>
-          <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
-            {error && <div className={styles.fail}>{error.message}</div>}
-            <InputField
-              placeholder="E-Mail"
-              type="email"
-              register={{
-                ...register("email", {
-                  required: "Please insert the E-Mail",
-                }),
-              }}
-              error={errors.email}
-            />
-            <InputField
-              placeholder="Password"
-              type="password"
-              register={{
-                ...register("password", {
-                  required: "Please insert the passwort",
-                }),
-              }}
-              error={errors.password}
-            />
-            <div className={styles.field}>
-              <Button type="submit" fullWidth={true}>
-                Submit
-              </Button>
-            </div>
-          </form>
-          <div className={styles.or}>
-            <hr />
-            OR
-            <hr />
+    <section className={styles.loginSection}>
+      <div className={styles.wrapper}>
+        <h1 className={styles.title}>Login</h1>
+        <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+          {error && <div className={styles.fail}>{error.message}</div>}
+          <InputField
+            placeholder="E-Mail"
+            type="email"
+            register={{
+              ...register("email", {
+                required: "Please insert the E-Mail",
+              }),
+            }}
+            error={errors.email}
+          />
+          <InputField
+            placeholder="Password"
+            type="password"
+            register={{
+              ...register("password", {
+                required: "Please insert the passwort",
+              }),
+            }}
+            error={errors.password}
+          />
+          <div className={styles.field}>
+            <Button type="submit" fullWidth={true}>
+              Submit
+            </Button>
           </div>
-          <div className={styles.list}>
-            <NavLink className={styles.btn} to="/register">
-              No Account? Register here!
-            </NavLink>
-            <button className={styles.btn}>
-              <Icon glyph={SvgGoogle} className={styles.provider} /> Login with
-              Google
-            </button>
-            <button className={styles.btn}>
-              <Icon glyph={SvgFacebookBlack} className={styles.provider} />
-              Login with Facebook
-            </button>
-          </div>
-          <p className={styles.footer}>
-            <NavLink to="/privacy">Privacy</NavLink>
-            <span className={styles.separator}>•</span>
-            <NavLink to="/imprint">Imprint</NavLink>
-          </p>
+        </form>
+        <div className={styles.or}>
+          <hr />
+          OR
+          <hr />
         </div>
-      </section>
-    </>
+        <div className={styles.list}>
+          <NavLink className={styles.btn} to="/register">
+            No Account? Register here!
+          </NavLink>
+          {/* TODO: Delete or add those login possibilities */}
+          <button className={styles.btn}>
+            <Icon glyph={SvgGoogle} className={styles.provider} /> Login with
+            Google
+          </button>
+          <button className={styles.btn}>
+            <Icon glyph={SvgFacebookBlack} className={styles.provider} />
+            Login with Facebook
+          </button>
+        </div>
+        <p className={styles.footer}>
+          <NavLink to="/privacy">Privacy</NavLink>
+          <span className={styles.separator}>•</span>
+          <NavLink to="/imprint">Imprint</NavLink>
+        </p>
+      </div>
+    </section>
   );
 };
 

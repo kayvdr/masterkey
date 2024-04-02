@@ -5,15 +5,16 @@ import useAuth from "../hooks/useAuth";
 import ScrollTop from "../hooks/useScrolltop";
 import AddAccountPage from "./Account/AddAccountPage";
 import EditAccountPage from "./Account/EditAccountPage";
+import Accounts from "./Accounts/AccountsPage";
 import LoginPage from "./Auth/LoginPage";
 import RegisterPage from "./Auth/RegisterPage";
 import HomePage from "./Home/HomePage";
 import ImprintPage from "./Imprint/ImprintPage";
 import NotFoundPage from "./NotFound/NotFoundPage";
 import PrivacyPage from "./Privacy/PrivacyPage";
-import DashboardPage from "./Profile/Profile";
+import Profile from "./Profile/Profile";
 import SearchPage from "./Search/SearchPage";
-import SharedAccounts from "./SharedAccounts/SharedAccountsPage";
+import Votes from "./Votes/VotesPage";
 
 export const SessionContext = createContext<Session | null>(null);
 
@@ -27,8 +28,9 @@ const AppRouter = () => {
         <Routes>
           {session && (
             <>
-              <Route path="/youraccounts" element={<SharedAccounts />} />
-              <Route path="/dashboard" element={<DashboardPage />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/accounts" element={<Accounts />} />
+              <Route path="/votes" element={<Votes />} />
             </>
           )}
           <Route path="/privacy" element={<PrivacyPage />} />
@@ -38,13 +40,13 @@ const AppRouter = () => {
           <Route
             path="/register"
             element={
-              session ? <Navigate to="/dashboard" replace /> : <RegisterPage />
+              session ? <Navigate to="/profile" replace /> : <RegisterPage />
             }
           />
           <Route
             path="/login"
             element={
-              session ? <Navigate to="/dashboard" replace /> : <LoginPage />
+              session ? <Navigate to="/profile" replace /> : <LoginPage />
             }
           />
           <Route path="/search" element={<SearchPage />} />

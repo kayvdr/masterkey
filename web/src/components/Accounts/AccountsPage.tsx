@@ -4,22 +4,18 @@ import AccountList from "../Account/AccountList";
 import { SessionContext } from "../AppRouter";
 import Footer from "../Footer";
 import Header from "../Header";
-import styles from "../SharedAccounts/SharedAccountsPage.module.css";
+import styles from "./AccountsPage.module.css";
 
-const SharedAccounts = () => {
+const Accounts = () => {
   const session = useContext(SessionContext);
   const { data, mutate } = getAccountsByCreatorId(session?.user.id);
 
   return (
     <>
       <Header />
-      <section className={styles.sectionGrey}>
+      <section className={styles.paddingTop}>
         <div className="container">
-          <h1 className={styles.title}>Your Shared Accounts</h1>
-        </div>
-      </section>
-      <section>
-        <div className="container">
+          <h1 className={styles.title}>Your Accounts</h1>
           {data?.accounts && (
             <AccountList accounts={data.accounts} mutate={mutate} />
           )}
@@ -30,4 +26,4 @@ const SharedAccounts = () => {
   );
 };
 
-export default SharedAccounts;
+export default Accounts;

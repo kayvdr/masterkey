@@ -14,29 +14,6 @@ import (
 	"github.com/on3k/shac-api/repositories"
 )
 
-func (app Application) GetCreatorsVotes(w http.ResponseWriter, r *http.Request) {
-	ctx := r.Context()
-	creatorID, err := common.GetUUIDParamFromURL(r, "creatorId")
-	if err != nil {
-		app.HTTPError.New(w, r, httperror.New(http.StatusBadRequest, err))
-		return
-	}
-
-	pagination, err := common.NewPaginationFromURL(r.URL.Query())
-	if err != nil {
-		app.HTTPError.New(w, r, httperror.New(http.StatusBadRequest, err))
-		return
-	}
-
-	res, err := app.Repositories.Vote.GetVotesByCreator(ctx, pagination, creatorID)
-	if err != nil {
-		app.HTTPError.New(w, r, err)
-		return
-	}
-
-	render.JSON(w, r,  domain.NewVotesResponse(res, len(res)))
-}
-
 func (app Application) GetAccountVotes(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	accountID, err := common.GetUUIDParamFromURL(r, "accountId")

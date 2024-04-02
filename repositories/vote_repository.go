@@ -7,7 +7,6 @@ import (
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/on3k/shac-api/common"
 	"github.com/on3k/shac-api/common/pg"
 )
 
@@ -70,21 +69,6 @@ func (r VoteRepository) CreateVote(ctx context.Context, vote Vote) (v *Vote, err
 	})
 
 	return
-}
-
-func (r VoteRepository) GetVotesByCreator(ctx context.Context, pagination common.Pagination, creatorId uuid.UUID) ([]Vote, error) {
-	rows, err := r.pool.Query(ctx, `
-		SELECT v.id, v.value, v.creator_id, a.id AS account_id, a.username, p.name AS platform_name FROM votes AS v
-		INNER JOIN accounts AS a ON v.account_id = a.id
-		INNER JOIN platforms AS p ON a.platform_id = p.id
-		WHERE v.creator_id = $1
-	`, creatorId)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return pgx.CollectRows(rows, pgx.RowToStructByName[Vote])
 }
 
 func (r VoteRepository) ExistsVote(ctx context.Context, voteID uuid.UUID) (exists bool, err error) {
