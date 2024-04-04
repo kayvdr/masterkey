@@ -5,7 +5,7 @@ import {
   Account,
   AccountPatchBody,
   AccountPostBody,
-  ListFilters,
+  Pagination,
   Platform,
   Vote,
   VoteBody,
@@ -27,8 +27,8 @@ const fetcher = <Response>({ url, query, signal }: FetcherOptions) =>
     .get()
     .json<Response>();
 
-export const getAccounts = (filters?: ListFilters) =>
-  useSWR({ url: `/accounts`, query: filters }, (opts) =>
+export const getAccounts = (pagination?: Pagination) =>
+  useSWR({ url: `/accounts`, query: pagination }, (opts) =>
     fetcher<{ total: number; accounts: Account[] }>(opts)
   );
 
@@ -37,9 +37,13 @@ export const getAccount = (id: string | undefined) =>
     fetcher<Account>(opts)
   );
 
-export const getAccountsByCreatorId = (id: string | undefined) =>
-  useSWR(id ? { url: `/creators/${id}/accounts` } : null, (opts) =>
-    fetcher<{ total: number; accounts: Account[] }>(opts)
+export const getAccountsByCreatorId = (
+  id: string | undefined,
+  pagination?: Pagination
+) =>
+  useSWR(
+    id ? { url: `/creators/${id}/accounts`, query: pagination } : null,
+    (opts) => fetcher<{ total: number; accounts: Account[] }>(opts)
   );
 
 export const createAccount = (body: AccountPostBody) =>
@@ -61,9 +65,13 @@ export const getVotesByAccountId = (id: string | undefined) =>
     fetcher<{ total: number; votes: Vote[] }>(opts)
   );
 
-export const getVotesByCreatorId = (id: string | undefined) =>
-  useSWR(id ? { url: `/creators/${id}/accounts/votes` } : null, (opts) =>
-    fetcher<{ total: number; accounts: Account[] }>(opts)
+export const getVotesByCreatorId = (
+  id: string | undefined,
+  pagination?: Pagination
+) =>
+  useSWR(
+    id ? { url: `/creators/${id}/accounts/votes`, query: pagination } : null,
+    (opts) => fetcher<{ total: number; accounts: Account[] }>(opts)
   );
 
 export const createVote = (body: VoteBody) =>

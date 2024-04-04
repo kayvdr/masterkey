@@ -1,4 +1,5 @@
 import { useContext } from "react";
+import usePagination from "../../hooks/usePagination";
 import { getAccountsByCreatorId } from "../../http/api";
 import AccountList from "../Account/AccountList";
 import { SessionContext } from "../AppRouter";
@@ -8,7 +9,11 @@ import styles from "./AccountsPage.module.css";
 
 const Accounts = () => {
   const session = useContext(SessionContext);
-  const { data, mutate } = getAccountsByCreatorId(session?.user.id);
+  const pagination = usePagination();
+  const { data, isLoading, mutate } = getAccountsByCreatorId(
+    session?.user.id,
+    pagination.state
+  );
 
   return (
     <>
@@ -16,8 +21,14 @@ const Accounts = () => {
       <section className={styles.paddingTop}>
         <div className="container">
           <h1 className={styles.title}>Your Accounts</h1>
-          {data?.accounts && (
-            <AccountList accounts={data.accounts} mutate={mutate} />
+          {data && (
+            <AccountList
+              accounts={data.accounts}
+              total={data.total}
+              pagination={pagination}
+              isLoading={isLoading}
+              mutate={mutate}
+            />
           )}
         </div>
       </section>

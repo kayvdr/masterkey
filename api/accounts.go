@@ -26,15 +26,8 @@ func (app Application) GetAccounts(w http.ResponseWriter, r *http.Request) {
 		app.HTTPError.New(w, r, err)
 		return
 	}
-
-	count, err := app.Repositories.Account.GetAccountsCount(ctx, pagination)
-	if err != nil {
-		app.HTTPError.New(w, r, err)
-		return
-	}
-
 	
-	render.JSON(w, r, domain.NewAccountsResponse(res, count))
+	render.JSON(w, r, domain.NewAccountsResponse(res))
 }
 
 func (app Application) GetCreatorsAccounts(w http.ResponseWriter, r *http.Request) {
@@ -57,7 +50,7 @@ func (app Application) GetCreatorsAccounts(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	render.JSON(w, r, domain.NewAccountsResponse(res, len(res)))
+	render.JSON(w, r, domain.NewAccountsResponse(res))
 }
 
 func (app Application) GetCreatorsAccountsByVote(w http.ResponseWriter, r *http.Request) {
@@ -80,7 +73,7 @@ func (app Application) GetCreatorsAccountsByVote(w http.ResponseWriter, r *http.
 		return
 	}
 
-	render.JSON(w, r, domain.NewAccountsResponse(res, len(res)))
+	render.JSON(w, r, domain.NewAccountsResponse(res))
 }
 
 func (app Application) GetAccount(w http.ResponseWriter, r *http.Request) {

@@ -1,13 +1,10 @@
 import classNames from "classnames";
 import { useEffect } from "react";
-import useListFilters from "../../hooks/useListFilters";
+import usePagination from "../../hooks/usePagination";
 import { getAccounts } from "../../http/api";
 import { Account } from "../../types";
-import { Loading } from "../../ui/Loading";
 import { getSearchParams, setSearchParams } from "../../utils";
 import AccountList from "../Account/AccountList";
-import SvgArrowLeft from "../icons/ArrowLeft";
-import SvgArrowRight from "../icons/ArrowRight";
 import styles from "./Search.module.css";
 
 interface Props {
@@ -23,21 +20,19 @@ const isKeyofAccount = (value: string | null): value is keyof Account =>
   );
 
 const Search = ({ title, searchTerm, isPagination = true, sort }: Props) => {
-  const filters = useListFilters();
+  const pagination = usePagination();
 
   const { data, isLoading, mutate } = getAccounts({
     q: searchTerm ?? "",
-    ...filters.state,
+    ...pagination.state,
   });
 
   useEffect(() => {
     const querySort = getSearchParams("sort");
 
-    !querySort && sort && filters.setSort(sort);
-    isKeyofAccount(querySort) && filters.setSort(querySort);
+    !querySort && sort && pagination.setSort(sort);
+    isKeyofAccount(querySort) && pagination.setSort(querySort);
   }, []);
-
-  const pages = data?.total && Math.ceil(data?.total / filters.state.limit);
 
   return (
     <>
@@ -49,15 +44,15 @@ const Search = ({ title, searchTerm, isPagination = true, sort }: Props) => {
         {title && <h1 className={styles.rowTitle}>{title}</h1>}
         <div className={styles.filter}>
           <select
-            value={filters.state.sort ?? ""}
+            value={pagination.state.sort ?? ""}
             onChange={(e) => {
               const value = e.target.value;
               if (!isKeyofAccount(value) || sort) return;
-              filters.setSort(value);
+              pagination.setSort(value);
               setSearchParams("sort", value);
             }}
             className={classNames(styles.sortSelect, {
-              [styles.selectActive]: !!filters.state.sort,
+              [styles.selectActive]: !!pagination.state.sort,
             })}
             disabled={!!sort}
           >
@@ -71,47 +66,15 @@ const Search = ({ title, searchTerm, isPagination = true, sort }: Props) => {
           </select>
         </div>
       </div>
-      {data?.accounts && (
-        <>
-          {isLoading && <Loading />}
-          {data?.total === 0 && !isLoading && <div>No Accounts found</div>}
-          <AccountList accounts={data.accounts} mutate={mutate} />
-        </>
-      )}
-      {isPagination && (
-        <div className={styles.pagination}>
-          <button
-            className={styles.paginationPrev}
-            onClick={filters.prevPage}
-            disabled={filters.state.page <= 1}
-          >
-            <SvgArrowLeft
-              className={classNames(styles.icon, styles.iconPagination)}
-            />
-          </button>
-          {[...Array(pages).keys()].map((p) => (
-            <button
-              className={classNames(styles.paginationBtn, {
-                [styles.paginationActive]: filters.state.page === p + 1,
-              })}
-              onClick={() => filters.setPage(p + 1)}
-              key={p}
-            >
-              {p + 1}
-            </button>
-          ))}
-          <button
-            className={styles.paginationNext}
-            onClick={filters.nextPage}
-            disabled={
-              filters.state.limit * filters.state.page >= (data?.total ?? 0)
-            }
-          >
-            <SvgArrowRight
-              className={classNames(styles.icon, styles.iconPagination)}
-            />
-          </button>
-        </div>
+      {data && (
+        <AccountList
+          accounts={data.accounts}
+          total={data.total}
+          pagination={pagination}
+          isPagination={isPagination}
+          isLoading={isLoading}
+          mutate={mutate}
+        />
       )}
     </>
   );

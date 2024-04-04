@@ -1,4 +1,5 @@
 import { useContext } from "react";
+import usePagination from "../../hooks/usePagination";
 import { getVotesByCreatorId } from "../../http/api";
 import AccountList from "../Account/AccountList";
 import { SessionContext } from "../AppRouter";
@@ -8,7 +9,11 @@ import styles from "./VotesPage.module.css";
 
 const Votes = () => {
   const session = useContext(SessionContext);
-  const { data, mutate } = getVotesByCreatorId(session?.user.id);
+  const pagination = usePagination();
+  const { data, isLoading, mutate } = getVotesByCreatorId(
+    session?.user.id,
+    pagination.state
+  );
 
   return (
     <>
@@ -16,8 +21,14 @@ const Votes = () => {
       <section className={styles.paddingTop}>
         <div className="container">
           <h1 className={styles.title}>Your Votes</h1>
-          {data?.accounts && (
-            <AccountList accounts={data.accounts} mutate={mutate} />
+          {data && (
+            <AccountList
+              accounts={data.accounts}
+              total={data.total}
+              pagination={pagination}
+              isLoading={isLoading}
+              mutate={mutate}
+            />
           )}
         </div>
       </section>

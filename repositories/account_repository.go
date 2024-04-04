@@ -33,6 +33,7 @@ type Account struct {
 	PlatformID  uuid.UUID    `db:"platform_id"`
 	PlatformName  string    `db:"platform_name"`
 	PlatformURL  string    `db:"platform_url"`
+	FullCount  int    `db:"full_count"`
 }
 
 var ErrAccountNotFound = errors.New("account not found")
@@ -47,7 +48,8 @@ func (r AccountRepository) GetAccounts(ctx context.Context, pagination common.Pa
 		SELECT a.id, a.username, a.password, 
 			(SELECT count(v.id) FROM votes AS v WHERE v.account_id = a.id AND v.value = 'up') AS votes_up, 
 			(SELECT count(v.id) FROM votes AS v WHERE v.account_id = a.id AND v.value = 'down') AS votes_down, 
-			a.created_at, a.creator_id, p.id AS platform_id, p.name AS platform_name, p.url  AS platform_url
+			a.created_at, a.creator_id, p.id AS platform_id, p.name AS platform_name, p.url  AS platform_url,
+			count(*) OVER() AS full_count
 		FROM accounts AS a 
 		INNER JOIN platforms AS p ON a.platform_id = p.id
 		WHERE ($1 = '' OR p.name ILIKE $1)
@@ -60,15 +62,17 @@ func (r AccountRepository) GetAccounts(ctx context.Context, pagination common.Pa
 }
 
 func (r AccountRepository) GetAccountsByCreator(ctx context.Context, pagination common.Pagination, accountID uuid.UUID) ([]Account, error) {
+	params := fmt.Sprintf("ORDER BY %s LIMIT %s OFFSET %s", pagination.Sort() + " " + pagination.Order(), strconv.Itoa(pagination.Limit()), strconv.Itoa(pagination.Offset()))
 	rows, err := r.pool.Query(ctx, `
 		SELECT a.id, a.username, a.password,
 			(SELECT count(v.id) FROM votes AS v WHERE v.account_id = a.id AND v.value = 'up') AS votes_up, 
 			(SELECT count(v.id) FROM votes AS v WHERE v.account_id = a.id AND v.value = 'down') AS votes_down, 
-			a.created_at, a.creator_id, p.id AS platform_id, p.name AS platform_name, p.url  AS platform_url
+			a.created_at, a.creator_id, p.id AS platform_id, p.name AS platform_name, p.url  AS platform_url,
+			count(*) OVER() AS full_count
 		FROM accounts AS a 
 		INNER JOIN platforms AS p ON a.platform_id = p.id
 		WHERE creator_id = $1
-	`, accountID)
+	`+params, accountID)
 
 	if err != nil {
 		return nil, err
@@ -78,16 +82,18 @@ func (r AccountRepository) GetAccountsByCreator(ctx context.Context, pagination 
 }
 
 func (r AccountRepository) GetAccountsByVotes(ctx context.Context, pagination common.Pagination, accountID uuid.UUID) ([]Account, error) {
+	params := fmt.Sprintf("ORDER BY %s LIMIT %s OFFSET %s", pagination.Sort() + " " + pagination.Order(), strconv.Itoa(pagination.Limit()), strconv.Itoa(pagination.Offset()))
 	rows, err := r.pool.Query(ctx, `
 	SELECT a.id, a.username, a.password,
 		(SELECT count(v.id) FROM votes AS v WHERE v.account_id = a.id AND v.value = 'up') AS votes_up, 
 		(SELECT count(v.id) FROM votes AS v WHERE v.account_id = a.id AND v.value = 'down') AS votes_down, 
-		a.created_at, a.creator_id, p.id AS platform_id, p.name AS platform_name, p.url  AS platform_url
+		a.created_at, a.creator_id, p.id AS platform_id, p.name AS platform_name, p.url  AS platform_url,
+		count(*) OVER() AS full_count
 	FROM accounts AS a 
 	INNER JOIN platforms AS p ON a.platform_id = p.id
-	Inner Join votes v On v.account_id = a.id
+	INNER JOIN votes v ON v.account_id = a.id
 	WHERE v.creator_id = $1
-	`, accountID)
+	`+params, accountID)
 
 	if err != nil {
 		return nil, err

@@ -2,7 +2,7 @@ import { FunctionComponent, SVGProps } from "react";
 
 export type Glyph = FunctionComponent<SVGProps<SVGSVGElement>>;
 
-export interface ListFilters {
+export interface Pagination {
   q?: string;
   page: number;
   limit: number;

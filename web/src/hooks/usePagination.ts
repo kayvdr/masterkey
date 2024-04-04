@@ -1,5 +1,5 @@
 import { useReducer } from "react";
-import { Account, ListFilters } from "../types";
+import { Account, Pagination } from "../types";
 
 type Action =
   | { type: "SET_PAGE"; page: number }
@@ -7,7 +7,7 @@ type Action =
   | { type: "NEXT_PAGE" }
   | { type: "PREV_PAGE" };
 
-const reducer = (state: ListFilters, action: Action): ListFilters => {
+const reducer = (state: Pagination, action: Action): Pagination => {
   switch (action.type) {
     case "SET_PAGE":
       return { ...state, page: action.page || 1 };
@@ -21,28 +21,28 @@ const reducer = (state: ListFilters, action: Action): ListFilters => {
   }
 };
 
-export interface UseListFiltersReturn {
-  state: ListFilters;
+export interface UsePaginationReturn {
+  state: Pagination;
   nextPage: () => void;
   prevPage: () => void;
   setPage: (page: number) => void;
   setSort: (sort: keyof Account) => void;
 }
 
-interface UseListFiltersOptions {
-  initialState: ListFilters;
+interface UsePaginationOptions {
+  initialState: Pagination;
 }
 
-const useListFilters = (
-  userOptions?: Partial<UseListFiltersOptions>
-): UseListFiltersReturn => {
-  const initialState: ListFilters = {
+const usePagination = (
+  userOptions?: Partial<UsePaginationOptions>
+): UsePaginationReturn => {
+  const initialState: Pagination = {
     page: 1,
     limit: 10,
     sort: undefined,
   };
 
-  const options: UseListFiltersOptions = {
+  const options: UsePaginationOptions = {
     initialState,
     ...userOptions,
   };
@@ -57,4 +57,4 @@ const useListFilters = (
   };
 };
 
-export default useListFilters;
+export default usePagination;
