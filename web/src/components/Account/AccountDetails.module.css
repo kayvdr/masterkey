@@ -1,7 +1,14 @@
 .details {
-  width: 40%;
-  margin-left: 2.5em;
+  width: 100%;
   padding: 0.5em;
+  background-color: white;
+}
+
+@media (min-width: 768px) {
+  .details {
+    width: 40%;
+    margin-left: 2.5em;
+  }
 }
 
 .detailsHeader {
@@ -42,10 +49,12 @@
 
 .data {
   display: flex;
+  max-width: 80%;
 }
 
 .icon {
   width: 1.25em;
+  min-width: 1.25em;
   margin-right: 0.5em;
   fill: var(--ci-grey);
 }

@@ -1,3 +1,7 @@
+.paddingTop {
+  padding-top: 4em;
+}
+
 .wrapper {
   width: 100%;
   max-width: 50em;
