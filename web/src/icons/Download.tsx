@@ -1,4 +1,4 @@
-import { Glyph } from "../../types";
+import { Glyph } from "../types";
 
 const SvgDownload: Glyph = (props) => {
   return (
