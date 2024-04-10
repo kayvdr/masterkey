@@ -19,7 +19,7 @@
     "vite": "^5.2.8"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.12.0",
+    "@supabase/supabase-js": "^2.42.0",
     "@vitejs/plugin-react": "^4.2.1",
     "classnames": "^2.5.1",
     "date-fns": "^3.6.0",
