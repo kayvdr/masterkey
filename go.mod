@@ -1,6 +1,6 @@
 module github.com/on3k/shac-api
 
-go 1.19
+go 1.22
 
 require github.com/jackc/pgx/v5 v5.2.0
 
