@@ -1,17 +1,21 @@
-import { Session } from "@supabase/supabase-js";
+import { AuthError, Session } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
 import { supabase } from "../http/supabase";
 
 const useAuth = () => {
   const [currentSession, setSession] = useState<Session | null>(null);
+  const [error, setError] = useState<AuthError | null>(null);
 
   const handleSession = async () => {
-    const {
-      data: { session },
-      error,
-    } = await supabase.auth.getSession();
-
-    !error && setSession(session);
+    supabase.auth
+      .getSession()
+      .then(({ data: { session } }) => {
+        setSession(session);
+      })
+      .catch((error) => {
+        console.error(error);
+        setError(error);
+      });
   };
 
   useEffect(() => {
@@ -20,7 +24,7 @@ const useAuth = () => {
 
   supabase.auth.onAuthStateChange(handleSession);
 
-  return { session: currentSession };
+  return { session: currentSession, error };
 };
 
 export default useAuth;
