@@ -118,17 +118,6 @@ func (r AccountRepository) GetAccountVotes(ctx context.Context, accountID uuid.U
 	return pgx.CollectRows(rows, pgx.RowToStructByName[Vote])
 }
 
-func (r AccountRepository) GetAccountsCount(ctx context.Context, pagination common.Pagination) (count int, err error) {
-	err = r.pool.QueryRow(ctx, `
-		SELECT count(*)
-		FROM accounts AS a 
-		INNER JOIN platforms AS p ON a.platform_id = p.id
-		WHERE ($1 = '' OR p.name ILIKE $1)
-	`, pg.ILIKE(pagination.SearchTerm()),
-	).Scan(&count)
-	return
-}
-
 func (r AccountRepository) CreateAccount(ctx context.Context, account Account) (a *Account, err error) {
 	err = pgx.BeginFunc(ctx, r.pool, func(tx pgx.Tx) (err error) {
 		var accountID uuid.UUID
@@ -199,7 +188,8 @@ func queryAccount(ctx context.Context, querier pg.Querier, accountID uuid.UUID) 
 	SELECT a.id, a.username, a.password,
 		(SELECT count(v.id) FROM votes AS v WHERE v.account_id = a.id AND v.value = 'up') AS votes_up, 
 		(SELECT count(v.id) FROM votes AS v WHERE v.account_id = a.id AND v.value = 'down') AS votes_down, 
-		a.created_at, a.creator_id, p.id AS platform_id, p.name AS platform_name, p.url as platform_url 
+		a.created_at, a.creator_id, p.id AS platform_id, p.name AS platform_name, p.url as platform_url, 
+		count(*) OVER() AS full_count
 	FROM accounts AS a 
 	INNER JOIN platforms AS p ON a.platform_id = p.id 
 	WHERE a.id = $1
