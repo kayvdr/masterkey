@@ -17,7 +17,6 @@ const AppRouter = () => {
   const { session } = useAuth();
 
   return (
-    // <ScrollTop />
     <Routes>
       {session && (
         <>
