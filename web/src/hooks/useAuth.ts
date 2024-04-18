@@ -3,28 +3,30 @@ import { useEffect, useState } from "react";
 import { supabase } from "../http/supabase";
 
 const useAuth = () => {
-  const [currentSession, setSession] = useState<Session | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const [error, setError] = useState<AuthError | null>(null);
 
-  const handleSession = async () => {
+  useEffect(() => {
     supabase.auth
       .getSession()
       .then(({ data: { session } }) => {
         setSession(session);
       })
-      .catch((error) => {
+      .catch(() => {
         console.error(error);
         setError(error);
       });
-  };
 
-  useEffect(() => {
-    handleSession();
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
-  supabase.auth.onAuthStateChange(handleSession);
-
-  return { session: currentSession, error };
+  return { session, error };
 };
 
 export default useAuth;
