@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { supabase } from "../../http/supabase";
+import { useAuth } from "../../context/authContext";
 import Button from "../../ui/Button";
 import Icon from "../../ui/Icon";
 import InputField from "../../ui/InputField";
@@ -34,7 +34,8 @@ const Edit = ({ name, value, label }: Props) => {
   });
 
   const onSubmit = async (inputs: Type) => {
-    const { error } = await supabase.auth.updateUser({
+    const { auth } = useAuth();
+    const { error } = await auth.updateUser({
       [value]: inputs,
     });
 

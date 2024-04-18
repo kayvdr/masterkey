@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { NavLink, useNavigate } from "react-router-dom";
-import { supabase } from "../../http/supabase";
+import { useAuth } from "../../context/authContext";
 import { CustomError } from "../../types";
 import Button from "../../ui/Button";
 import Icon from "../../ui/Icon";
@@ -16,6 +16,7 @@ interface FormLogin {
 }
 
 const LoginPage = () => {
+  const { auth } = useAuth();
   const [error, setError] = useState<CustomError>();
   const navigate = useNavigate();
   const {
@@ -27,7 +28,7 @@ const LoginPage = () => {
 
   const onSubmit = async (formData: FormLogin) => {
     setError(undefined);
-    const { error } = await supabase.auth.signInWithPassword(formData);
+    const { error } = await auth.signInWithPassword(formData);
 
     if (error?.status) {
       setTimeout(() => {

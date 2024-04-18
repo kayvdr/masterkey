@@ -1,17 +1,16 @@
-import { useContext } from "react";
+import { useAuth } from "../../context/authContext";
 import usePagination from "../../hooks/usePagination";
 import { getVotesByCreatorId } from "../../http/api";
 import AccountList from "../Account/AccountList";
-import { SessionContext } from "../AppRouter";
 import Footer from "../Footer";
 import Header from "../Header";
 import styles from "./VotesPage.module.css";
 
 const Votes = () => {
-  const session = useContext(SessionContext);
+  const { user } = useAuth();
   const pagination = usePagination();
   const { data, isLoading, mutate } = getVotesByCreatorId(
-    session?.user.id,
+    user?.id,
     pagination.state
   );
 

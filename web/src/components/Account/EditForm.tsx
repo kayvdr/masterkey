@@ -1,6 +1,7 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/authContext";
 import { getPlatforms, updateAccount } from "../../http/api";
 import { Account } from "../../types";
 import Button from "../../ui/Button";
@@ -8,7 +9,6 @@ import ErrorText from "../../ui/ErrorText";
 import InputField from "../../ui/InputField";
 import Select from "../../ui/Select";
 import SuccessText from "../../ui/SuccessText";
-import { SessionContext } from "../AppRouter";
 import styles from "./Form.module.css";
 
 interface FormUser {
@@ -23,7 +23,7 @@ interface Props {
 const EditForm = ({ account }: Props) => {
   const { data } = getPlatforms();
   const [error, setError] = useState(false);
-  const session = useContext(SessionContext);
+  const { session } = useAuth();
   const navigate = useNavigate();
   const {
     register,

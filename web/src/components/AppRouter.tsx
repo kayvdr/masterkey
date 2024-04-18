@@ -1,8 +1,5 @@
-import { Session } from "@supabase/supabase-js";
-import { createContext } from "react";
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import useAuth from "../hooks/useAuth";
-import ScrollTop from "../hooks/useScrolltop";
+import { Navigate, Route, Routes } from "react-router-dom";
+import { useAuth } from "../context/authContext";
 import AddAccountPage from "./Account/AddAccountPage";
 import EditAccountPage from "./Account/EditAccountPage";
 import Accounts from "./Accounts/AccountsPage";
@@ -16,45 +13,47 @@ import Profile from "./Profile/Profile";
 import SearchPage from "./Search/SearchPage";
 import Votes from "./Votes/VotesPage";
 
-export const SessionContext = createContext<Session | null>(null);
-
 const AppRouter = () => {
   const { session } = useAuth();
 
   return (
-    <BrowserRouter>
-      <ScrollTop />
-      <SessionContext.Provider value={session}>
-        <Routes>
-          {session && (
-            <>
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/accounts" element={<Accounts />} />
-              <Route path="/votes" element={<Votes />} />
-            </>
-          )}
-          <Route path="/privacy" element={<PrivacyPage />} />
-          <Route path="/imprint" element={<ImprintPage />} />
-          <Route path="/add" element={<AddAccountPage />} />
-          <Route path="/edit" element={<EditAccountPage />} />
-          <Route
-            path="/register"
-            element={
-              session ? <Navigate to="/profile" replace /> : <RegisterPage />
-            }
-          />
-          <Route
-            path="/login"
-            element={
-              session ? <Navigate to="/profile" replace /> : <LoginPage />
-            }
-          />
-          <Route path="/search" element={<SearchPage />} />
-          <Route path="/" element={<HomePage />} />
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
-      </SessionContext.Provider>
-    </BrowserRouter>
+    // <ScrollTop />
+    <Routes>
+      {session && (
+        <>
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/accounts" element={<Accounts />} />
+          <Route path="/votes" element={<Votes />} />
+        </>
+      )}
+      <Route path="/privacy" element={<PrivacyPage />} />
+      <Route path="/imprint" element={<ImprintPage />} />
+      <Route
+        path="/add"
+        element={
+          session ? <AddAccountPage /> : <Navigate to="/login" replace />
+        }
+      />
+      <Route
+        path="/edit"
+        element={
+          session ? <EditAccountPage /> : <Navigate to="/login" replace />
+        }
+      />
+      <Route
+        path="/register"
+        element={
+          session ? <Navigate to="/profile" replace /> : <RegisterPage />
+        }
+      />
+      <Route
+        path="/login"
+        element={session ? <Navigate to="/profile" replace /> : <LoginPage />}
+      />
+      <Route path="/search" element={<SearchPage />} />
+      <Route path="/" element={<HomePage />} />
+      <Route path="*" element={<NotFoundPage />} />
+    </Routes>
   );
 };
 

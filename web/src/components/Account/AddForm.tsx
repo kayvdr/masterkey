@@ -1,6 +1,7 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/authContext";
 import { createAccount, getPlatforms } from "../../http/api";
 import Button from "../../ui/Button";
 import ErrorText from "../../ui/ErrorText";
@@ -8,7 +9,6 @@ import InputCheckBox from "../../ui/InputCheckBox";
 import InputField from "../../ui/InputField";
 import Select from "../../ui/Select";
 import SuccessText from "../../ui/SuccessText";
-import { SessionContext } from "../AppRouter";
 import styles from "./Form.module.css";
 
 interface FormUser {
@@ -21,7 +21,7 @@ interface FormUser {
 const AddForm = () => {
   const { data } = getPlatforms();
   const [error, setError] = useState(false);
-  const session = useContext(SessionContext);
+  const { session } = useAuth();
   const navigate = useNavigate();
   const {
     register,

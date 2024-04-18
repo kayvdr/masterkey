@@ -1,6 +1,6 @@
 import classNames from "classnames";
-import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/authContext";
 import useToggle from "../../hooks/useToggle";
 import {
   createVote,
@@ -12,7 +12,6 @@ import { Account, VoteValue } from "../../types";
 import Icon from "../../ui/Icon";
 import Popup from "../../ui/Popup";
 import { logoMapping } from "../../utils";
-import { SessionContext } from "../AppRouter";
 import SvgArrowDown from "../icons/ArrowDown";
 import SvgArrowUp from "../icons/ArrowUp";
 import SvgClose from "../icons/Close";
@@ -33,7 +32,7 @@ interface Props {
 const AccountDetails = ({ account, mutate, setAccount, onClose }: Props) => {
   const popup = useToggle();
   const navigate = useNavigate();
-  const session = useContext(SessionContext);
+  const { session } = useAuth();
   const { data: accountVote, mutate: mutateVote } = getVotesByAccountId(
     account.id
   );

@@ -1,15 +1,15 @@
 import { Session } from "@supabase/supabase-js";
+import { SupabaseAuthClient } from "@supabase/supabase-js/dist/module/lib/SupabaseAuthClient";
 import classNames from "classnames";
-import { useContext, useRef } from "react";
+import { useRef } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/authContext";
 import { useOnClickOutside } from "../hooks/useOnClickOutside";
 import useToggle from "../hooks/useToggle";
-import { supabase } from "../http/supabase";
-import { SessionContext } from "./AppRouter";
 import styles from "./Header.module.css";
 
 const Header = () => {
-  const session = useContext(SessionContext);
+  const { session, auth } = useAuth();
 
   return (
     <header className={styles.header}>
@@ -19,7 +19,7 @@ const Header = () => {
       {!session ? (
         <NavLink to="/login">Login</NavLink>
       ) : (
-        <Account session={session} />
+        <Account session={session} auth={auth} />
       )}
     </header>
   );
@@ -27,9 +27,10 @@ const Header = () => {
 
 interface Props {
   session: Session | null;
+  auth: SupabaseAuthClient;
 }
 
-const Account = ({ session }: Props) => {
+const Account = ({ session, auth }: Props) => {
   const dropdown = useToggle();
   const wrapperRef = useRef<HTMLDivElement>(null);
   useOnClickOutside(wrapperRef, dropdown.close);
@@ -54,7 +55,7 @@ const Account = ({ session }: Props) => {
           <div className={styles.separator}></div>
           <button
             className={classNames(styles.dropdownBtn, styles.logout)}
-            onClick={() => (supabase.auth.signOut(), navigate("/"))}
+            onClick={() => (auth.signOut(), navigate("/"))}
           >
             Logout
           </button>

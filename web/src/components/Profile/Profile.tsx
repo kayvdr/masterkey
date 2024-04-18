@@ -1,11 +1,10 @@
-import { PropsWithChildren, useContext, useEffect, useState } from "react";
+import { PropsWithChildren, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useAuth } from "../../context/authContext";
 import useToggle from "../../hooks/useToggle";
-import { supabase } from "../../http/supabase";
 import Button from "../../ui/Button";
 import ErrorText from "../../ui/ErrorText";
 import InputField from "../../ui/InputField";
-import { SessionContext } from "../AppRouter";
 import Footer from "../Footer";
 import Header from "../Header";
 import styles from "./Profile.module.css";
@@ -15,7 +14,7 @@ interface FormUser {
 }
 
 const Profile = () => {
-  const session = useContext(SessionContext);
+  const { user, auth } = useAuth();
   const emailModal = useToggle();
   const passworModal = useToggle();
   const deleteModal = useToggle();
@@ -51,7 +50,7 @@ const Profile = () => {
             {error && <ErrorText text="An unknown error has occurred." />}
             <Item
               label="E-Mail Address"
-              value={session?.user.email ?? ""}
+              value={user?.email ?? ""}
               openValue="Enter your new E-Mail Address"
               modal={emailModal}
               closeAllModal={closeAllModal}
@@ -71,7 +70,7 @@ const Profile = () => {
                   type="submit"
                   isLoading={isSubmitting}
                   onClick={handleSubmit(async (body) => {
-                    const { error } = await supabase.auth.updateUser({
+                    const { error } = await auth.updateUser({
                       email: body.email,
                     });
 
@@ -92,12 +91,10 @@ const Profile = () => {
             >
               <Button
                 onClick={async () => {
-                  const email = session?.user.email;
+                  const email = user?.email;
                   if (!email) return;
 
-                  const { error } = await supabase.auth.resetPasswordForEmail(
-                    email
-                  );
+                  const { error } = await auth.resetPasswordForEmail(email);
                   error ? setError(true) : deleteModal.close();
                 }}
               >
@@ -114,10 +111,10 @@ const Profile = () => {
             >
               <Button
                 onClick={async () => {
-                  const id = session?.user.id;
+                  const id = user?.id;
                   if (!id) return;
 
-                  const { error } = await supabase.auth.admin.deleteUser(id);
+                  const { error } = await auth.admin.deleteUser(id);
                   error ? setError(true) : deleteModal.close();
                 }}
               >

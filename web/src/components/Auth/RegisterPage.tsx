@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { NavLink, useNavigate } from "react-router-dom";
-import { supabase } from "../../http/supabase";
+import { useAuth } from "../../context/authContext";
 import { CustomError } from "../../types";
 import Button from "../../ui/Button";
 import Icon from "../../ui/Icon";
@@ -27,7 +27,8 @@ const RegisterPage = () => {
   } = useForm<FormLogin>();
 
   const onSubmit = async (formData: FormLogin) => {
-    const { error } = await supabase.auth.signUp(formData);
+    const { auth } = useAuth();
+    const { error } = await auth.signUp(formData);
 
     if (error?.status) {
       setError({ code: error.status, message: error.message });
