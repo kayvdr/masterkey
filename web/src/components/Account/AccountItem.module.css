@@ -46,26 +46,6 @@
   }
 }
 
-/* .open {
-  margin-left: 0.5em;
-  visibility: hidden;
-  opacity: 0;
-  transition: opacity 0.5s;
-  fill: var(--ci-darker-grey);
-  display: none;
-}
-
-@media (min-width: 768px) {
-  .open {
-    display: block;
-  }
-} */
-
-.platform:hover .open {
-  visibility: visible;
-  opacity: 1;
-}
-
 .wrapper {
   display: grid;
   grid-template-columns: 1fr;
@@ -128,8 +108,7 @@
 
 .text {
   margin: 0;
-  text-overflow: ellipsis;
-  overflow: hidden;
+  text-align: left;
 }
 
 .textSmall {
