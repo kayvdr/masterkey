@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import { PropsWithChildren } from "react";
 import styles from "../ui/Button.module.css";
-import { Loading } from "./Loading";
+import { LoadingSpinner } from "./LoadingSpinner";
 
 type Props = PropsWithChildren<{
   type?: "button" | "submit";
@@ -28,7 +28,7 @@ const Button = ({
     })}
     onClick={onClick}
   >
-    {isLoading && <Loading size="small" scheme="dark" />}
+    {isLoading && <LoadingSpinner size="small" scheme="dark" />}
     {children}
   </button>
 );

@@ -12,15 +12,15 @@ interface Props {
   onClick: () => void;
 }
 
-const AccountItem = ({ account: user, onClick }: Props) => {
-  const icon = logoMapping[user.platform_name];
+const AccountItem = ({ account, onClick }: Props) => {
+  const icon = logoMapping[account.platform_name];
 
   return (
     <>
       <button className={styles.row} onClick={onClick}>
         {icon && (
           <a
-            href={user.platform_url}
+            href={account.platform_url}
             className={styles.platform}
             target="_blank"
           >
@@ -33,26 +33,26 @@ const AccountItem = ({ account: user, onClick }: Props) => {
               glyph={SvgUser}
               className={classNames(styles.icon, styles.iconUsername)}
             />
-            <p className={styles.text}>{user.username}</p>
+            <p className={styles.text}>{account.username}</p>
           </div>
         </div>
         <div className={styles.wrapper}>
           <div className={styles.vote}>
             <Icon glyph={SvgArrowUp} className={styles.iconGreen} />
             <p className={classNames(styles.textSmall, styles.voteText)}>
-              {user.votes_up}
+              {account.votes_up}
             </p>
           </div>
           <div className={styles.vote}>
             <Icon glyph={SvgArrowDown} className={styles.iconRed} />
             <p className={classNames(styles.textSmall, styles.voteText)}>
-              {user.votes_down}
+              {account.votes_down}
             </p>
           </div>
         </div>
         <div className={styles.date}>
           <p className={classNames(styles.textSmall)}>
-            {getDiff(user.created_at)}
+            {getDiff(account.created_at)}
           </p>
         </div>
       </button>

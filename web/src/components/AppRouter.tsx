@@ -15,10 +15,11 @@ import Votes from "./Votes/VotesPage";
 const AppRouter = () => (
   <Routes>
     <Route path="/*" element={<SessionRouter />} />
-    <Route path="/privacy" element={<PrivacyPage />} />
-    <Route path="/imprint" element={<ImprintPage />} />
-    <Route path="/search" element={<SearchPage />} />
+    <Route path="privacy" element={<PrivacyPage />} />
+    <Route path="imprint" element={<ImprintPage />} />
+    <Route path="search" element={<SearchPage />} />
     <Route path="/" index element={<HomePage />} />
+    <Route path="*" element={<Navigate to="/" replace />} />
   </Routes>
 );
 
@@ -29,17 +30,17 @@ const SessionRouter = () => {
     <>
       {session ? (
         <Routes>
-          <Route path="/add" element={<AddAccountPage />} />
-          <Route path="/edit" element={<EditAccountPage />} />
-          <Route path="/profile" index element={<Profile />} />
-          <Route path="/accounts" element={<Accounts />} />
-          <Route path="/votes" element={<Votes />} />
+          <Route path="add" element={<AddAccountPage />} />
+          <Route path="edit" element={<EditAccountPage />} />
+          <Route path="profile" index element={<Profile />} />
+          <Route path="accounts" element={<Accounts />} />
+          <Route path="votes" element={<Votes />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       ) : (
         <Routes>
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/login" element={<LoginPage />} />
+          <Route path="register" element={<RegisterPage />} />
+          <Route path="login" element={<LoginPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       )}

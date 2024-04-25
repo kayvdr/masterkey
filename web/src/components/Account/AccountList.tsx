@@ -8,7 +8,6 @@ import { Account } from "../../types";
 import SvgArrowLeft from "../icons/ArrowLeft";
 import SvgArrowRight from "../icons/ArrowRight";
 import Icon from "../ui/Icon";
-import { Loading } from "../ui/Loading";
 import AccountDetails from "./AccountDetails";
 import AccountItem from "./AccountItem";
 import styles from "./AccountList.module.css";
@@ -18,7 +17,6 @@ interface Props {
   total: number;
   pagination: UsePaginationReturn;
   isPagination?: boolean;
-  isLoading: boolean;
   mutate: () => void;
 }
 
@@ -27,7 +25,6 @@ const AccountList = ({
   total,
   pagination,
   isPagination = true,
-  isLoading,
   mutate,
 }: Props) => {
   const details = useToggle();
@@ -40,9 +37,8 @@ const AccountList = ({
 
   return (
     <div>
-      {isLoading && <Loading />}
-      {total === 0 && !isLoading && <div>No Items found</div>}
-      {total > 0 && !isLoading && (
+      {total === 0 && <div>No Items found</div>}
+      {total > 0 && (
         <div className={styles.wrapper} ref={wrapperRef}>
           {((matches && !details.isOpen) || !matches) && (
             <div className={styles.list}>

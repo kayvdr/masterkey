@@ -11,8 +11,10 @@ const AddAccountPage = () => (
         <h1 className={styles.title}>Share your Account with us!</h1>
       </div>
     </section>
-    <section className="container">
-      <AddForm />
+    <section>
+      <div className="container">
+        <AddForm />
+      </div>
     </section>
     <Footer />
   </>

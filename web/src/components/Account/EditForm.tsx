@@ -8,7 +8,6 @@ import Button from "../ui/Button";
 import ErrorText from "../ui/ErrorText";
 import InputField from "../ui/InputField";
 import Select from "../ui/Select";
-import SuccessText from "../ui/SuccessText";
 import styles from "./Form.module.css";
 
 interface FormUser {
@@ -28,7 +27,7 @@ const EditForm = ({ account }: Props) => {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting, isSubmitSuccessful },
+    formState: { errors, isSubmitting },
   } = useForm<FormUser>({
     defaultValues: {
       username: account.username,
@@ -41,12 +40,7 @@ const EditForm = ({ account }: Props) => {
     <div className={styles.formWrapper}>
       <h2 className={styles.subtitle}>Please enter the following data.</h2>
       <form className={styles.form}>
-        {isSubmitSuccessful && !error && (
-          <SuccessText text="Edited successfully!" />
-        )}
-        {error && !isSubmitting && (
-          <ErrorText text="An unknown error has occurred." />
-        )}
+        {error && <ErrorText text="An unknown error has occurred." />}
         <Select
           placeholder="Choose platform..."
           register={{
@@ -90,9 +84,7 @@ const EditForm = ({ account }: Props) => {
               })
                 .then(() => {
                   setError(false);
-                  setTimeout(() => {
-                    navigate("/search");
-                  }, 2500);
+                  navigate("/search");
                 })
                 .catch(() => setError(true));
             })}

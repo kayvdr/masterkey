@@ -1,0 +1,15 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  padding: 3em 1.5em;
+}
+
+/* @media (min-width: 850px) {
+  .page {
+    padding: 2em 3em;
+  }
+} */
+
+.title {
+  margin-bottom: 1.5em;
+}
