@@ -7,52 +7,43 @@ import LoginPage from "./Auth/LoginPage";
 import RegisterPage from "./Auth/RegisterPage";
 import HomePage from "./Home/HomePage";
 import ImprintPage from "./Imprint/ImprintPage";
-import NotFoundPage from "./NotFound/NotFoundPage";
 import PrivacyPage from "./Privacy/PrivacyPage";
 import Profile from "./Profile/Profile";
 import SearchPage from "./Search/SearchPage";
 import Votes from "./Votes/VotesPage";
 
-const AppRouter = () => {
+const AppRouter = () => (
+  <Routes>
+    <Route path="/*" element={<SessionRouter />} />
+    <Route path="/privacy" element={<PrivacyPage />} />
+    <Route path="/imprint" element={<ImprintPage />} />
+    <Route path="/search" element={<SearchPage />} />
+    <Route path="/" index element={<HomePage />} />
+  </Routes>
+);
+
+const SessionRouter = () => {
   const { session } = useAuth();
 
   return (
-    <Routes>
-      {session && (
-        <>
-          <Route path="/profile" element={<Profile />} />
+    <>
+      {session ? (
+        <Routes>
+          <Route path="/add" element={<AddAccountPage />} />
+          <Route path="/edit" element={<EditAccountPage />} />
+          <Route path="/profile" index element={<Profile />} />
           <Route path="/accounts" element={<Accounts />} />
           <Route path="/votes" element={<Votes />} />
-        </>
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      ) : (
+        <Routes>
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
       )}
-      <Route path="/privacy" element={<PrivacyPage />} />
-      <Route path="/imprint" element={<ImprintPage />} />
-      <Route
-        path="/add"
-        element={
-          session ? <AddAccountPage /> : <Navigate to="/login" replace />
-        }
-      />
-      <Route
-        path="/edit"
-        element={
-          session ? <EditAccountPage /> : <Navigate to="/login" replace />
-        }
-      />
-      <Route
-        path="/register"
-        element={
-          session ? <Navigate to="/profile" replace /> : <RegisterPage />
-        }
-      />
-      <Route
-        path="/login"
-        element={session ? <Navigate to="/profile" replace /> : <LoginPage />}
-      />
-      <Route path="/search" element={<SearchPage />} />
-      <Route path="/" element={<HomePage />} />
-      <Route path="*" element={<NotFoundPage />} />
-    </Routes>
+    </>
   );
 };
 
