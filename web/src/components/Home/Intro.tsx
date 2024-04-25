@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import { useNavigate } from "react-router-dom";
-import Searchfield from "../../ui/Searchfield";
+import Searchfield from "../ui/Searchfield";
 import styles from "./Intro.module.css";
 // @ts-ignore
 import imgUrl from "../../img/sunrise.jpg";

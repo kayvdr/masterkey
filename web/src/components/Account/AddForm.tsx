@@ -3,12 +3,12 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/authContext";
 import { createAccount, getPlatforms } from "../../http/api";
-import Button from "../../ui/Button";
-import ErrorText from "../../ui/ErrorText";
-import InputCheckBox from "../../ui/InputCheckBox";
-import InputField from "../../ui/InputField";
-import Select from "../../ui/Select";
-import SuccessText from "../../ui/SuccessText";
+import Button from "../ui/Button";
+import ErrorText from "../ui/ErrorText";
+import InputCheckBox from "../ui/InputCheckBox";
+import InputField from "../ui/InputField";
+import Select from "../ui/Select";
+import SuccessText from "../ui/SuccessText";
 import styles from "./Form.module.css";
 
 interface FormUser {

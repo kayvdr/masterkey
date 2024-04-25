@@ -1,0 +1,34 @@
+.emptyPage {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  margin: 10em auto 2em;
+  max-width: 1200px;
+  padding: 2em;
+}
+
+.title {
+  font-size: 2em;
+  font-weight: 600;
+  margin-bottom: 1em;
+}
+
+.text {
+  margin-bottom: 3em;
+}
+
+.image {
+  width: 15em;
+}
+
+@media (min-width: 768px) {
+  .image {
+    width: 20em;
+  }
+}
+
+.btnContainer {
+  margin-top: 3em;
+}

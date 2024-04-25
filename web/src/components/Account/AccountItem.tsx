@@ -1,10 +1,10 @@
 import classNames from "classnames";
 import { Account } from "../../types";
-import Icon from "../../ui/Icon";
 import { getDiff, logoMapping } from "../../utils";
 import SvgArrowDown from "../icons/ArrowDown";
 import SvgArrowUp from "../icons/ArrowUp";
 import SvgUser from "../icons/User";
+import Icon from "../ui/Icon";
 import styles from "./AccountItem.module.css";
 
 interface Props {

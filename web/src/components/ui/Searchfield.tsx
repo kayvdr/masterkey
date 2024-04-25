@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import SvgClose from "../components/icons/Close";
-import SvgSearch from "../components/icons/Search";
-import { getSearchParams, setSearchParams } from "../utils";
+import { getSearchParams, setSearchParams } from "../../utils";
+import SvgClose from "../icons/Close";
+import SvgSearch from "../icons/Search";
 import Button from "./Button";
 import Icon from "./Icon";
 import styles from "./Searchfield.module.css";

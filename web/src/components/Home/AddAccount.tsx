@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import LinkButton from "../../ui/LinkButton";
+import LinkButton from "../ui/LinkButton";
 import styles from "./AddAccount.module.css";
 
 const AddAccount = () => (

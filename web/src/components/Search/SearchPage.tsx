@@ -1,8 +1,8 @@
 import { useState } from "react";
-import Searchfield from "../../ui/Searchfield";
 import Footer from "../Footer";
 import Header from "../Header";
 import styles from "../Search/SearchPage.module.css";
+import Searchfield from "../ui/Searchfield";
 import Search from "./Search";
 
 const SearchPage = () => {

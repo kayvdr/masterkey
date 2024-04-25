@@ -9,8 +9,6 @@ import {
   getVotesByAccountId,
 } from "../../http/api";
 import { Account, VoteValue } from "../../types";
-import Icon from "../../ui/Icon";
-import Popup from "../../ui/Popup";
 import { logoMapping } from "../../utils";
 import SvgArrowDown from "../icons/ArrowDown";
 import SvgArrowUp from "../icons/ArrowUp";
@@ -20,6 +18,8 @@ import SvgDelete from "../icons/Delete";
 import SvgEdit from "../icons/Edit";
 import SvgKey from "../icons/Key";
 import SvgUser from "../icons/User";
+import Icon from "../ui/Icon";
+import Popup from "../ui/Popup";
 import styles from "./AccountDetails.module.css";
 
 interface Props {

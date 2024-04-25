@@ -3,11 +3,11 @@ import { useForm } from "react-hook-form";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/authContext";
 import { CustomError } from "../../types";
-import Button from "../../ui/Button";
-import Icon from "../../ui/Icon";
-import InputField from "../../ui/InputField";
 import SvgFacebookBlack from "../icons/FacebookBlack";
 import SvgGoogle from "../icons/Google";
+import Button from "../ui/Button";
+import Icon from "../ui/Icon";
+import InputField from "../ui/InputField";
 import styles from "./AuthPage.module.css";
 
 interface FormLogin {

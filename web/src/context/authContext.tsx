@@ -24,18 +24,6 @@ type AuthContextType = {
 const AuthContext = createContext<AuthContextType>(undefined!);
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {
-  const { session } = useSession();
-
-  const value = {
-    session,
-    auth: supabase.auth,
-    user: session?.user,
-  };
-
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-};
-
-const useSession = () => {
   const [session, setSession] = useState<Session | null>(null);
 
   useEffect(() => {
@@ -52,7 +40,13 @@ const useSession = () => {
     return () => subscription.unsubscribe();
   }, []);
 
-  return { session };
+  const value = {
+    session,
+    auth: supabase.auth,
+    user: session?.user,
+  };
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth = () => useContext(AuthContext);

@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import { memo } from "react";
-import { Glyph } from "../types";
+import { Glyph } from "../../types";
 import styles from "./Icon.module.css";
 
 interface Props {

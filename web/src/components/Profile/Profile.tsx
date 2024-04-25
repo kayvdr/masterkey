@@ -2,11 +2,11 @@ import { PropsWithChildren, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useAuth } from "../../context/authContext";
 import useToggle from "../../hooks/useToggle";
-import Button from "../../ui/Button";
-import ErrorText from "../../ui/ErrorText";
-import InputField from "../../ui/InputField";
 import Footer from "../Footer";
 import Header from "../Header";
+import Button from "../ui/Button";
+import ErrorText from "../ui/ErrorText";
+import InputField from "../ui/InputField";
 import styles from "./Profile.module.css";
 
 interface FormUser {

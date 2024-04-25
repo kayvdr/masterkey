@@ -5,6 +5,7 @@ import {
   differenceInMonths,
   differenceInYears,
 } from "date-fns";
+import { SWRResponse } from "swr";
 import SvgDiscord from "./components/icons/Discord";
 import SvgDropbox from "./components/icons/Dropbox";
 import SvgEvernote from "./components/icons/Evernote";
@@ -21,7 +22,7 @@ import SvgTikTok from "./components/icons/Tiktok";
 import SvgTinder from "./components/icons/Tinder";
 import SvgTwitch from "./components/icons/Twitch";
 import SvgTwitter from "./components/icons/Twitter";
-import { Glyph } from "./types";
+import { Glyph, RemoteDataStatus } from "./types";
 
 export const getDiff = (createdAt: string) => {
   const date = new Date(createdAt);
@@ -39,6 +40,15 @@ export const getDiff = (createdAt: string) => {
   if (hours) return `${hours}h`;
 
   return `${minutes}m`;
+};
+
+export const getRemoteDataStatus = ({
+  isValidating,
+  error,
+}: Partial<SWRResponse>): RemoteDataStatus => {
+  if (isValidating) return "validating";
+  if (error) return "failure";
+  return "success";
 };
 
 export const logoMapping: { [key in string]: Glyph } = {

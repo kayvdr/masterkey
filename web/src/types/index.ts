@@ -2,6 +2,8 @@ import { FunctionComponent, SVGProps } from "react";
 
 export type Glyph = FunctionComponent<SVGProps<SVGSVGElement>>;
 
+export type RemoteDataStatus = "success" | "validating" | "failure";
+
 export interface Pagination {
   q?: string;
   page: number;

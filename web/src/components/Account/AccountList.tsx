@@ -5,11 +5,10 @@ import { useOnClickOutside } from "../../hooks/useOnClickOutside";
 import { UsePaginationReturn } from "../../hooks/usePagination";
 import useToggle from "../../hooks/useToggle";
 import { Account } from "../../types";
-import ErrorText from "../../ui/ErrorText";
-import Icon from "../../ui/Icon";
-import { Loading } from "../../ui/Loading";
 import SvgArrowLeft from "../icons/ArrowLeft";
 import SvgArrowRight from "../icons/ArrowRight";
+import Icon from "../ui/Icon";
+import { Loading } from "../ui/Loading";
 import AccountDetails from "./AccountDetails";
 import AccountItem from "./AccountItem";
 import styles from "./AccountList.module.css";
@@ -42,7 +41,7 @@ const AccountList = ({
   return (
     <div>
       {isLoading && <Loading />}
-      {total === 0 && !isLoading && <ErrorText text="No Accounts found" />}
+      {total === 0 && !isLoading && <div>No Items found</div>}
       {total > 0 && !isLoading && (
         <div className={styles.wrapper} ref={wrapperRef}>
           {((matches && !details.isOpen) || !matches) && (

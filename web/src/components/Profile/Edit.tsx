@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useAuth } from "../../context/authContext";
-import Button from "../../ui/Button";
-import Icon from "../../ui/Icon";
-import InputField from "../../ui/InputField";
 import SvgEdit from "../icons/Edit";
+import Button from "../ui/Button";
+import Icon from "../ui/Icon";
+import InputField from "../ui/InputField";
 import styles from "./Profile.module.css";
 
 interface Props {

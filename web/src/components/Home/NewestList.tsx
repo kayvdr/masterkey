@@ -1,5 +1,5 @@
-import LinkButton from "../../ui/LinkButton";
 import Search from "../Search/Search";
+import LinkButton from "../ui/LinkButton";
 import styles from "./NewestList.module.css";
 
 const NewestList = () => (
