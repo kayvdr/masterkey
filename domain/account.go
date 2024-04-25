@@ -108,9 +108,9 @@ type AccountsResponse struct {
 	Accounts []Account `json:"accounts"`
 }
 
-func NewAccountsResponse(accounts []repositories.Account) AccountsResponse {
+func NewAccountsResponse(accounts []repositories.Account, total int) AccountsResponse {
 	return AccountsResponse{
-		Total: accounts[0].FullCount,
+		Total: total,
 		Accounts: slices.Map(accounts, NewAccount),
 	}
 }
