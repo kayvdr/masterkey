@@ -4,33 +4,26 @@ import { getVotesByCreatorId } from "../../http/api";
 import AccountList from "../Account/AccountList";
 import Footer from "../Footer";
 import Header from "../Header";
-import styles from "./VotesPage.module.css";
+import Page from "../ui/Page";
 
 const Votes = () => {
   const { user } = useAuth();
   const pagination = usePagination();
-  const { data, isLoading, mutate } = getVotesByCreatorId(
-    user?.id,
-    pagination.state
-  );
+  const { data, mutate } = getVotesByCreatorId(user?.id, pagination.state);
+
+  if (!data) return null;
 
   return (
     <>
       <Header />
-      <section className={styles.paddingTop}>
-        <div className="container">
-          <h1 className={styles.title}>Your Votes</h1>
-          {data && (
-            <AccountList
-              accounts={data.accounts}
-              total={data.total}
-              pagination={pagination}
-              isLoading={isLoading}
-              mutate={mutate}
-            />
-          )}
-        </div>
-      </section>
+      <Page title="Your Votes">
+        <AccountList
+          accounts={data.accounts}
+          total={data.total}
+          pagination={pagination}
+          mutate={mutate}
+        />
+      </Page>
       <Footer />
     </>
   );

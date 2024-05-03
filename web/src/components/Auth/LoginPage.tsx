@@ -6,6 +6,7 @@ import { CustomError } from "../../types";
 import SvgFacebookBlack from "../icons/FacebookBlack";
 import SvgGoogle from "../icons/Google";
 import Button from "../ui/Button";
+import ErrorText from "../ui/ErrorText";
 import Icon from "../ui/Icon";
 import InputField from "../ui/InputField";
 import styles from "./AuthPage.module.css";
@@ -47,7 +48,7 @@ const LoginPage = () => {
       <div className={styles.wrapper}>
         <h1 className={styles.title}>Login</h1>
         <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
-          {error && <div className={styles.fail}>{error.message}</div>}
+          {error && <ErrorText text={error.message} />}
           <InputField
             placeholder="E-Mail"
             type="email"

@@ -1,7 +1,3 @@
-.subtitle {
-  margin-bottom: 1.5em;
-}
-
 .formWrapper {
   display: flex;
   flex-direction: column;
@@ -12,15 +8,4 @@
 .form {
   width: 100%;
   max-width: 32em;
-}
-
-.notvisible {
-  visibility: hidden;
-  height: 0;
-  width: 0;
-  position: absolute;
-}
-
-.fail:first-letter {
-  text-transform: uppercase;
 }

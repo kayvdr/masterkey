@@ -7,8 +7,10 @@ type Props = PropsWithChildren<{
 
 const Page = ({ title, children }: Props) => (
   <main className={styles.page}>
-    {title && <h1 className={styles.title}>{title}</h1>}
-    {children}
+    <div className="container">
+      {title && <h1 className={styles.title}>{title}</h1>}
+      {children}
+    </div>
   </main>
 );
 

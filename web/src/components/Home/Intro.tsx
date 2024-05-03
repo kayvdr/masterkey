@@ -1,13 +1,10 @@
 import classNames from "classnames";
-import { useNavigate } from "react-router-dom";
 import Searchfield from "../ui/Searchfield";
 import styles from "./Intro.module.css";
 // @ts-ignore
 import imgUrl from "../../img/sunrise.jpg";
 
 const Intro = () => {
-  const navigate = useNavigate();
-
   return (
     <section className={styles.intro}>
       <div className={styles.imgContainer}>
@@ -23,7 +20,7 @@ const Intro = () => {
           responsibly, you need to protect yourself.
         </h2>
         <div className={styles.searchWrapper}>
-          <Searchfield onSubmit={(value) => navigate(`/search?q=${value}`)} />
+          <Searchfield />
         </div>
       </div>
     </section>

@@ -1,7 +1,6 @@
 .footer {
   background-color: var(--ci-darker-grey);
   color: var(--ci-light-grey);
-  margin-top: 1em;
 }
 
 .wrapper {

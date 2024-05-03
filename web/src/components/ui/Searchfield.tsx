@@ -1,24 +1,25 @@
-import { useEffect, useRef, useState } from "react";
-import { getSearchParams, setSearchParams } from "../../utils";
+import { useForm } from "react-hook-form";
+import { useLocation, useNavigate } from "react-router-dom";
+import { getSearchParams } from "../../utils";
 import SvgClose from "../icons/Close";
 import SvgSearch from "../icons/Search";
 import Button from "./Button";
 import Icon from "./Icon";
 import styles from "./Searchfield.module.css";
 
-interface Props {
-  onSubmit: (value: string) => void;
-}
+const Searchfield = () => {
+  const navigate = useNavigate();
+  const { search } = useLocation();
 
-const Searchfield = ({ onSubmit }: Props) => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    const searchQuery = getSearchParams("q");
-    searchQuery && setSearchTerm(searchQuery);
-    searchQuery && onSubmit(searchQuery);
-  }, []);
+  const {
+    register,
+    handleSubmit,
+    getValues,
+    reset,
+    formState: { dirtyFields },
+  } = useForm<{ query: string }>({
+    defaultValues: { query: getSearchParams(search, "q") ?? "" },
+  });
 
   return (
     <form className={styles.form}>
@@ -26,20 +27,19 @@ const Searchfield = ({ onSubmit }: Props) => {
         <div className={styles.inputField}>
           <Icon glyph={SvgSearch} className={styles.searchIcon} />
           <input
-            ref={inputRef}
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
             type="search"
             placeholder="Instagram, Google ..."
             className={styles.input}
+            autoComplete="off"
+            spellCheck="false"
+            {...register("query")}
           />
-          {!!searchTerm.length && (
+          {(dirtyFields.query || getValues("query")) && (
             <button
+              type="button"
               className={styles.closeBtn}
               onClick={() => {
-                setSearchTerm("");
-                setSearchParams("q", "");
-                inputRef.current?.focus();
+                reset({ query: "" });
               }}
             >
               <Icon glyph={SvgClose} className={styles.closeIcon} />
@@ -48,10 +48,9 @@ const Searchfield = ({ onSubmit }: Props) => {
         </div>
         <Button
           type="submit"
-          onClick={() => {
-            onSubmit(searchTerm);
-            setSearchParams("q", searchTerm);
-          }}
+          onClick={handleSubmit((body) => {
+            navigate({ pathname: "/search", search: `?q=${body.query}` });
+          })}
         >
           Search
         </Button>

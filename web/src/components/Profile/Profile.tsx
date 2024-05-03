@@ -1,4 +1,4 @@
-import { PropsWithChildren, useEffect, useState } from "react";
+import { PropsWithChildren, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useAuth } from "../../context/authContext";
 import useToggle from "../../hooks/useToggle";
@@ -7,6 +7,7 @@ import Header from "../Header";
 import Button from "../ui/Button";
 import ErrorText from "../ui/ErrorText";
 import InputField from "../ui/InputField";
+import Page from "../ui/Page";
 import styles from "./Profile.module.css";
 
 interface FormUser {
@@ -32,98 +33,86 @@ const Profile = () => {
     formState: { errors, isSubmitting },
   } = useForm<FormUser>();
 
-  useEffect(() => {
-    if (!error) return;
-
-    setTimeout(() => {
-      setError(false);
-    }, 5000);
-  }, [error]);
-
   return (
     <>
       <Header />
-      <section className={styles.paddingTop}>
-        <div className="container">
-          <div className={styles.wrapper}>
-            <h1 className={styles.title}>Profile</h1>
-            {error && <ErrorText text="An unknown error has occurred." />}
-            <Item
-              label="E-Mail Address"
-              value={user?.email ?? ""}
-              openValue="Enter your new E-Mail Address"
-              modal={emailModal}
-              closeAllModal={closeAllModal}
-            >
-              <form>
-                <InputField
-                  type="email"
-                  placeholder="E-Mail"
-                  register={{
-                    ...register("email", {
-                      required: "Please insert an E-Mail Address",
-                    }),
-                  }}
-                  error={errors.email}
-                />
-                <Button
-                  type="submit"
-                  isLoading={isSubmitting}
-                  onClick={handleSubmit(async (body) => {
-                    const { error } = await auth.updateUser({
-                      email: body.email,
-                    });
+      <Page title="Profile">
+        {error && <ErrorText text="An unknown error has occurred." />}
+        <Item
+          label="E-Mail Address"
+          value={user?.email ?? ""}
+          openValue="Enter your new E-Mail Address"
+          modal={emailModal}
+          closeAllModal={closeAllModal}
+        >
+          <form>
+            <InputField
+              type="email"
+              placeholder="E-Mail"
+              register={{
+                ...register("email", {
+                  required: "Please insert an E-Mail Address",
+                }),
+              }}
+              error={errors.email}
+            />
+            <Button
+              type="submit"
+              isLoading={isSubmitting}
+              onClick={handleSubmit(async (body) => {
+                setError(false);
+                const { error } = await auth.updateUser({
+                  email: body.email,
+                });
 
-                    error ? setError(true) : passworModal.close();
-                  })}
-                >
-                  Save
-                </Button>
-              </form>
-            </Item>
-            <Item
-              label="Password"
-              value="**********"
-              openValue="You need to get a Password Reset Email?"
-              editBtnLabel="Change"
-              modal={passworModal}
-              closeAllModal={closeAllModal}
+                error ? setError(true) : passworModal.close();
+              })}
             >
-              <Button
-                onClick={async () => {
-                  const email = user?.email;
-                  if (!email) return;
+              Save
+            </Button>
+          </form>
+        </Item>
+        <Item
+          label="Password"
+          value="**********"
+          openValue="You need to get a Password Reset Email?"
+          editBtnLabel="Change"
+          modal={passworModal}
+          closeAllModal={closeAllModal}
+        >
+          <Button
+            onClick={async () => {
+              const email = user?.email;
+              if (!email) return;
 
-                  const { error } = await auth.resetPasswordForEmail(email);
-                  error ? setError(true) : deleteModal.close();
-                }}
-              >
-                Send
-              </Button>
-            </Item>
-            <Item
-              label="Delete Account"
-              value="All your Data"
-              openValue="Are you sure you want to delete your profile?"
-              editBtnLabel="Delete"
-              modal={deleteModal}
-              closeAllModal={closeAllModal}
-            >
-              <Button
-                onClick={async () => {
-                  const id = user?.id;
-                  if (!id) return;
+              const { error } = await auth.resetPasswordForEmail(email);
+              error ? setError(true) : deleteModal.close();
+            }}
+          >
+            Send
+          </Button>
+        </Item>
+        <Item
+          label="Delete Account"
+          value="All your Data"
+          openValue="Are you sure you want to delete your profile?"
+          editBtnLabel="Delete"
+          modal={deleteModal}
+          closeAllModal={closeAllModal}
+        >
+          <Button
+            onClick={async () => {
+              const id = user?.id;
+              if (!id) return;
 
-                  const { error } = await auth.admin.deleteUser(id);
-                  error ? setError(true) : deleteModal.close();
-                }}
-              >
-                Delete Permanently
-              </Button>
-            </Item>
-          </div>
-        </div>
-      </section>
+              const { error } = await auth.admin.deleteUser(id);
+              error ? setError(true) : deleteModal.close();
+            }}
+          >
+            Delete Permanently
+          </Button>
+        </Item>
+      </Page>
       <Footer />
     </>
   );

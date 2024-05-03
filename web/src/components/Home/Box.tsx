@@ -9,7 +9,10 @@ interface Props {
 }
 
 const Box = ({ glyph, label }: Props) => (
-  <NavLink to={`/search?q=${label.toLowerCase()}`} className={styles.box}>
+  <NavLink
+    to={{ pathname: "/search", search: `?q=${label.toLowerCase()}` }}
+    className={styles.box}
+  >
     <Icon glyph={glyph} className={styles.boxIcon} />
     <h3 className={styles.boxTitle}>{label}</h3>
   </NavLink>
