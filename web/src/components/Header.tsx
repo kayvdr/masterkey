@@ -2,11 +2,13 @@ import { Session } from "@supabase/supabase-js";
 import { SupabaseAuthClient } from "@supabase/supabase-js/dist/module/lib/SupabaseAuthClient";
 import classNames from "classnames";
 import { useRef } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/authContext";
 import { useOnClickOutside } from "../hooks/useOnClickOutside";
 import useToggle from "../hooks/useToggle";
 import styles from "./Header.module.css";
+import SvgAdd from "./icons/Add";
+import Icon from "./ui/Icon";
 
 const Header = () => {
   const { session, auth } = useAuth();
@@ -38,9 +40,14 @@ const Account = ({ session, auth }: Props) => {
 
   return (
     <div className={styles.account} ref={wrapperRef}>
-      <button className={styles.accountBtn} onClick={dropdown.toggle}>
-        {session?.user.email?.charAt(0).toUpperCase()}
-      </button>
+      <div className={styles.buttons}>
+        <Link className={styles.addBtn} to="/add">
+          <Icon glyph={SvgAdd} className={styles.addIcon} />
+        </Link>
+        <button className={styles.accountBtn} onClick={dropdown.toggle}>
+          {session?.user.email?.charAt(0).toUpperCase()}
+        </button>
+      </div>
       {dropdown.isOpen && (
         <div className={styles.dropdown}>
           <NavLink className={styles.dropdownBtn} to="/profile">

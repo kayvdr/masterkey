@@ -26,6 +26,8 @@ const AppRouter = () => (
 const SessionRouter = () => {
   const { session } = useAuth();
 
+  if (session === undefined) return null;
+
   return (
     <>
       {session ? (

@@ -16,7 +16,7 @@ const supabase = createClient(
 );
 
 type AuthContextType = {
-  session: Session | null;
+  session: Session | null | undefined;
   auth: SupabaseAuthClient;
   user?: User;
 };
@@ -24,7 +24,7 @@ type AuthContextType = {
 const AuthContext = createContext<AuthContextType>(undefined!);
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {
-  const [session, setSession] = useState<Session | null>(null);
+  const [session, setSession] = useState<Session | null | undefined>(undefined);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {

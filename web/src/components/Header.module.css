@@ -22,9 +22,9 @@
   color: var(--ci-green);
 }
 
-.btn {
-  font-size: 1em;
-  color: var(--ci-light-grey);
+.buttons {
+  display: flex;
+  gap: 0.75em;
 }
 
 .account {
@@ -44,6 +44,21 @@
   color: var(--ci-darker-grey);
   font-weight: 600;
   background-color: var(--ci-light-grey);
+}
+
+.addBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--ci-light-grey);
+  border-radius: 100%;
+  border-radius: 100%;
+  width: 2em;
+  height: 2em;
+}
+
+.addIcon {
+  font-size: 1.25em;
 }
 
 .dropdown {

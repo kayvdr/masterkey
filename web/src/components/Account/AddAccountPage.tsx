@@ -36,7 +36,7 @@ const AddAccountPage = () => {
   return (
     <>
       <Header />
-      <Page title="Share your Account with us!">
+      <Page title="Share your Account with us!" titleAlign="center">
         <div className={styles.formWrapper}>
           <h2>Please enter the following data.</h2>
           <form className={styles.form}>
