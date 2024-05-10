@@ -3,7 +3,7 @@
   align-items: center;
   grid-template-columns: 3em 1fr 3.5em;
   border-radius: 0.5em;
-  padding: 0.5em;
+  padding: 0.5em 0;
   margin-bottom: 0.5em;
   width: 100%;
 }
@@ -109,6 +109,15 @@
 .text {
   margin: 0;
   text-align: left;
+  max-width: 8em;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+@media (min-width: 768px) {
+  .text {
+    max-width: none;
+  }
 }
 
 .textSmall {

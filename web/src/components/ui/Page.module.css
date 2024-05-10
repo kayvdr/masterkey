@@ -1,7 +1,7 @@
 .page {
   display: flex;
   flex-direction: column;
-  padding: 4em 1.5em 1.5em;
+  padding: 4em 0 1.5em;
   min-height: 65vh;
 }
 
