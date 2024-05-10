@@ -17,6 +17,10 @@
   align-items: center;
 }
 
+.detailsTitle {
+  margin-bottom: 0;
+}
+
 .closeBtn {
   width: 0.8em;
 }
@@ -26,7 +30,7 @@
 }
 
 .closeIcon {
-  width: 0.8em;
+  width: 1.25em;
   fill: var(--ci-darker-grey);
 }
 

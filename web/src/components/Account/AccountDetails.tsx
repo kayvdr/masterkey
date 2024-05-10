@@ -75,7 +75,7 @@ const AccountDetails = ({ account, mutate, setAccount, onClose }: Props) => {
   return (
     <div className={styles.details}>
       <header className={styles.detailsHeader}>
-        <h2>Details</h2>
+        <h2 className={styles.detailsTitle}>Details</h2>
         <button className={styles.closeBtn} onClick={onClose}>
           <Icon glyph={SvgClose} className={styles.closeIcon} />
         </button>
