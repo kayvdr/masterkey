@@ -52,7 +52,7 @@ func (r AccountRepository) GetAccounts(ctx context.Context, pagination common.Pa
 			count(*) OVER() AS full_count
 		FROM accounts AS a 
 		INNER JOIN platforms AS p ON a.platform_id = p.id
-		WHERE ($1 = '' OR p.name ILIKE $1)
+		WHERE ($1 = '' OR p.name ILIKE $1 OR a.username ILIKE $1)
 	`+params, pg.ILIKE(pagination.SearchTerm()))
 	if err != nil {
 		return nil, err
