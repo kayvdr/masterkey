@@ -2,7 +2,10 @@ module github.com/on3k/shac-api
 
 go 1.22
 
-require github.com/jackc/pgx/v5 v5.2.0
+require (
+	github.com/jackc/pgx/v5 v5.2.0
+	github.com/lengzuo/supa v1.0.1
+)
 
 require (
 	cloud.google.com/go/compute v1.14.0 // indirect
@@ -12,11 +15,15 @@ require (
 	github.com/google/go-cmp v0.5.9 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.2.0 // indirect
 	github.com/googleapis/gax-go/v2 v2.7.0 // indirect
+	github.com/mattn/go-colorable v0.1.13 // indirect
+	github.com/mattn/go-isatty v0.0.19 // indirect
+	github.com/rs/zerolog v1.32.0 // indirect
 	go.opencensus.io v0.24.0 // indirect
+	golang.org/x/exp v0.0.0-20240205201215-2c58cdc269a3 // indirect
 	golang.org/x/net v0.3.0 // indirect
 	golang.org/x/oauth2 v0.0.0-20221014153046-6fdb5e3db783 // indirect
 	golang.org/x/sync v0.1.0 // indirect
-	golang.org/x/sys v0.3.0 // indirect
+	golang.org/x/sys v0.12.0 // indirect
 	golang.org/x/text v0.5.0 // indirect
 	google.golang.org/api v0.103.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect

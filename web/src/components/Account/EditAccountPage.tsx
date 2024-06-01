@@ -88,11 +88,15 @@ const EditAccountPage = () => {
                 onClick={handleSubmit((body) => {
                   if (!session) return;
 
-                  updateAccount(account.id, {
-                    username: body.username,
-                    password: body.password,
-                    platform_id: body.platform,
-                  })
+                  updateAccount(
+                    account.id,
+                    {
+                      username: body.username,
+                      password: body.password,
+                      platform_id: body.platform,
+                    },
+                    session.access_token
+                  )
                     .then(() => {
                       setError(false);
                       navigate("/search");

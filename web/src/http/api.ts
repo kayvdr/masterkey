@@ -1,3 +1,4 @@
+import { encode } from "base-64";
 import useSWR from "swr";
 import wretch from "wretch";
 import QueryStringAddon from "wretch/addons/queryString";
@@ -17,7 +18,14 @@ interface FetcherOptions {
   signal?: AbortSignal;
 }
 
-const api = wretch().addon(QueryStringAddon).url("/api/v1");
+const basicAuth = encode(
+  `${import.meta.env.VITE_BASIC_USER}:${import.meta.env.VITE_BASIC_PASS}`
+);
+
+const api = wretch()
+  .addon(QueryStringAddon)
+  .url("/api/v1")
+  .auth(`Basic ${basicAuth}`);
 
 const fetcher = <Response>({ url, query, signal }: FetcherOptions) =>
   api
@@ -46,14 +54,30 @@ export const getAccountsByCreatorId = (
     (opts) => fetcher<{ total: number; accounts: Account[] }>(opts)
   );
 
-export const createAccount = (body: AccountPostBody) =>
-  api.url(`/accounts`).post(body).json<Account>();
+export const createAccount = (body: AccountPostBody, token: string) =>
+  api
+    .url(`/accounts`)
+    .headers({ "X-Supabase-Auth": token })
+    .post(body)
+    .json<Account>();
 
-export const updateAccount = (id: string, body: AccountPatchBody) =>
-  api.url(`/accounts/${id}`).patch(body).json<Account>();
+export const updateAccount = (
+  id: string,
+  body: AccountPatchBody,
+  token: string
+) =>
+  api
+    .url(`/accounts/${id}`)
+    .headers({ "X-Supabase-Auth": token })
+    .patch(body)
+    .json<Account>();
 
-export const deleteAccount = (id: string) =>
-  api.url(`/accounts/${id}`).delete().res();
+export const deleteAccount = (id: string, token: string) =>
+  api
+    .url(`/accounts/${id}`)
+    .headers({ "X-Supabase-Auth": token })
+    .delete()
+    .res();
 
 export const getPlatforms = () =>
   useSWR({ url: `/platforms` }, (opts) =>
@@ -74,8 +98,12 @@ export const getVotesByCreatorId = (
     (opts) => fetcher<{ total: number; accounts: Account[] }>(opts)
   );
 
-export const createVote = (body: VoteBody) =>
-  api.url(`/votes`).post(body).json<Vote>();
+export const createVote = (body: VoteBody, token: string) =>
+  api
+    .url(`/votes`)
+    .headers({ "X-Supabase-Auth": token })
+    .post(body)
+    .json<Vote>();
 
-export const deleteVote = (id: string) =>
-  api.url(`/votes/${id}`).delete().res();
+export const deleteVote = (id: string, token: string) =>
+  api.url(`/votes/${id}`).headers({ "X-Supabase-Auth": token }).delete().res();

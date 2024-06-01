@@ -117,6 +117,12 @@ func (app Application) GetAccount(w http.ResponseWriter, r *http.Request) {
 
 func (app Application) CreateAccount(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
+
+	token := r.Header.Get("X-Supabase-Auth")
+	if err := app.Clients.SupabaseClient.GetUser(ctx, token); err != nil {
+		app.HTTPError.New(w, r, httperror.New(http.StatusForbidden, err))
+		return
+	}
 	
 	var body domain.CreateAccountBody
 	if err := render.Bind(r, &body); err != nil {
@@ -136,6 +142,13 @@ func (app Application) CreateAccount(w http.ResponseWriter, r *http.Request) {
 
 func (app Application) UpdateAccount(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
+
+	token := r.Header.Get("X-Supabase-Auth")
+	if err := app.Clients.SupabaseClient.GetUser(ctx, token); err != nil {
+		app.HTTPError.New(w, r, httperror.New(http.StatusForbidden, err))
+		return
+	}
+	
 	accountID, err := common.GetUUIDParamFromURL(r, "accountId")
 	if err != nil {
 		app.HTTPError.New(w, r, httperror.New(http.StatusBadRequest, err))
@@ -169,6 +182,13 @@ func (app Application) UpdateAccount(w http.ResponseWriter, r *http.Request) {
 
 func (app Application) DeleteAccount(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
+
+	token := r.Header.Get("X-Supabase-Auth")
+	if err := app.Clients.SupabaseClient.GetUser(ctx, token); err != nil {
+		app.HTTPError.New(w, r, httperror.New(http.StatusForbidden, err))
+		return
+	}
+
 	accountID, err := common.GetUUIDParamFromURL(r, "accountId")
 	if err != nil {
 		app.HTTPError.New(w, r, httperror.New(http.StatusBadRequest, err))

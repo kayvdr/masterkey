@@ -11,6 +11,10 @@ type Env struct {
 	Environment     string
 	DbUrl        string
 	Port         string
+	BasicUser         string
+	BasicPass         string
+	SupabaseUrl         string
+	SupabaseKey        string
 }
 
 func NewEnv() (*Env, error) {
@@ -28,6 +32,10 @@ func NewEnv() (*Env, error) {
 		Environment:     os.Getenv("ENVIRONMENT"),
 		DbUrl:        os.Getenv("DATABASE_URL"),
 		Port:         os.Getenv("PORT"),
+		BasicUser:         os.Getenv("VITE_BASIC_USER"),
+		BasicPass:         os.Getenv("VITE_BASIC_PASS"),
+		SupabaseUrl:         os.Getenv("VITE_SUPABASE_URL"),
+		SupabaseKey:         os.Getenv("VITE_SUPABASE_KEY"),
 	}
 
 	return &env, nil

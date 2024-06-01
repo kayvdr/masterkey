@@ -42,11 +42,16 @@ const AccountDetails = ({ account, mutate, setAccount, onClose }: Props) => {
   const platformIcon = logoMapping[account.platform_name];
 
   const addVote = (value: VoteValue) => {
-    createVote({
-      value,
-      account_id: account.id,
-      creator_id: session?.user.id ?? "",
-    }).then(() => {
+    if (!session) return;
+
+    createVote(
+      {
+        value,
+        account_id: account.id,
+        creator_id: session.user.id,
+      },
+      session.access_token
+    ).then(() => {
       mutate();
       mutateVote();
       setAccount({
@@ -57,9 +62,9 @@ const AccountDetails = ({ account, mutate, setAccount, onClose }: Props) => {
   };
 
   const removeVote = (value: VoteValue) => {
-    if (!vote) return;
+    if (!vote || !session) return;
 
-    deleteVote(vote.id).then(() => {
+    deleteVote(vote.id, session.access_token).then(() => {
       mutate();
       mutateVote();
       setAccount({
@@ -176,7 +181,9 @@ const AccountDetails = ({ account, mutate, setAccount, onClose }: Props) => {
                   text="Are you sure you want to delete this user?"
                   onClose={popup.close}
                   onSubmit={() => {
-                    deleteAccount(account.id).then(() => {
+                    if (!session) return;
+
+                    deleteAccount(account.id, session.access_token).then(() => {
                       mutate();
                       popup.close();
                       setAccount(undefined);

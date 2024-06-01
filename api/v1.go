@@ -6,8 +6,10 @@ import (
 
 	"github.com/go-chi/chi"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/on3k/shac-api/clients/supabase"
 	"github.com/on3k/shac-api/common/env"
 	"github.com/on3k/shac-api/common/httperror"
+	"github.com/on3k/shac-api/common/middleware"
 	"github.com/on3k/shac-api/repositories"
 	"github.com/shopspring/decimal"
 )
@@ -28,10 +30,16 @@ type Repositories struct {
 
 type Clients struct {
 	Pool          *pgxpool.Pool
+	SupabaseClient supabase.Client
 }
 
 func NewApplication(ctx context.Context, env *env.Env) (*Application, error) {
 	pool, err := pgxpool.New(ctx, env.DbUrl)
+	if err != nil {
+		return nil, err
+	}
+
+	supabaseClient, err := supabase.NewClient(env)
 	if err != nil {
 		return nil, err
 	}
@@ -41,6 +49,7 @@ func NewApplication(ctx context.Context, env *env.Env) (*Application, error) {
 	return &Application{
 		Clients: Clients{
 			Pool:          pool,
+			SupabaseClient: *supabaseClient,
 		},
 		Repositories: Repositories{
 			Account: repositories.NewAccountRepository(pool),
@@ -54,30 +63,33 @@ func NewApplication(ctx context.Context, env *env.Env) (*Application, error) {
 
 func (app *Application) Router(env *env.Env) http.Handler {
 	r := chi.NewRouter()
-	// TODO: Secure some api endpoint with authentication 
 
+	r.Group(func(r chi.Router) {
+		r.Use(middleware.AuthMiddleware("ShacRealm", map[string]string{
+			env.BasicUser: env.BasicPass,
+		}))
+		r.Route("/accounts", func(r chi.Router) {
+			r.Get("/", app.GetAccounts)
+			r.Post("/", app.CreateAccount)
+			r.Get("/{accountId}", app.GetAccount)
+			r.Patch("/{accountId}", app.UpdateAccount)
+			r.Delete("/{accountId}", app.DeleteAccount)
+			r.Get("/{accountId}/votes", app.GetAccountVotes)
+		})
 
-	r.Route("/accounts", func(r chi.Router) {
-		r.Get("/", app.GetAccounts)
-		r.Post("/", app.CreateAccount)
-		r.Get("/{accountId}", app.GetAccount)
-		r.Patch("/{accountId}", app.UpdateAccount)
-		r.Delete("/{accountId}", app.DeleteAccount)
-		r.Get("/{accountId}/votes", app.GetAccountVotes)
-	})
+		r.Route("/creators", func(r chi.Router) {
+			r.Get("/{creatorId}/accounts", app.GetCreatorsAccounts)
+			r.Get("/{creatorId}/accounts/votes", app.GetCreatorsAccountsByVote)
+		})
 
-	r.Route("/creators", func(r chi.Router) {
-		r.Get("/{creatorId}/accounts", app.GetCreatorsAccounts)
-		r.Get("/{creatorId}/accounts/votes", app.GetCreatorsAccountsByVote)
-	})
+		r.Route("/platforms", func(r chi.Router) {
+			r.Get("/", app.GetPlatforms)
+		})
 
-	r.Route("/platforms", func(r chi.Router) {
-		r.Get("/", app.GetPlatforms)
-	})
-
-	r.Route("/votes", func(r chi.Router) {
-		r.Post("/", app.CreateVote)
-		r.Delete("/{voteId}", app.DeleteVote)
+		r.Route("/votes", func(r chi.Router) {
+			r.Post("/", app.CreateVote)
+			r.Delete("/{voteId}", app.DeleteVote)
+		})
 	})
 
 	return r

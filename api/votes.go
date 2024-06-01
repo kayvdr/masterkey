@@ -55,6 +55,12 @@ func (app Application) GetAccountVotes(w http.ResponseWriter, r *http.Request) {
 
 func (app Application) CreateVote(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
+
+	token := r.Header.Get("X-Supabase-Auth")
+	if err := app.Clients.SupabaseClient.GetUser(ctx, token); err != nil {
+		app.HTTPError.New(w, r, httperror.New(http.StatusForbidden, err))
+		return
+	}
 	
 	var body domain.CreateVoteBody
 	if err := render.Bind(r, &body); err != nil {
@@ -78,6 +84,13 @@ func (app Application) CreateVote(w http.ResponseWriter, r *http.Request) {
 
 func (app Application) DeleteVote(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
+
+	token := r.Header.Get("X-Supabase-Auth")
+	if err := app.Clients.SupabaseClient.GetUser(ctx, token); err != nil {
+		app.HTTPError.New(w, r, httperror.New(http.StatusForbidden, err))
+		return
+	}
+	
 	param := chi.URLParam(r, "voteId")
 	if param == "" {
 		app.HTTPError.New(w, r, httperror.New(http.StatusBadRequest, errors.New("missing parameter 'voteId'")))

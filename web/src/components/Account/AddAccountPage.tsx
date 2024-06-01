@@ -86,12 +86,15 @@ const AddAccountPage = () => {
                 onClick={handleSubmit((body) => {
                   if (!session) return;
 
-                  createAccount({
-                    username: body.username,
-                    password: body.password,
-                    platform_id: body.platform,
-                    creator_id: session.user.id,
-                  })
+                  createAccount(
+                    {
+                      username: body.username,
+                      password: body.password,
+                      platform_id: body.platform,
+                      creator_id: session.user.id,
+                    },
+                    session.access_token
+                  )
                     .then(() => {
                       setError(false);
                       navigate("/search");
