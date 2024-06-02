@@ -1,4 +1,5 @@
 import classNames from "classnames";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/authContext";
 import useToggle from "../../hooks/useToggle";
@@ -12,6 +13,7 @@ import { Account, VoteValue } from "../../types";
 import { logoMapping } from "../../utils";
 import SvgArrowDown from "../icons/ArrowDown";
 import SvgArrowUp from "../icons/ArrowUp";
+import SvgCheck from "../icons/Check";
 import SvgClose from "../icons/Close";
 import SvgCopy from "../icons/Copy";
 import SvgDelete from "../icons/Delete";
@@ -97,24 +99,18 @@ const AccountDetails = ({ account, mutate, setAccount, onClose }: Props) => {
             <Icon glyph={SvgUser} className={styles.icon} />
             <p className={styles.text}>{account.username}</p>
           </div>
-          <button
-            className={styles.copyBtn}
+          <CopyButton
             onClick={() => navigator.clipboard.writeText(account.username)}
-          >
-            <Icon glyph={SvgCopy} className={styles.copyIcon} />
-          </button>
+          />
         </div>
         <div className={styles.item}>
           <div className={styles.data}>
             <Icon glyph={SvgKey} className={styles.icon} />
             <p className={styles.text}>{account.password}</p>
           </div>
-          <button
-            className={styles.copyBtn}
+          <CopyButton
             onClick={() => navigator.clipboard.writeText(account.password)}
-          >
-            <Icon glyph={SvgCopy} className={styles.copyIcon} />
-          </button>
+          />
         </div>
         <div className={styles.voteItem}>
           <button
@@ -197,6 +193,37 @@ const AccountDetails = ({ account, mutate, setAccount, onClose }: Props) => {
         )}
       </div>
     </div>
+  );
+};
+
+interface CopyButtonProps {
+  onClick: () => void;
+}
+
+const CopyButton = ({ onClick }: CopyButtonProps) => {
+  const [active, setActive] = useState(false);
+
+  useEffect(() => {
+    active &&
+      setTimeout(() => {
+        setActive(false);
+      }, 3000);
+  }, [active]);
+
+  return (
+    <button
+      className={styles.copyBtn}
+      onClick={() => {
+        setActive(true);
+        onClick();
+      }}
+    >
+      {!active ? (
+        <Icon glyph={SvgCopy} className={styles.copyIcon} />
+      ) : (
+        <Icon glyph={SvgCheck} className={styles.copyActive} />
+      )}
+    </button>
   );
 };
 

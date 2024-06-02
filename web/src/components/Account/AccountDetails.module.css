@@ -82,6 +82,11 @@
   width: 1em;
 }
 
+.copyActive {
+  fill: var(--ci-green);
+  transform: scale(1.1);
+}
+
 .voteItem {
   display: grid;
   grid-template-columns: 1fr 1fr;
