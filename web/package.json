@@ -2,6 +2,7 @@
   "name": "shac",
   "version": "1.0.0",
   "description": "",
+  "type": "module",
   "main": "src/index.tsx",
   "scripts": {
     "start": "vite",
