@@ -16,6 +16,11 @@ import (
 
 func (app Application) GetAccountVotes(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
+	creatorID, err := common.GetUUIDParamFromURL(r, "creatorId")
+	if err != nil {
+		app.HTTPError.New(w, r, httperror.New(http.StatusBadRequest, err))
+		return
+	}
 	accountID, err := common.GetUUIDParamFromURL(r, "accountId")
 	if err != nil {
 		app.HTTPError.New(w, r, httperror.New(http.StatusBadRequest, err))
@@ -30,18 +35,6 @@ func (app Application) GetAccountVotes(w http.ResponseWriter, r *http.Request) {
 	if !exists {
 		app.HTTPError.New(w, r, httperror.New(http.StatusNotFound, fmt.Errorf("account '%s' not found", accountID)))
 		return
-	}
-
-	var creatorID uuid.NullUUID
-	if r.URL.Query().Has("creatorId") {
-		
-		a, err := uuid.Parse(r.URL.Query().Get("creatorId"))
-		if err != nil {
-			app.HTTPError.New(w, r, err)
-			return
-		}
-
-		creatorID = uuid.NullUUID{UUID: a, Valid: true}
 	}
 
 	res, err := app.Repositories.Account.GetAccountVotes(ctx, accountID, creatorID)

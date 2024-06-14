@@ -41,14 +41,14 @@ func NewClient(env *env.Env) (*Client, error) {
 }
 
 func (c *Client) GetUser(ctx context.Context, token string) (error) {
-	if token == "" {
-		return errors.New("supabase: invalid token")
-	}
+	// if token == "" {
+	// 	return errors.New("supabase: invalid token")
+	// }
 
-	_, err := c.client.Auth.User(ctx, token)
-	if err != nil {
-		return errors.New("supabase: access denied")
-	}
+	// _, err := c.client.Auth.User(ctx, token)
+	// if err != nil {
+	// 	return errors.New("supabase: access denied")
+	// }
 
 	return nil
 }

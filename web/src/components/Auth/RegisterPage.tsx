@@ -20,6 +20,7 @@ interface FormLogin {
 const RegisterPage = () => {
   const [error, setError] = useState<CustomError>();
   const navigate = useNavigate();
+  const { auth } = useAuth();
   const {
     register,
     reset,
@@ -28,14 +29,11 @@ const RegisterPage = () => {
   } = useForm<FormLogin>();
 
   const onSubmit = async (formData: FormLogin) => {
-    const { auth } = useAuth();
     const { error } = await auth.signUp(formData);
-
     if (error?.status) {
       setError({ code: error.status, message: error.message });
       return;
     }
-
     reset();
     navigate("/login");
   };

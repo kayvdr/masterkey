@@ -84,9 +84,15 @@ export const getPlatforms = () =>
     fetcher<{ platforms: Platform[] }>(opts)
   );
 
-export const getVotesByAccountId = (id: string | undefined) =>
-  useSWR(id ? { url: `/accounts/${id}/votes` } : null, (opts) =>
-    fetcher<{ total: number; votes: Vote[] }>(opts)
+export const getVotesByAccountId = (
+  creatorId: string | undefined,
+  accountId: string | undefined
+) =>
+  useSWR(
+    creatorId && accountId
+      ? { url: `/creators/${creatorId}/accounts/${accountId}/votes` }
+      : null,
+    (opts) => fetcher<{ total: number; votes: Vote[] }>(opts)
   );
 
 export const getVotesByCreatorId = (

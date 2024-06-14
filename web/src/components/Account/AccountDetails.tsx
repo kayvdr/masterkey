@@ -34,23 +34,21 @@ interface Props {
 const AccountDetails = ({ account, mutate, setAccount, onClose }: Props) => {
   const popup = useToggle();
   const navigate = useNavigate();
-  const { session } = useAuth();
-  const { data: accountVote, mutate: mutateVote } = getVotesByAccountId(
+  const { session, user } = useAuth();
+  const { data, mutate: mutateVote } = getVotesByAccountId(
+    user?.id,
     account.id
   );
-
-  const vote = accountVote?.votes?.[0];
-
   const platformIcon = logoMapping[account.platform_name];
 
   const addVote = (value: VoteValue) => {
-    if (!session) return;
+    if (!user || !session) return;
 
     createVote(
       {
         value,
         account_id: account.id,
-        creator_id: session.user.id,
+        creator_id: user?.id,
       },
       session.access_token
     ).then(() => {
@@ -64,9 +62,9 @@ const AccountDetails = ({ account, mutate, setAccount, onClose }: Props) => {
   };
 
   const removeVote = (value: VoteValue) => {
-    if (!vote || !session) return;
+    if (!data?.votes[0] || !session) return;
 
-    deleteVote(vote.id, session.access_token).then(() => {
+    deleteVote(data.votes[0].id, session.access_token).then(() => {
       mutate();
       mutateVote();
       setAccount({
@@ -77,7 +75,7 @@ const AccountDetails = ({ account, mutate, setAccount, onClose }: Props) => {
   };
 
   const handleVote = async (value: VoteValue) =>
-    vote ? removeVote(value) : addVote(value);
+    data?.votes[0] ? removeVote(value) : addVote(value);
 
   return (
     <div className={styles.details}>
@@ -115,34 +113,36 @@ const AccountDetails = ({ account, mutate, setAccount, onClose }: Props) => {
         <div className={styles.voteItem}>
           <button
             className={classNames(styles.btn, {
-              [styles.btnActive]: vote?.value === "up",
+              [styles.btnActive]:
+                data?.votes[0]?.value === "up" &&
+                data?.votes[0].creator_id === user?.id,
             })}
-            onClick={async () => {
+            onClick={() => {
               if (!session) {
                 navigate("/login");
                 return;
               }
-
               handleVote("up");
             }}
-            disabled={vote?.value === "down"}
+            disabled={data?.votes[0]?.value === "down"}
           >
             <Icon glyph={SvgArrowUp} className={styles.iconGreen} />
             <p className={styles.textSmall}>{account.votes_up}</p>
           </button>
           <button
             className={classNames(styles.btn, {
-              [styles.btnActive]: vote?.value === "down",
+              [styles.btnActive]:
+                data?.votes[0]?.value === "down" &&
+                data?.votes[0].creator_id === user?.id,
             })}
             onClick={async () => {
               if (!session) {
                 navigate("/login");
                 return;
               }
-
               handleVote("down");
             }}
-            disabled={vote?.value === "up"}
+            disabled={data?.votes[0]?.value === "up"}
           >
             <Icon glyph={SvgArrowDown} className={styles.iconRed} />
             <p className={styles.textSmall}>{account.votes_down}</p>

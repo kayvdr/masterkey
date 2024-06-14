@@ -74,12 +74,12 @@ func (app *Application) Router(env *env.Env) http.Handler {
 			r.Get("/{accountId}", app.GetAccount)
 			r.Patch("/{accountId}", app.UpdateAccount)
 			r.Delete("/{accountId}", app.DeleteAccount)
-			r.Get("/{accountId}/votes", app.GetAccountVotes)
 		})
 
 		r.Route("/creators", func(r chi.Router) {
 			r.Get("/{creatorId}/accounts", app.GetCreatorsAccounts)
 			r.Get("/{creatorId}/accounts/votes", app.GetCreatorsAccountsByVote)
+			r.Get("/{creatorId}/accounts/{accountId}/votes", app.GetAccountVotes)
 		})
 
 		r.Route("/platforms", func(r chi.Router) {

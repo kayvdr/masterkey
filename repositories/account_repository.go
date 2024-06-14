@@ -102,13 +102,12 @@ func (r AccountRepository) GetAccountsByVotes(ctx context.Context, pagination co
 	return pgx.CollectRows(rows, pgx.RowToStructByName[Account])
 }
 
-func (r AccountRepository) GetAccountVotes(ctx context.Context, accountID uuid.UUID, creatorID uuid.NullUUID) ([]Vote, error) {
+func (r AccountRepository) GetAccountVotes(ctx context.Context, accountID uuid.UUID, creatorID uuid.UUID) ([]Vote, error) {
 	rows, err := r.pool.Query(ctx, `
 		SELECT v.id, v.value, v.account_id, v.creator_id, a.username, p.name AS platform_name FROM votes v
 		INNER JOIN accounts AS a ON v.account_id = a.id
 		INNER JOIN platforms AS p ON a.platform_id = p.id
-		WHERE v.account_id = $1
-			AND (v.creator_id = $2 OR ($2 IS NULL AND v.creator_id IS NOT NULL))
+		WHERE v.account_id = $1 AND v.creator_id = $2
 	`, accountID, creatorID)
 
 	if err != nil {
