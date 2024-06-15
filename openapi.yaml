@@ -86,27 +86,9 @@ paths:
         "404":
           description: User not found
 
-  /accounts/{accountId}/votes:
-    get:
-      operationId: GetAccountVotes
-      description: Return votes of Accounts
-      responses:
-        "200":
-          description: ""
-          content:
-            application/json:
-              schema:
-                properties:
-                  votes:
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/Vote"
-        "404":
-          description: Returns an error if the provided account ID was not found.
-
   /creators/{creatorId}/accounts:
     get:
-      operationId: GetCreatorsAccounts
+      operationId: GetCreatorAccounts
       description: Returns all Accounts by creator id
       responses:
         "200":
@@ -123,7 +105,7 @@ paths:
 
   /creators/{creatorId}/accounts/votes:
     get:
-      operationId: GetCreatorsAccountsByVote
+      operationId: GetCreatorAccountVote
       description: Returns all accounts where creator voted
       responses:
         "200":
@@ -137,6 +119,22 @@ paths:
                     type: array
                     items:
                       $ref: "#/components/schemas/Account"
+
+  /creators/{creatorId}//accounts/{accountId}/votes:
+    get:
+      operationId: GetCreatorAccountVote
+      description: Return votes of Account
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                properties:
+                  vote:
+                    $ref: "#/components/schemas/Vote"
+        "404":
+          description: Returns an error if the provided account ID was not found.
 
   /platforms:
     get:

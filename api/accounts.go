@@ -36,7 +36,7 @@ func (app Application) GetAccounts(w http.ResponseWriter, r *http.Request) {
 	render.JSON(w, r, domain.NewAccountsResponse(res, total))
 }
 
-func (app Application) GetCreatorsAccounts(w http.ResponseWriter, r *http.Request) {
+func (app Application) GetCreatorAccounts(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	creatorID, err := common.GetUUIDParamFromURL(r, "creatorId")
 	if err != nil {
@@ -50,7 +50,7 @@ func (app Application) GetCreatorsAccounts(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	res, err := app.Repositories.Account.GetAccountsByCreator(ctx, pagination, creatorID)
+	res, err := app.Repositories.Account.GetCreatorAccounts(ctx, pagination, creatorID)
 	if err != nil {
 		app.HTTPError.New(w, r, err)
 		return
@@ -65,7 +65,7 @@ func (app Application) GetCreatorsAccounts(w http.ResponseWriter, r *http.Reques
 	render.JSON(w, r, domain.NewAccountsResponse(res, total))
 }
 
-func (app Application) GetCreatorsAccountsByVote(w http.ResponseWriter, r *http.Request) {
+func (app Application) GetCreatorAccountsVotes(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	creatorID, err := common.GetUUIDParamFromURL(r, "creatorId")
 	if err != nil {
@@ -79,7 +79,7 @@ func (app Application) GetCreatorsAccountsByVote(w http.ResponseWriter, r *http.
 		return
 	}
 
-	res, err := app.Repositories.Account.GetAccountsByVotes(ctx, pagination, creatorID)
+	res, err := app.Repositories.Account.GetCreatorAccountsVotes(ctx, pagination, creatorID)
 	if err != nil {
 		app.HTTPError.New(w, r, err)
 		return

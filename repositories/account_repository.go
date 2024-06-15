@@ -61,7 +61,7 @@ func (r AccountRepository) GetAccounts(ctx context.Context, pagination common.Pa
 	return pgx.CollectRows(rows, pgx.RowToStructByName[Account])
 }
 
-func (r AccountRepository) GetAccountsByCreator(ctx context.Context, pagination common.Pagination, accountID uuid.UUID) ([]Account, error) {
+func (r AccountRepository) GetCreatorAccounts(ctx context.Context, pagination common.Pagination, accountID uuid.UUID) ([]Account, error) {
 	params := fmt.Sprintf("ORDER BY %s LIMIT %s OFFSET %s", pagination.Sort() + " " + pagination.Order(), strconv.Itoa(pagination.Limit()), strconv.Itoa(pagination.Offset()))
 	rows, err := r.pool.Query(ctx, `
 		SELECT a.id, a.username, a.password,
@@ -81,7 +81,7 @@ func (r AccountRepository) GetAccountsByCreator(ctx context.Context, pagination 
 	return pgx.CollectRows(rows, pgx.RowToStructByName[Account])
 }
 
-func (r AccountRepository) GetAccountsByVotes(ctx context.Context, pagination common.Pagination, accountID uuid.UUID) ([]Account, error) {
+func (r AccountRepository) GetCreatorAccountsVotes(ctx context.Context, pagination common.Pagination, accountID uuid.UUID) ([]Account, error) {
 	params := fmt.Sprintf("ORDER BY %s LIMIT %s OFFSET %s", pagination.Sort() + " " + pagination.Order(), strconv.Itoa(pagination.Limit()), strconv.Itoa(pagination.Offset()))
 	rows, err := r.pool.Query(ctx, `
 	SELECT a.id, a.username, a.password,

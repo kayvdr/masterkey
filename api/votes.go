@@ -14,7 +14,7 @@ import (
 	"github.com/on3k/shac-api/repositories"
 )
 
-func (app Application) GetAccountVotes(w http.ResponseWriter, r *http.Request) {
+func (app Application) GetCreatorAccountVote(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	creatorID, err := common.GetUUIDParamFromURL(r, "creatorId")
 	if err != nil {

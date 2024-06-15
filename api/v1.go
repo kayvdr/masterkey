@@ -76,10 +76,10 @@ func (app *Application) Router(env *env.Env) http.Handler {
 			r.Delete("/{accountId}", app.DeleteAccount)
 		})
 
-		r.Route("/creators", func(r chi.Router) {
-			r.Get("/{creatorId}/accounts", app.GetCreatorsAccounts)
-			r.Get("/{creatorId}/accounts/votes", app.GetCreatorsAccountsByVote)
-			r.Get("/{creatorId}/accounts/{accountId}/votes", app.GetAccountVotes)
+		r.Route("/creators/{creatorId}/accounts", func(r chi.Router) {
+			r.Get("/", app.GetCreatorAccounts)
+			r.Get("/votes", app.GetCreatorAccountsVotes)
+			r.Get("/{accountId}/votes", app.GetCreatorAccountVote)
 		})
 
 		r.Route("/platforms", func(r chi.Router) {
