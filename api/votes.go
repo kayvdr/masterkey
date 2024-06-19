@@ -37,13 +37,16 @@ func (app Application) GetCreatorAccountVote(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
-	res, err := app.Repositories.Account.GetAccountVotes(ctx, accountID, creatorID)
+	res, err := app.Repositories.Vote.GetAccountVotes(ctx, accountID, creatorID)
 	if err != nil {
 		app.HTTPError.New(w, r, err)
 		return
 	}
+	if res == nil {
+		return
+	}
 
-	render.JSON(w, r, domain.NewVotesResponse(res, len(res)))
+	render.JSON(w, r, domain.NewVote(*res))
 }
 
 func (app Application) CreateVote(w http.ResponseWriter, r *http.Request) {

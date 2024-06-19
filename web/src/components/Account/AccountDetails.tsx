@@ -35,7 +35,7 @@ const AccountDetails = ({ account, mutate, setAccount, onClose }: Props) => {
   const popup = useToggle();
   const navigate = useNavigate();
   const { session, user } = useAuth();
-  const { data, mutate: mutateVote } = getVotesByAccountId(
+  const { data: vote, mutate: mutateVote } = getVotesByAccountId(
     user?.id,
     account.id
   );
@@ -51,9 +51,9 @@ const AccountDetails = ({ account, mutate, setAccount, onClose }: Props) => {
         creator_id: user?.id,
       },
       session.access_token
-    ).then(() => {
+    ).then((vote) => {
       mutate();
-      mutateVote();
+      mutateVote(vote);
       setAccount({
         ...account,
         [`votes_${value}`]: account[`votes_${value}`] + 1,
@@ -62,11 +62,11 @@ const AccountDetails = ({ account, mutate, setAccount, onClose }: Props) => {
   };
 
   const removeVote = (value: VoteValue) => {
-    if (!data?.votes[0] || !session) return;
+    if (!vote || !session) return;
 
-    deleteVote(data.votes[0].id, session.access_token).then(() => {
+    deleteVote(vote.id, session.access_token).then(() => {
       mutate();
-      mutateVote();
+      mutateVote(undefined);
       setAccount({
         ...account,
         [`votes_${value}`]: account[`votes_${value}`] - 1,
@@ -75,7 +75,7 @@ const AccountDetails = ({ account, mutate, setAccount, onClose }: Props) => {
   };
 
   const handleVote = async (value: VoteValue) =>
-    data?.votes[0] ? removeVote(value) : addVote(value);
+    vote ? removeVote(value) : addVote(value);
 
   return (
     <div className={styles.details}>
@@ -114,8 +114,7 @@ const AccountDetails = ({ account, mutate, setAccount, onClose }: Props) => {
           <button
             className={classNames(styles.btn, {
               [styles.btnActive]:
-                data?.votes[0]?.value === "up" &&
-                data?.votes[0].creator_id === user?.id,
+                vote?.value === "up" && vote.creator_id === user?.id,
             })}
             onClick={() => {
               if (!session) {
@@ -124,7 +123,7 @@ const AccountDetails = ({ account, mutate, setAccount, onClose }: Props) => {
               }
               handleVote("up");
             }}
-            disabled={data?.votes[0]?.value === "down"}
+            disabled={vote?.value === "down"}
           >
             <Icon glyph={SvgArrowUp} className={styles.iconGreen} />
             <p className={styles.textSmall}>{account.votes_up}</p>
@@ -132,8 +131,7 @@ const AccountDetails = ({ account, mutate, setAccount, onClose }: Props) => {
           <button
             className={classNames(styles.btn, {
               [styles.btnActive]:
-                data?.votes[0]?.value === "down" &&
-                data?.votes[0].creator_id === user?.id,
+                vote?.value === "down" && vote.creator_id === user?.id,
             })}
             onClick={async () => {
               if (!session) {
@@ -142,7 +140,7 @@ const AccountDetails = ({ account, mutate, setAccount, onClose }: Props) => {
               }
               handleVote("down");
             }}
-            disabled={data?.votes[0]?.value === "up"}
+            disabled={vote?.value === "up"}
           >
             <Icon glyph={SvgArrowDown} className={styles.iconRed} />
             <p className={styles.textSmall}>{account.votes_down}</p>

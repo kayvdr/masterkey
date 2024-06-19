@@ -84,6 +84,15 @@ export const getPlatforms = () =>
     fetcher<{ platforms: Platform[] }>(opts)
   );
 
+export const getVotesByCreatorId = (
+  id: string | undefined,
+  pagination?: Pagination
+) =>
+  useSWR(
+    id ? { url: `/creators/${id}/accounts/votes`, query: pagination } : null,
+    (opts) => fetcher<{ total: number; accounts: Account[] }>(opts)
+  );
+
 export const getVotesByAccountId = (
   creatorId: string | undefined,
   accountId: string | undefined
@@ -92,16 +101,7 @@ export const getVotesByAccountId = (
     creatorId && accountId
       ? { url: `/creators/${creatorId}/accounts/${accountId}/votes` }
       : null,
-    (opts) => fetcher<{ total: number; votes: Vote[] }>(opts)
-  );
-
-export const getVotesByCreatorId = (
-  id: string | undefined,
-  pagination?: Pagination
-) =>
-  useSWR(
-    id ? { url: `/creators/${id}/accounts/votes`, query: pagination } : null,
-    (opts) => fetcher<{ total: number; accounts: Account[] }>(opts)
+    (opts) => fetcher<Vote>(opts)
   );
 
 export const createVote = (body: VoteBody, token: string) =>

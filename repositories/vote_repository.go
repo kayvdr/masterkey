@@ -41,6 +41,37 @@ func (r VoteRepository) GetVote(ctx context.Context, id uuid.UUID) (*Vote, error
 	return queryVote(ctx, r.pool, id)
 }
 
+func (r VoteRepository) GetAccountVotes(ctx context.Context, accountID uuid.UUID, creatorID uuid.UUID) (v *Vote, err error) {
+	err = pgx.BeginFunc(ctx, r.pool, func(tx pgx.Tx) (err error) {
+		var voteID uuid.UUID
+		err = r.pool.QueryRow(ctx, `
+			SELECT v.id
+			FROM votes v
+			INNER JOIN accounts AS a ON v.account_id = a.id
+			INNER JOIN platforms AS p ON a.platform_id = p.id
+			WHERE v.account_id = $1 AND v.creator_id = $2
+			`,
+			accountID,
+			creatorID,
+		).Scan(&voteID);
+
+		if err == pgx.ErrNoRows {
+			err = nil
+			return
+		}
+		if err != nil {
+			return
+		}
+
+		v, err = queryVote(ctx,tx, voteID)
+		return
+	})
+
+	return
+
+
+}
+
 func (r VoteRepository) CreateVote(ctx context.Context, vote Vote) (v *Vote, err error) {
 	err = pgx.BeginFunc(ctx, r.pool, func(tx pgx.Tx) (err error) {
 		var voteID uuid.UUID
