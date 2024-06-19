@@ -15,7 +15,6 @@ import {
 interface FetcherOptions {
   url: string;
   query?: object;
-  signal?: AbortSignal;
 }
 
 const basicAuth = encode(
@@ -27,9 +26,8 @@ const api = wretch()
   .url("/api/v1")
   .auth(`Basic ${basicAuth}`);
 
-const fetcher = <Response>({ url, query, signal }: FetcherOptions) =>
+const fetcher = <Response>({ url, query }: FetcherOptions) =>
   api
-    .options({ signal })
     .url(url)
     .query(query ?? {})
     .get()
