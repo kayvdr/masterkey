@@ -1,4 +1,4 @@
-FROM golang:1.22-alpine AS base
+FROM golang:1.23-alpine AS base
 WORKDIR /app
 
 FROM base AS development
@@ -11,7 +11,7 @@ RUN go install github.com/cespare/reflex@latest
 COPY reflex.conf /
 ENTRYPOINT ["reflex", "-c", "/reflex.conf"]
 
-FROM node:20-alpine as node-builder
+FROM node:22-alpine as node-builder
 # Necessary for working inside the HGV network
 WORKDIR /app
 # Copy application dependency manifests to the container image.
