@@ -28,8 +28,7 @@ const Button = ({
     })}
     onClick={onClick}
   >
-    {isLoading && <LoadingSpinner size="small" scheme="dark" />}
-    {children}
+    {isLoading ? <LoadingSpinner size="small" scheme="dark" /> : children}
   </button>
 );
 

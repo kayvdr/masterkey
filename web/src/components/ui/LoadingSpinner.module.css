@@ -16,10 +16,9 @@
 }
 
 .small {
-  width: 1.25em;
-  height: 1.25em;
-  border-width: 0.25em;
-  margin-right: 0.25em;
+  width: 1.15em;
+  height: 1.15em;
+  border-width: 0.2em;
 }
 
 .dark {

@@ -24,7 +24,7 @@ const LoginPage = () => {
     register,
     reset,
     handleSubmit,
-    formState: { errors },
+    formState: { isSubmitting, errors },
   } = useForm<FormLogin>();
 
   const onSubmit = async (formData: FormLogin) => {
@@ -42,6 +42,8 @@ const LoginPage = () => {
     reset();
     navigate("/profile");
   };
+
+  console.log(isSubmitting);
 
   return (
     <section className={styles.loginSection}>
@@ -70,7 +72,7 @@ const LoginPage = () => {
             error={errors.password}
           />
           <div className={styles.field}>
-            <Button type="submit" fullWidth={true}>
+            <Button type="submit" fullWidth={true} isLoading={isSubmitting}>
               Submit
             </Button>
           </div>
