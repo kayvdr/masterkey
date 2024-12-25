@@ -14,7 +14,23 @@ INSERT INTO platforms (id, name, url)VALUES
 ('697820ed-847b-4c78-9d28-e17a48e09ca7', 'Reddit', 'https://www.reddit.com'),
 ('1d4e03dd-ccd6-4732-8f61-8c0a4aad81ed', 'Stack Exchange', 'https://www.stackexchange.com'),
 ('cee7ecfb-48eb-4d9d-af2a-82b191c4b0c4', 'Stack Overflow', 'https://www.stackoverflow.com'),
-('1e96484e-d3fd-4d7e-9cf5-4faf5a1f02e3', 'Twitch', 'https://www.twitch.tv');
+('1e96484e-d3fd-4d7e-9cf5-4faf5a1f02e3', 'Twitch', 'https://www.twitch.tv'),
+('46e9ba69-a7e8-4ce0-a40c-5ab6d2c0ede2', 'Dribbble', 'https://dribbble.com'),
+('b2cd9aff-d684-4fd4-a4a3-9fbc1f2e2848', 'X', 'https://x.com'),
+('efbebbb7-2a2b-409f-b31f-b78daa56371a', 'Figma', 'https://www.figma.com'),
+('1f8f4203-00bd-4986-8f18-8f6142f05225', 'Pexels', 'https://www.pexels.com'),
+('7fcfc77b-1ec1-4cb9-841d-ddc73ab6dfe5', 'Pixabay', 'https://pixabay.com'),
+('766efc40-0819-4574-8c6b-2c4c170da7c9', 'Unsplash', 'https://unsplash.com'),
+('04168f6c-69fd-44c4-8edb-b8e6252cac2a', 'Elevenlabs', 'https://elevenlabs.io'),
+('6fd6c387-1e4d-43a3-a10a-1b1e3bc4a169', 'Spotify', 'https://www.spotify.com'),
+('8a1e37f5-8721-4e95-af34-53044228bf24', 'SoundCloud', 'https://soundcloud.com'),
+('66acfc20-2059-4f5b-90ae-5746d025f417', 'Vimeo', 'https://vimeo.com'),
+('fd5f9bf0-c883-46ed-ae5f-844f3c81fe7a', 'Coursera', 'https://www.coursera.org'),
+('3984da05-4c5d-4857-bc0e-17b6518e3802', 'Udemy', 'https://www.udemy.com'),
+('55216a91-588b-4fe6-81fa-3e1d3e0220e4', 'Medium', 'https://www.medium.com'),
+('4054a5de-69d2-44ec-89c4-ced5438b7e4f', 'Meetup', 'https://www.meetup.com'),
+('b425b6bf-d755-4e63-afb5-de905460bd5d', 'Photopea', 'https://www.photopea.com'),
+('d9c4e106-2366-4389-a608-565b3d8fed6b', 'Hackerrank', 'https://www.hackerrank.com');
 
 INSERT INTO accounts (id, username, password,  creator_id, platform_id) VALUES 
 ('dfefabe3-38d3-486b-a655-b776d4136a6c', 'ipo97678@zslsz.com', 'Passwort4', '7af9cfc7-f6fb-4de0-9ffe-1ca60a82bf1b','a755e64e-4b0f-4592-9dc1-01947fc278fc'),
