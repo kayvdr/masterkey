@@ -1,26 +1,27 @@
 import classNames from "classnames";
 import { PropsWithChildren } from "react";
+import Container from "../Container";
 import styles from "./Page.module.css";
 
 type Props = PropsWithChildren<{
   title?: string;
-  titleAlign?: "left" | "center";
+  titleCenter?: boolean;
 }>;
 
-const Page = ({ title, titleAlign = "left", children }: Props) => (
+const Page = ({ title, titleCenter = false, children }: Props) => (
   <main className={styles.page}>
-    <div className="container">
+    <Container>
       {title && (
         <h1
           className={classNames(styles.title, {
-            [styles.center]: titleAlign === "center",
+            [styles.center]: titleCenter,
           })}
         >
           {title}
         </h1>
       )}
       {children}
-    </div>
+    </Container>
   </main>
 );
 

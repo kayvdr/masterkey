@@ -1,10 +1,10 @@
-import classNames from "classnames";
+import Container from "../Container";
 import LinkButton from "../ui/LinkButton";
 import styles from "./AddAccount.module.css";
 
 const AddAccount = () => (
   <section className={styles.bg}>
-    <div className={classNames("container", styles.wrapper)}>
+    <Container className={styles.wrapper}>
       <h2 className={styles.title}>We need your help!</h2>
       <p>
         Our site lives on your willingness to share accounts with us. These
@@ -15,7 +15,7 @@ const AddAccount = () => (
       <div className={styles.btnWrapper}>
         <LinkButton to="/add">Share your Account</LinkButton>
       </div>
-    </div>
+    </Container>
   </section>
 );
 

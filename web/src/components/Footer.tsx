@@ -1,4 +1,5 @@
 import { NavLink } from "react-router-dom";
+import Container from "./Container";
 import styles from "./Footer.module.css";
 import SvgFacebookBlack from "./icons/FacebookBlack";
 import SvgGithubBlack from "./icons/GithubBlack";
@@ -6,7 +7,7 @@ import SvgInstagramBlack from "./icons/InstagramBlack";
 
 const Footer = () => (
   <footer className={styles.footer}>
-    <div className="container">
+    <Container>
       <div className={styles.wrapper}>
         <div className={styles.item}>
           <h3 className={styles.companyTitle}>Shac</h3>
@@ -85,8 +86,10 @@ const Footer = () => (
           </ul>
         </div>
       </div>
-      <p className={styles.copyright}>© 2023 KAYVDR. All rights reserved.</p>
-    </div>
+      <p className={styles.copyright}>
+        © {new Date().getFullYear()} KAYVDR. All rights reserved.
+      </p>
+    </Container>
   </footer>
 );
 

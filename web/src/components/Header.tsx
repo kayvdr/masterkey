@@ -8,6 +8,7 @@ import { useOnClickOutside } from "../hooks/useOnClickOutside";
 import useToggle from "../hooks/useToggle";
 import styles from "./Header.module.css";
 import SvgAdd from "./icons/Add";
+import SvgLogout from "./icons/Logout";
 import Icon from "./ui/Icon";
 
 const Header = () => {
@@ -64,6 +65,7 @@ const Account = ({ session, auth }: Props) => {
             className={classNames(styles.dropdownBtn, styles.logout)}
             onClick={() => (auth.signOut(), navigate("/"))}
           >
+            <Icon glyph={SvgLogout} className={styles.icon} />
             Logout
           </button>
         </div>

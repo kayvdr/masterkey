@@ -33,10 +33,11 @@ const AddAccountPage = () => {
   } = useForm<FormUser>();
 
   if (!data) return null;
+
   return (
     <>
       <Header />
-      <Page title="Share your Account with us!" titleAlign="center">
+      <Page title="Share your Account with us!" titleCenter={true}>
         <div className={styles.formWrapper}>
           <h2>Please enter the following data.</h2>
           <form className={styles.form}>

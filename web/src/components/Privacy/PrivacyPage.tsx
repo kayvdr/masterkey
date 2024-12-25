@@ -1,3 +1,4 @@
+import Container from "../Container";
 import Footer from "../Footer";
 import Header from "../Header";
 import styles from "./PrivacyPage.module.css";
@@ -6,10 +7,10 @@ const PrivacyPage = () => (
   <>
     <Header />
     <section className={styles.wrapper}>
-      <div className="container">
+      <Container>
         <h1 className={styles.title}>Privacy</h1>
         <p>comming soon...</p>
-      </div>
+      </Container>
     </section>
     <Footer />
   </>

@@ -140,36 +140,34 @@ const Item = ({
   editBtnLabel = "Edit",
   closeAllModal,
   children,
-}: ItemProps) => {
-  return (
-    <div className={styles.item}>
-      <div className={styles.labelRow}>
-        <p className={styles.label}>{label}</p>
-        {!modal.isOpen ? (
-          <button
-            className={styles.btn}
-            onClick={() => (closeAllModal(), modal.open())}
-          >
-            {editBtnLabel}
-          </button>
-        ) : (
-          <button className={styles.btn} onClick={modal.close}>
-            Cancel
-          </button>
-        )}
-      </div>
-      <div>
-        {!modal.isOpen ? (
-          <p className={styles.value}>{value}</p>
-        ) : (
-          <>
-            <p className={styles.value}>{openValue}</p>
-            <div className={styles.modalWrapper}>{children}</div>
-          </>
-        )}
-      </div>
+}: ItemProps) => (
+  <div className={styles.item}>
+    <div className={styles.labelRow}>
+      <p className={styles.label}>{label}</p>
+      {!modal.isOpen ? (
+        <button
+          className={styles.btn}
+          onClick={() => (closeAllModal(), modal.open())}
+        >
+          {editBtnLabel}
+        </button>
+      ) : (
+        <button className={styles.btn} onClick={modal.close}>
+          Cancel
+        </button>
+      )}
     </div>
-  );
-};
+    <div>
+      {!modal.isOpen ? (
+        <p className={styles.value}>{value}</p>
+      ) : (
+        <>
+          <p className={styles.value}>{openValue}</p>
+          <div className={styles.modalWrapper}>{children}</div>
+        </>
+      )}
+    </div>
+  </div>
+);
 
 export default Profile;

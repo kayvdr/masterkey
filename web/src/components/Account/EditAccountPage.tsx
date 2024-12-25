@@ -47,7 +47,7 @@ const EditAccountPage = () => {
   return (
     <>
       <Header />
-      <Page title="Edit your shared Account!" titleAlign="center">
+      <Page title="Edit your shared Account!" titleCenter={true}>
         <div className={styles.formWrapper}>
           <h2 className={styles.subtitle}>Please enter the following data.</h2>
           <form className={styles.form}>

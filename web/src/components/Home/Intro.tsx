@@ -1,30 +1,24 @@
-import classNames from "classnames";
+import imgUrl from "../../img/sunrise.jpg";
+import Container from "../Container";
 import Searchfield from "../ui/Searchfield";
 import styles from "./Intro.module.css";
-// @ts-ignore
-import imgUrl from "../../img/sunrise.jpg";
 
-const Intro = () => {
-  return (
-    <section className={styles.intro}>
-      <div className={styles.imgContainer}>
-        <img src={imgUrl} className={styles.img} />
+const Intro = () => (
+  <section className={styles.intro}>
+    <div className={styles.imgContainer}>
+      <img src={imgUrl} className={styles.img} />
+    </div>
+    <Container className={styles.content}>
+      <h1 className={styles.title}>Access for EVERYONE!</h1>
+      <h2 className={styles.subtitle}>
+        Accessing basic services shouldn't require registration. Protect your
+        data from misuse.
+      </h2>
+      <div className={styles.searchWrapper}>
+        <Searchfield />
       </div>
-      <div className={classNames("container", styles.content)}>
-        <h1 className={styles.title}>
-          Access for <span>Everyone</span>
-        </h1>
-        <h2 className={styles.subtitle}>
-          It should not be necessary to register with every website in order to
-          use their basic services. Because not everyone can handle your data
-          responsibly, you need to protect yourself.
-        </h2>
-        <div className={styles.searchWrapper}>
-          <Searchfield />
-        </div>
-      </div>
-    </section>
-  );
-};
+    </Container>
+  </section>
+);
 
 export default Intro;

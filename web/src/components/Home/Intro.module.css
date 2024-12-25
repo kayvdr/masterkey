@@ -49,10 +49,6 @@
   }
 }
 
-.title span {
-  text-transform: uppercase;
-}
-
 .subtitle {
   font-size: 1.2em;
   max-width: 50em;
