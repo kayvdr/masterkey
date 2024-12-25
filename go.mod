@@ -1,4 +1,4 @@
-module github.com/on3k/shac-api
+module github.com/kayvdr/shac
 
 go 1.22
 

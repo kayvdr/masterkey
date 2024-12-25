@@ -5,8 +5,8 @@ import (
 	"errors"
 	"strings"
 
+	"github.com/kayvdr/shac/common/env"
 	supabase "github.com/lengzuo/supa"
-	"github.com/on3k/shac-api/common/env"
 )
 
 type Client struct {

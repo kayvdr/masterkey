@@ -6,10 +6,10 @@ import (
 	"net/http"
 
 	"github.com/go-chi/render"
-	"github.com/on3k/shac-api/common"
-	"github.com/on3k/shac-api/common/httperror"
-	"github.com/on3k/shac-api/domain"
-	"github.com/on3k/shac-api/repositories"
+	"github.com/kayvdr/shac/common"
+	"github.com/kayvdr/shac/common/httperror"
+	"github.com/kayvdr/shac/domain"
+	"github.com/kayvdr/shac/repositories"
 )
 
 func (app Application) GetAccounts(w http.ResponseWriter, r *http.Request) {

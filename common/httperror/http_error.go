@@ -8,7 +8,7 @@ import (
 	"github.com/go-chi/render"
 	"github.com/jackc/pgerrcode"
 	"github.com/jackc/pgx/v5/pgconn"
-	"github.com/on3k/shac-api/clients/errorreporting"
+	"github.com/kayvdr/shac/clients/errorreporting"
 )
 
 type Client struct {

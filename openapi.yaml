@@ -2,7 +2,7 @@ openapi: "3.0.3"
 info:
   title: Shac API
   contact:
-    email: on3k.dev@gmail.com
+    email: kayvieider97@gmail.com
   version: 0.0.1
 paths:
   /accounts:

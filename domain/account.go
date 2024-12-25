@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/on3k/shac-api/common/slices"
-	"github.com/on3k/shac-api/repositories"
+	"github.com/kayvdr/shac/common/slices"
+	"github.com/kayvdr/shac/repositories"
 )
 
 type PatchAccountBody struct {

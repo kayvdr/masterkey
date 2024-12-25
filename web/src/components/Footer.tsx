@@ -21,7 +21,7 @@ const Footer = () => (
           <ul className={styles.list}>
             <li className={styles.listItem}>
               <a
-                href="https://www.instagram.com/on3k.dev"
+                href="https://www.instagram.com/kaycodes_"
                 className={styles.listLink}
                 target="_blank"
               >
@@ -41,7 +41,7 @@ const Footer = () => (
             </li>
             <li className={styles.listItem}>
               <a
-                href="https://github.com/on3kdev"
+                href="https://github.com/kayvdr"
                 className={styles.listLink}
                 target="_blank"
               >
@@ -75,14 +75,17 @@ const Footer = () => (
               <a href="tel:" className={styles.listLink}></a>
             </li>
             <li className={styles.listItem}>
-              <a href="mailto:on3k.dev@gmail.com" className={styles.listLink}>
-                on3k.dev@gmail.com
+              <a
+                href="mailto:kayvieider97@gmail.com"
+                className={styles.listLink}
+              >
+                kayvieider97@gmail.com
               </a>
             </li>
           </ul>
         </div>
       </div>
-      <p className={styles.copyright}>© 2023 ON3K. All rights reserved.</p>
+      <p className={styles.copyright}>© 2023 KAYVDR. All rights reserved.</p>
     </div>
   </footer>
 );

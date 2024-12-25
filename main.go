@@ -8,8 +8,8 @@ import (
 
 	"github.com/go-chi/chi"
 	chimiddleware "github.com/go-chi/chi/v5/middleware"
-	"github.com/on3k/shac-api/api"
-	"github.com/on3k/shac-api/common/env"
+	"github.com/kayvdr/shac/api"
+	"github.com/kayvdr/shac/common/env"
 )
 
 //go:embed web/dist

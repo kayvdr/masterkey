@@ -7,7 +7,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/on3k/shac-api/common/pg"
+	"github.com/kayvdr/shac/common/pg"
 )
 
 type Value string
