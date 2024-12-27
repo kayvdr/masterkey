@@ -43,8 +43,6 @@ const LoginPage = () => {
     navigate("/profile");
   };
 
-  console.log(isSubmitting);
-
   return (
     <section className={styles.loginSection}>
       <div className={styles.wrapper}>
