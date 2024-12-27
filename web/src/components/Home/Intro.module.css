@@ -52,13 +52,6 @@
 .subtitle {
   font-size: 1.2em;
   max-width: 50em;
-  display: none;
-}
-
-@media (min-width: 768px) {
-  .subtitle {
-    display: block;
-  }
 }
 
 .searchWrapper {
