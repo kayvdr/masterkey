@@ -1,7 +1,6 @@
 import classNames from "classnames";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import useMatchMedia from "../../hooks/useMatchMedia";
-import { useOnClickOutside } from "../../hooks/useOnClickOutside";
 import { UsePaginationReturn } from "../../hooks/usePagination";
 import useToggle from "../../hooks/useToggle";
 import { Account } from "../../types";
@@ -29,8 +28,6 @@ const AccountList = ({
 }: Props) => {
   const details = useToggle();
   const [account, setAccount] = useState<Account>();
-  const wrapperRef = useRef<HTMLDivElement>(null);
-  useOnClickOutside(wrapperRef, details.close);
   const matches = useMatchMedia("(max-width: 768px)");
 
   const pages = total && Math.ceil(total / pagination.state.limit);
@@ -39,7 +36,7 @@ const AccountList = ({
     <div>
       {total === 0 && <div>No Items found</div>}
       {total > 0 && (
-        <div className={styles.wrapper} ref={wrapperRef}>
+        <div className={styles.wrapper}>
           {((matches && !details.isOpen) || !matches) && (
             <div className={styles.list}>
               {accounts.map((a) => (
