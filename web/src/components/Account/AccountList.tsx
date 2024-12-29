@@ -43,7 +43,7 @@ const AccountList = ({
                 <AccountItem
                   key={a.id}
                   account={a}
-                  isActive={a === account}
+                  isActive={a === account && details.isOpen}
                   onClick={() => (setAccount(a), details.open())}
                 />
               ))}
