@@ -32,10 +32,7 @@ const LoginPage = () => {
     const { error } = await auth.signInWithPassword(formData);
 
     if (error?.status) {
-      setTimeout(() => {
-        setError({ code: error.status ?? 400, message: error.message });
-      }, 500);
-
+      setError({ code: error.status ?? 400, message: error.message });
       return;
     }
 

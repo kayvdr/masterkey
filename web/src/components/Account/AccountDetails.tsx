@@ -202,10 +202,7 @@ const CopyButton = ({ onClick }: CopyButtonProps) => {
   const [active, setActive] = useState(false);
 
   useEffect(() => {
-    active &&
-      setTimeout(() => {
-        setActive(false);
-      }, 3000);
+    active && setTimeout(() => setActive(false), 3000);
   }, [active]);
 
   return (
@@ -216,11 +213,13 @@ const CopyButton = ({ onClick }: CopyButtonProps) => {
         onClick();
       }}
     >
-      {!active ? (
-        <Icon glyph={SvgCopy} className={styles.copyIcon} />
-      ) : (
-        <Icon glyph={SvgCheck} className={styles.copyActive} />
-      )}
+      <Icon
+        glyph={active ? SvgCheck : SvgCopy}
+        className={classNames({
+          [styles.copyIcon]: !active,
+          [styles.copyActive]: active,
+        })}
+      />
     </button>
   );
 };
