@@ -4,7 +4,7 @@ import SvgEvernote from "../icons/Evernote";
 import SvgFacebook from "../icons/Facebook";
 import SvgGoogle from "../icons/Google";
 import SvgInstagram from "../icons/Instagram";
-import SvgSnapchat from "../icons/Snapchat";
+import SvgReddit from "../icons/Reddit";
 import SvgTikTok from "../icons/Tiktok";
 import SvgTinder from "../icons/Tinder";
 import Box from "./Box";
@@ -18,7 +18,7 @@ const FavoritePlatforms = () => (
         <Box glyph={SvgInstagram} label="Instagram" />
         <Box glyph={SvgFacebook} label="Facebook" />
         <Box glyph={SvgEvernote} label="Evernote" />
-        <Box glyph={SvgSnapchat} label="Snapchat" />
+        <Box glyph={SvgReddit} label="Reddit" />
         <Box glyph={SvgGoogle} label="Google" />
         <Box glyph={SvgTikTok} label="Tiktok" />
         <Box glyph={SvgDropbox} label="DropBox" />
