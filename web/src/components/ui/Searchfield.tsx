@@ -18,7 +18,7 @@ const Searchfield = () => {
     reset,
     formState: { dirtyFields },
   } = useForm<{ query: string }>({
-    defaultValues: { query: getSearchParams(search, "q") ?? "" },
+    values: { query: getSearchParams(search, "q") ?? "" },
   });
 
   return (

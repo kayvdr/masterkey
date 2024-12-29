@@ -32,29 +32,27 @@
   color: var(--grey);
 }
 
-.accountBtn {
-  background-color: white;
-  padding: 0.15em;
+.accountBtn,
+.addBtn {
+  width: 2em;
+  height: 2em;
+  border-radius: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 100%;
-  width: 2em;
-  height: 2em;
-  color: var(--ci-darker-grey);
-  font-weight: 600;
   background-color: var(--ci-light-grey);
 }
 
-.addBtn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: var(--ci-light-grey);
-  border-radius: 100%;
-  border-radius: 100%;
-  width: 2em;
-  height: 2em;
+.accountBtn {
+  padding: 0.15em;
+  color: var(--ci-darker-grey);
+  font-weight: 600;
+}
+
+.accountBtn:hover,
+.addBtn:hover,
+.accountBtnActive {
+  border: 2px solid var(--ci-grey);
 }
 
 .addIcon {

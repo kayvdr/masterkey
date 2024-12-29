@@ -156,9 +156,7 @@ const AccountDetails = ({ account, mutate, setAccount, onClose }: Props) => {
               <button
                 className={styles.btn}
                 onClick={() => {
-                  navigate("/edit", {
-                    state: { account: JSON.stringify(account) },
-                  });
+                  navigate(`/edit/${account.id}`);
                 }}
               >
                 <Icon glyph={SvgEdit} className={styles.iconBtn} />

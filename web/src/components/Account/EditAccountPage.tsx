@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../context/authContext";
-import { getPlatforms, updateAccount } from "../../http/api";
+import { getAccount, getPlatforms, updateAccount } from "../../http/api";
 import { Account } from "../../types";
 import Footer from "../Footer";
 import Header from "../Header";
@@ -20,13 +20,31 @@ interface FormUser {
 }
 
 const EditAccountPage = () => {
-  const { state } = useLocation();
+  const params = useParams<"accountId">();
 
-  const account: Account | undefined =
-    state?.account && JSON.parse(state?.account);
+  const { data: account } = getAccount(params.accountId);
 
   if (!account) return null;
 
+  return (
+    <>
+      <Header />
+      <Page title="Edit your shared Account!" titleCenter={true}>
+        <div className={styles.formWrapper}>
+          <h2 className={styles.subtitle}>Please enter the following data.</h2>
+          <EditForm account={account} />
+        </div>
+      </Page>
+      <Footer />
+    </>
+  );
+};
+
+interface FormProps {
+  account: Account;
+}
+
+const EditForm = ({ account }: FormProps) => {
   const { data } = getPlatforms();
   const [error, setError] = useState(false);
   const { session } = useAuth();
@@ -36,7 +54,7 @@ const EditAccountPage = () => {
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<FormUser>({
-    defaultValues: {
+    values: {
       username: account.username,
       password: account.password,
       platform: account.platform_id,
@@ -44,67 +62,58 @@ const EditAccountPage = () => {
   });
 
   return (
-    <>
-      <Header />
-      <Page title="Edit your shared Account!" titleCenter={true}>
-        <div className={styles.formWrapper}>
-          <h2 className={styles.subtitle}>Please enter the following data.</h2>
-          <form className={styles.form}>
-            {error && <ErrorText text="An unknown error has occurred." />}
-            <Select
-              placeholder="Choose platform..."
-              register={register("platform", {
-                required: "Please choose a platform",
-              })}
-              options={data?.platforms}
-              error={errors.platform}
-            />
-            <InputField
-              placeholder="Username"
-              register={register("username", {
-                required: "Please insert the username",
-              })}
-              error={errors.username}
-            />
-            <InputField
-              placeholder="Password"
-              register={register("password", {
-                required: "Please insert the passwort",
-              })}
-              error={errors.password}
-            />
-            <div className={styles.field}>
-              <Button
-                type="submit"
-                fullWidth={true}
-                isLoading={isSubmitting}
-                onClick={handleSubmit((body) => {
-                  if (!session) return;
+    <form className={styles.form}>
+      {error && <ErrorText text="An unknown error has occurred." />}
+      <Select
+        placeholder="Choose platform..."
+        register={register("platform", {
+          required: "Please choose a platform",
+        })}
+        options={data?.platforms}
+        error={errors.platform}
+      />
+      <InputField
+        placeholder="Username"
+        register={register("username", {
+          required: "Please insert the username",
+        })}
+        error={errors.username}
+      />
+      <InputField
+        placeholder="Password"
+        register={register("password", {
+          required: "Please insert the passwort",
+        })}
+        error={errors.password}
+      />
+      <div className={styles.field}>
+        <Button
+          type="submit"
+          fullWidth={true}
+          isLoading={isSubmitting}
+          onClick={handleSubmit((body) => {
+            if (!session) return;
 
-                  updateAccount(
-                    account.id,
-                    {
-                      username: body.username,
-                      password: body.password,
-                      platform_id: body.platform,
-                    },
-                    session.access_token
-                  )
-                    .then(() => {
-                      setError(false);
-                      navigate("/search");
-                    })
-                    .catch(() => setError(true));
-                })}
-              >
-                Edit Account
-              </Button>
-            </div>
-          </form>
-        </div>
-      </Page>
-      <Footer />
-    </>
+            updateAccount(
+              account.id,
+              {
+                username: body.username,
+                password: body.password,
+                platform_id: body.platform,
+              },
+              session.access_token
+            )
+              .then(() => {
+                setError(false);
+                navigate("/search");
+              })
+              .catch(() => setError(true));
+          })}
+        >
+          Edit Account
+        </Button>
+      </div>
+    </form>
   );
 };
 

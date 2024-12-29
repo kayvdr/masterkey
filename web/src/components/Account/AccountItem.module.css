@@ -26,7 +26,8 @@
   }
 }
 
-.row:hover {
+.row:hover,
+.rowActive {
   background-color: var(--ci-light-grey);
 }
 

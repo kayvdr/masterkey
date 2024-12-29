@@ -33,7 +33,10 @@ const SessionRouter = () => {
       {session ? (
         <Routes>
           <Route path="add" element={<AddAccountPage />} />
-          <Route path="edit" element={<EditAccountPage />} />
+          <Route path="edit">
+            <Route index element={<Navigate to="/" replace />} />
+            <Route path=":accountId" element={<EditAccountPage />} />
+          </Route>
           <Route path="profile" index element={<Profile />} />
           <Route path="accounts" element={<Accounts />} />
           <Route path="votes" element={<Votes />} />

@@ -9,15 +9,19 @@ import styles from "./AccountItem.module.css";
 
 interface Props {
   account: Account;
+  isActive: boolean;
   onClick: () => void;
 }
 
-const AccountItem = ({ account, onClick }: Props) => {
+const AccountItem = ({ account, isActive, onClick }: Props) => {
   const icon = logoMapping[account.platform_name];
 
   return (
     <>
-      <button className={styles.row} onClick={onClick}>
+      <button
+        className={classNames(styles.row, { [styles.rowActive]: isActive })}
+        onClick={onClick}
+      >
         {icon && (
           <a
             href={account.platform_url}

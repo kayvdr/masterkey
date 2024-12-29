@@ -45,7 +45,12 @@ const Account = ({ session, auth }: Props) => {
         <Link className={styles.addBtn} to="/add">
           <Icon glyph={SvgAdd} className={styles.addIcon} />
         </Link>
-        <button className={styles.accountBtn} onClick={dropdown.toggle}>
+        <button
+          className={classNames(styles.accountBtn, {
+            [styles.accountBtnActive]: dropdown.isOpen,
+          })}
+          onClick={dropdown.toggle}
+        >
           {session?.user.email?.charAt(0).toUpperCase()}
         </button>
       </div>
