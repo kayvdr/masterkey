@@ -74,7 +74,7 @@ const AccountDetails = ({ account, mutate, setAccount, onClose }: Props) => {
     });
   };
 
-  const handleVote = async (value: VoteValue) =>
+  const handleVote = (value: VoteValue) =>
     vote ? removeVote(value) : addVote(value);
 
   return (
@@ -86,12 +86,16 @@ const AccountDetails = ({ account, mutate, setAccount, onClose }: Props) => {
         </button>
       </header>
       <div className={styles.listContent}>
-        <div className={styles.platformItem}>
+        <a
+          href={account.platform_url}
+          target="_blank"
+          className={styles.platformItem}
+        >
           {platformIcon && (
             <Icon glyph={platformIcon} className={styles.platformIcon} />
           )}
           <p className={styles.platformText}>{account.platform_name}</p>
-        </div>
+        </a>
         <div className={styles.item}>
           <div className={styles.data}>
             <Icon glyph={SvgUser} className={styles.icon} />
@@ -133,7 +137,7 @@ const AccountDetails = ({ account, mutate, setAccount, onClose }: Props) => {
               [styles.btnActive]:
                 vote?.value === "down" && vote.creator_id === user?.id,
             })}
-            onClick={async () => {
+            onClick={() => {
               if (!session) {
                 navigate("/login");
                 return;
@@ -153,7 +157,7 @@ const AccountDetails = ({ account, mutate, setAccount, onClose }: Props) => {
                 className={styles.btn}
                 onClick={() => {
                   navigate("/edit", {
-                    state: { user: JSON.stringify(account) },
+                    state: { account: JSON.stringify(account) },
                   });
                 }}
               >

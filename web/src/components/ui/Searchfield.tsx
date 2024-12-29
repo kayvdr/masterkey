@@ -38,9 +38,7 @@ const Searchfield = () => {
             <button
               type="button"
               className={styles.closeBtn}
-              onClick={() => {
-                reset({ query: "" });
-              }}
+              onClick={() => reset({ query: "" })}
             >
               <Icon glyph={SvgClose} className={styles.closeIcon} />
             </button>
@@ -48,9 +46,9 @@ const Searchfield = () => {
         </div>
         <Button
           type="submit"
-          onClick={handleSubmit((body) => {
-            navigate({ pathname: "/search", search: `?q=${body.query}` });
-          })}
+          onClick={handleSubmit((body) =>
+            navigate({ pathname: "/search", search: `?q=${body.query}` })
+          )}
         >
           Search
         </Button>

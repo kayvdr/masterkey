@@ -44,38 +44,30 @@ const AddAccountPage = () => {
             {error && <ErrorText text="An unknown error has occurred." />}
             <Select
               placeholder="Choose platform..."
-              register={{
-                ...register("platform", {
-                  required: "Please choose a platform",
-                }),
-              }}
+              register={register("platform", {
+                required: "Please choose a platform",
+              })}
               options={data?.platforms}
               error={errors.platform}
             />
             <InputField
               placeholder="Username"
-              register={{
-                ...register("username", {
-                  required: "Please insert a username",
-                }),
-              }}
+              register={register("username", {
+                required: "Please insert a username",
+              })}
               error={errors.username}
             />
             <InputField
               placeholder="Password"
-              register={{
-                ...register("password", {
-                  required: "Please insert a password",
-                }),
-              }}
+              register={register("password", {
+                required: "Please insert a password",
+              })}
               error={errors.password}
             />
             <InputCheckBox
-              register={{
-                ...register("privacy", {
-                  required: "Please accept the checkbox",
-                }),
-              }}
+              register={register("privacy", {
+                required: "Please accept the checkbox",
+              })}
               error={errors.privacy}
               text="I agree that this data will be stored and further disseminated"
             />

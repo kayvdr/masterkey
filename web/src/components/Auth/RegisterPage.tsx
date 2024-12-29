@@ -43,6 +43,7 @@ const RegisterPage = () => {
       <div className={styles.wrapper}>
         <h1 className={styles.title}>Register</h1>
         <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+          {error && <ErrorText text={error.message} />}
           <InputField
             placeholder="Name"
             register={{
@@ -52,7 +53,6 @@ const RegisterPage = () => {
             }}
             error={errors.email}
           />
-          {error && <ErrorText text={error.message} />}
           <InputField
             placeholder="E-Mail"
             type="email"

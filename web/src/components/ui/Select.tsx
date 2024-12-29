@@ -1,11 +1,12 @@
-import { FieldError } from "react-hook-form";
+import { FieldError, UseFormRegisterReturn } from "react-hook-form";
+import { Platform } from "../../types";
 import styles from "./InputField.module.css";
 
 interface Props {
   placeholder: string;
   error: FieldError | undefined;
-  register: any;
-  options: { id: string; name: string }[] | undefined;
+  register: UseFormRegisterReturn<string>;
+  options: Platform[] | undefined;
 }
 
 const Select = ({ placeholder, error, register, options }: Props) => (

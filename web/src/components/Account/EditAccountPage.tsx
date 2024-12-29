@@ -22,9 +22,8 @@ interface FormUser {
 const EditAccountPage = () => {
   const { state } = useLocation();
 
-  const account: Account | undefined = state?.user
-    ? JSON.parse(state?.user)
-    : undefined;
+  const account: Account | undefined =
+    state?.account && JSON.parse(state?.account);
 
   if (!account) return null;
 
@@ -54,30 +53,24 @@ const EditAccountPage = () => {
             {error && <ErrorText text="An unknown error has occurred." />}
             <Select
               placeholder="Choose platform..."
-              register={{
-                ...register("platform", {
-                  required: "Please choose a platform",
-                }),
-              }}
+              register={register("platform", {
+                required: "Please choose a platform",
+              })}
               options={data?.platforms}
               error={errors.platform}
             />
             <InputField
               placeholder="Username"
-              register={{
-                ...register("username", {
-                  required: "Please insert the username",
-                }),
-              }}
+              register={register("username", {
+                required: "Please insert the username",
+              })}
               error={errors.username}
             />
             <InputField
               placeholder="Password"
-              register={{
-                ...register("password", {
-                  required: "Please insert the passwort",
-                }),
-              }}
+              register={register("password", {
+                required: "Please insert the passwort",
+              })}
               error={errors.password}
             />
             <div className={styles.field}>
