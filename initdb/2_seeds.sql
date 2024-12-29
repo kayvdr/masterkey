@@ -5,7 +5,6 @@ INSERT INTO platforms (id, name, url)VALUES
 ('4e1a32db-9e0b-492d-bc8c-232359292fd9', 'Google', 'https://www.google.com'),
 ('ea191b37-8878-40c8-9a21-01c7722be456', 'Tinder', 'https://www.tinder.com'),
 ('6056b64e-c72c-4e15-a422-99f4af4f564b', 'Evernote', 'https://www.evernote.com'),
-('fc4d2d2f-31ae-4f99-b4d2-0c9322ebfdc5', 'Twitter', 'https://www.twitter.com'),
 ('16f32e1b-cb87-4922-b44c-b8b2ddede3fc', 'Dropbox', 'https://www.dropbox.com'),
 ('4e0852cc-7aba-4f32-b3be-c4e7c598ea84', 'Tiktok', 'https://www.tiktok.com'),
 ('a755e64e-4b0f-4592-9dc1-01947fc278fc', 'Onlyfans', 'https://www.onlyfans.com'),

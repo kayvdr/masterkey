@@ -32,7 +32,6 @@ import SvgStackOverflow from "./components/icons/StackOverflow";
 import SvgTikTok from "./components/icons/Tiktok";
 import SvgTinder from "./components/icons/Tinder";
 import SvgTwitch from "./components/icons/Twitch";
-import SvgTwitter from "./components/icons/Twitter";
 import SvgUdemy from "./components/icons/Udemy";
 import SvgUnsplash from "./components/icons/Unsplash";
 import SvgVimeo from "./components/icons/Vimeo";
@@ -65,7 +64,6 @@ export const logoMapping: { [key in string]: Glyph } = {
   Tinder: SvgTinder,
   Evernote: SvgEvernote,
   Tiktok: SvgTikTok,
-  Twitter: SvgTwitter,
   Dropbox: SvgDropbox,
   Onlyfans: SvgOnlyfans,
   Discord: SvgDiscord,
