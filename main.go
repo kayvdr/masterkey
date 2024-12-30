@@ -10,6 +10,7 @@ import (
 	chimiddleware "github.com/go-chi/chi/v5/middleware"
 	"github.com/kayvdr/shac/api"
 	"github.com/kayvdr/shac/common/env"
+	"github.com/kayvdr/shac/file"
 )
 
 //go:embed web/dist
@@ -35,10 +36,10 @@ func main() {
 	r.Use(chimiddleware.SetHeader("Cache-Control", "no-store"))
 	r.Use(chimiddleware.Compress(5))
 
-	// files, err := file.NewFileServer(staticFiles)
-	// if err != nil {
-	// 	panic(err)
-	// }
+	files, err := file.NewFileServer(staticFiles)
+	if err != nil {
+		panic(err)
+	}
 
 	api, err := api.NewApplication(context.Background(), env)
 	if err != nil {
@@ -46,7 +47,7 @@ func main() {
 	}
 	defer api.Close()
 
-	// r.Mount("/", files.Router())
+	r.Mount("/", files.Router())
 	r.Mount("/api/v1", api.Router(env))
 
 	log.Printf("listening on port %s", env.Port)

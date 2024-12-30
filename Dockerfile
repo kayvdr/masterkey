@@ -2,7 +2,6 @@ FROM golang:1.23-alpine AS base
 WORKDIR /app
 
 FROM base AS development
-# Necessary for working inside the HGV network
 RUN apk add build-base tzdata --no-cache
 # Create external debugger
 RUN go install github.com/go-delve/delve/cmd/dlv@latest
@@ -12,7 +11,6 @@ COPY reflex.conf /
 ENTRYPOINT ["reflex", "-c", "/reflex.conf"]
 
 FROM node:22-alpine as node-builder
-# Necessary for working inside the HGV network
 WORKDIR /app
 # Copy application dependency manifests to the container image.
 # A wildcard is used to ensure copying both package.json AND package-lock.json (when available).
@@ -30,7 +28,7 @@ COPY go.* ./
 RUN go mod download
 # Copy local code to the container image.
 COPY . .
-COPY --from=node-builder /app/dist /app/web/dist
+COPY --from=node-builder /app/dist /app/dist
 WORKDIR /app
 # Build the binary.
 RUN go build -buildvcs=false -v -o server
