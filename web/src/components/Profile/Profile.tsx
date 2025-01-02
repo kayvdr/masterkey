@@ -1,12 +1,13 @@
+import classNames from "classnames";
 import { PropsWithChildren, useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { useAuth } from "../../context/authContext";
 import useToggle from "../../hooks/useToggle";
+import inputStyles from "../Account/Form.module.css";
 import Footer from "../Footer";
 import Header from "../Header";
 import Button from "../ui/Button";
 import ErrorText from "../ui/ErrorText";
-import InputField from "../ui/InputField";
 import Page from "../ui/Page";
 import styles from "./Profile.module.css";
 
@@ -28,10 +29,10 @@ const Profile = () => {
   };
 
   const {
-    register,
     handleSubmit,
+    control,
     formState: { errors, isSubmitting },
-  } = useForm<FormUser>();
+  } = useForm<FormUser>({ defaultValues: { email: "" } });
 
   return (
     <>
@@ -46,16 +47,36 @@ const Profile = () => {
           closeAllModal={closeAllModal}
         >
           <form>
-            <InputField
-              type="email"
-              placeholder="E-Mail"
-              register={{
-                ...register("email", {
-                  required: "Please insert an E-Mail Address",
-                }),
-              }}
-              error={errors.email}
-            />
+            <div
+              className={classNames(inputStyles.field, {
+                [inputStyles.fieldError]: errors.email,
+              })}
+            >
+              <Controller
+                name="email"
+                control={control}
+                rules={{
+                  required: "Email cannot be empty.",
+                  pattern: {
+                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                    message: "The email is not a valid email address.",
+                  },
+                }}
+                render={({ field }) => (
+                  <input
+                    type="email"
+                    placeholder="Email"
+                    className={inputStyles.input}
+                    {...field}
+                  />
+                )}
+              />
+              {errors.email && (
+                <div className={inputStyles.inputError}>
+                  {errors.email.message}
+                </div>
+              )}
+            </div>
             <Button
               type="submit"
               isLoading={isSubmitting}

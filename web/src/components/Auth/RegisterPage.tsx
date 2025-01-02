@@ -1,14 +1,15 @@
+import classNames from "classnames";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/authContext";
 import { CustomError } from "../../types";
+import inputStyles from "../Account/Form.module.css";
 import SvgFacebookBlack from "../icons/FacebookBlack";
 import SvgGoogle from "../icons/Google";
 import Button from "../ui/Button";
 import ErrorText from "../ui/ErrorText";
 import Icon from "../ui/Icon";
-import InputField from "../ui/InputField";
 import styles from "./AuthPage.module.css";
 
 interface FormLogin {
@@ -22,11 +23,13 @@ const RegisterPage = () => {
   const navigate = useNavigate();
   const { auth } = useAuth();
   const {
-    register,
     reset,
     handleSubmit,
-    formState: { errors },
-  } = useForm<FormLogin>();
+    control,
+    formState: { isSubmitting, errors },
+  } = useForm<FormLogin>({
+    defaultValues: { name: "", email: "", password: "" },
+  });
 
   const onSubmit = async (formData: FormLogin) => {
     const { error } = await auth.signUp(formData);
@@ -44,37 +47,90 @@ const RegisterPage = () => {
         <h1 className={styles.title}>Register</h1>
         <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
           {error && <ErrorText text={error.message} />}
-          <InputField
-            placeholder="Name"
-            register={{
-              ...register("name", {
-                required: "Please insert Name",
-              }),
-            }}
-            error={errors.email}
-          />
-          <InputField
-            placeholder="E-Mail"
-            type="email"
-            register={{
-              ...register("email", {
-                required: "Please insert the E-Mail",
-              }),
-            }}
-            error={errors.email}
-          />
-          <InputField
-            placeholder="Password"
-            type="password"
-            register={{
-              ...register("password", {
-                required: "Please insert the passwort",
-              }),
-            }}
-            error={errors.password}
-          />
+          <div
+            className={classNames(inputStyles.field, {
+              [inputStyles.fieldError]: errors.name,
+            })}
+          >
+            <Controller
+              name="name"
+              control={control}
+              rules={{
+                required: "Name cannot be empty.",
+              }}
+              render={({ field }) => (
+                <input
+                  type="text"
+                  placeholder="Name"
+                  className={inputStyles.input}
+                  {...field}
+                />
+              )}
+            />
+            {errors.name && (
+              <div className={inputStyles.inputError}>
+                {errors.name.message}
+              </div>
+            )}
+          </div>
+          <div
+            className={classNames(inputStyles.field, {
+              [inputStyles.fieldError]: errors.email,
+            })}
+          >
+            <Controller
+              name="email"
+              control={control}
+              rules={{
+                required: "Email cannot be empty.",
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: "The email is not a valid email address.",
+                },
+              }}
+              render={({ field }) => (
+                <input
+                  type="email"
+                  placeholder="Email"
+                  className={inputStyles.input}
+                  {...field}
+                />
+              )}
+            />
+            {errors.email && (
+              <div className={inputStyles.inputError}>
+                {errors.email.message}
+              </div>
+            )}
+          </div>
+          <div
+            className={classNames(inputStyles.field, {
+              [inputStyles.fieldError]: errors.password,
+            })}
+          >
+            <Controller
+              name="password"
+              control={control}
+              rules={{
+                required: "Password cannot be empty.",
+              }}
+              render={({ field }) => (
+                <input
+                  type="password"
+                  placeholder="Password"
+                  className={inputStyles.input}
+                  {...field}
+                />
+              )}
+            />
+            {errors.password && (
+              <div className={inputStyles.inputError}>
+                {errors.password.message}
+              </div>
+            )}
+          </div>
           <div className={styles.field}>
-            <Button type="submit" fullWidth={true}>
+            <Button type="submit" fullWidth={true} isLoading={isSubmitting}>
               Submit
             </Button>
           </div>

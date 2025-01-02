@@ -1,14 +1,15 @@
+import classNames from "classnames";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/authContext";
 import { CustomError } from "../../types";
+import inputStyles from "../Account/Form.module.css";
 import SvgFacebookBlack from "../icons/FacebookBlack";
 import SvgGoogle from "../icons/Google";
 import Button from "../ui/Button";
 import ErrorText from "../ui/ErrorText";
 import Icon from "../ui/Icon";
-import InputField from "../ui/InputField";
 import styles from "./AuthPage.module.css";
 
 interface FormLogin {
@@ -21,11 +22,11 @@ const LoginPage = () => {
   const [error, setError] = useState<CustomError>();
   const navigate = useNavigate();
   const {
-    register,
     reset,
     handleSubmit,
+    control,
     formState: { isSubmitting, errors },
-  } = useForm<FormLogin>();
+  } = useForm<FormLogin>({ defaultValues: { email: "", password: "" } });
 
   const onSubmit = async (formData: FormLogin) => {
     setError(undefined);
@@ -46,26 +47,62 @@ const LoginPage = () => {
         <h1 className={styles.title}>Login</h1>
         <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
           {error && <ErrorText text={error.message} />}
-          <InputField
-            placeholder="E-Mail"
-            type="email"
-            register={{
-              ...register("email", {
-                required: "Please insert the E-Mail",
-              }),
-            }}
-            error={errors.email}
-          />
-          <InputField
-            placeholder="Password"
-            type="password"
-            register={{
-              ...register("password", {
-                required: "Please insert the passwort",
-              }),
-            }}
-            error={errors.password}
-          />
+          <div
+            className={classNames(inputStyles.field, {
+              [inputStyles.fieldError]: errors.email,
+            })}
+          >
+            <Controller
+              name="email"
+              control={control}
+              rules={{
+                required: "Email cannot be empty.",
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: "The email is not a valid email address.",
+                },
+              }}
+              render={({ field }) => (
+                <input
+                  type="email"
+                  placeholder="Email"
+                  className={inputStyles.input}
+                  {...field}
+                />
+              )}
+            />
+            {errors.email && (
+              <div className={inputStyles.inputError}>
+                {errors.email.message}
+              </div>
+            )}
+          </div>
+          <div
+            className={classNames(inputStyles.field, {
+              [inputStyles.fieldError]: errors.password,
+            })}
+          >
+            <Controller
+              name="password"
+              control={control}
+              rules={{
+                required: "Password cannot be empty.",
+              }}
+              render={({ field }) => (
+                <input
+                  type="password"
+                  placeholder="Password"
+                  className={inputStyles.input}
+                  {...field}
+                />
+              )}
+            />
+            {errors.password && (
+              <div className={inputStyles.inputError}>
+                {errors.password.message}
+              </div>
+            )}
+          </div>
           <div className={styles.field}>
             <Button type="submit" fullWidth={true} isLoading={isSubmitting}>
               Submit

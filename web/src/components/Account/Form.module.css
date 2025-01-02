@@ -9,3 +9,38 @@
   width: 100%;
   max-width: 32em;
 }
+
+.field {
+  width: 100%;
+  margin-bottom: 0.75em;
+  text-align: left;
+}
+
+.input[type="text"],
+.input[type="email"],
+.input[type="password"],
+select {
+  width: 100%;
+  padding: 0.5em 1em;
+  height: 2.5em;
+  border: 1px solid var(--ci-light-grey);
+  border-radius: 0.5em;
+  transition: all 0.5s;
+}
+
+.input[type="text"]:hover,
+.input[type="email"]:hover,
+.input[type="password"]:hover,
+select:hover {
+  border-color: var(--ci-green);
+}
+
+.fieldError .input {
+  border-color: var(--ci-red);
+}
+
+.inputError {
+  font-size: 0.75em;
+  color: var(--ci-red);
+  padding: 0 0.5em;
+}
