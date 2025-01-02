@@ -5,11 +5,8 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/authContext";
 import { CustomError } from "../../types";
 import inputStyles from "../Account/Form.module.css";
-import SvgFacebookBlack from "../icons/FacebookBlack";
-import SvgGoogle from "../icons/Google";
 import Button from "../ui/Button";
 import ErrorText from "../ui/ErrorText";
-import Icon from "../ui/Icon";
 import styles from "./AuthPage.module.css";
 
 interface FormLogin {
@@ -144,14 +141,14 @@ const RegisterPage = () => {
           <NavLink className={styles.btn} to="/login">
             Already Registered? Login here!
           </NavLink>
-          <button className={styles.btn}>
+          {/* <button className={styles.btn}>
             <Icon glyph={SvgGoogle} className={styles.provider} /> Login with
             Google
           </button>
           <button className={styles.btn}>
             <Icon glyph={SvgFacebookBlack} className={styles.provider} />
             Login with Facebook
-          </button>
+          </button> */}
         </div>
         <p className={styles.footer}>
           <NavLink to="/privacy">Privacy</NavLink>
