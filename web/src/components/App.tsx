@@ -3,10 +3,12 @@ import { AuthProvider } from "../context/authContext";
 import ScrollTop from "../hooks/useScrollTop";
 import styles from "./App.module.css";
 import AppRouter from "./AppRouter";
+import CookieComponent from "./CookieComponent";
 
 const App = () => (
   <BrowserRouter>
     <ScrollTop />
+    <CookieComponent />
     <AuthProvider>
       <div className={styles.app}>
         <AppRouter />

@@ -1,0 +1,22 @@
+.button {
+  position: fixed;
+  bottom: 0.5em;
+  right: 0;
+  z-index: 100;
+  background-color: var(--ci-dark-grey);
+  color: white;
+  padding: 0.5em 1em;
+  border-top-left-radius: 0.5em;
+  border-bottom-left-radius: 0.5em;
+}
+
+@media (min-width: 768px) {
+  .button {
+    transform: translateX(2.5em);
+    transition: 0.5s transform;
+  }
+
+  .button:hover {
+    transform: translateX(0);
+  }
+}

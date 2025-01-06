@@ -4,3 +4,7 @@
   flex-direction: column;
   align-items: center;
 }
+
+.iconShowAll {
+  margin-right: 0.5em;
+}

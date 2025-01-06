@@ -98,3 +98,12 @@ button {
   font-size: 1.5em;
   margin-bottom: 1em;
 }
+
+#cc-main {
+  --cc-font-family: "Open Sans", sans-serif;
+  --cc-btn-primary-bg: var(--ci-green);
+  --cc-btn-primary-border-color: var(--ci-green);
+  --cc-btn-primary-hover-bg: var(--ci-light-green);
+  --cc-btn-primary-hover-border-color: var(--ci-light-green);
+  --cc-toggle-on-bg: var(--ci-green);
+}
