@@ -6,7 +6,12 @@ export default defineConfig(({ command }) => {
   const baseConfig: UserConfigExport = {
     build: { sourcemap: true },
     envDir: "..",
-    css: { devSourcemap: true },
+    css: {
+      devSourcemap: true,
+      modules: {
+        generateScopedName: "[hash:base64:8]",
+      },
+    },
     server: {
       port: 60000,
       strictPort: true,
