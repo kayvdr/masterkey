@@ -58,6 +58,7 @@
 .listLink {
   display: flex;
   align-items: center;
+  max-width: fit-content;
 }
 
 .listLink:hover {
