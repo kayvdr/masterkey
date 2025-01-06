@@ -28,6 +28,10 @@ select {
   transition: all 0.5s;
 }
 
+.field select {
+  padding: 0.5em 0.75em;
+}
+
 .input[type="text"]:hover,
 .input[type="email"]:hover,
 .input[type="password"]:hover,
@@ -35,7 +39,8 @@ select:hover {
   border-color: var(--ci-green);
 }
 
-.fieldError .input {
+.fieldError .input,
+.fieldError select {
   border-color: var(--ci-red);
 }
 

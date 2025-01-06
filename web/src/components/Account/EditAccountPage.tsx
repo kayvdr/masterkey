@@ -82,11 +82,14 @@ const EditForm = ({ account }: FormProps) => {
         <Controller
           name="platform"
           control={control}
+          rules={{
+            required: "Platform cannot be empty.",
+            validate: (value) =>
+              value.trim() !== "" || "Platform cannot be empty.",
+          }}
           render={({ field }) => (
             <select {...field}>
-              <option value="" disabled={true}>
-                Choose platform...
-              </option>
+              <option value="">Choose platform...</option>
               {data?.platforms.map((p) => (
                 <option key={p.id} value={p.id}>
                   {p.name}
