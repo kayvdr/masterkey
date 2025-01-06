@@ -1,9 +1,13 @@
 import classNames from "classnames";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../context/authContext";
-import { getAccount, getPlatforms, updateAccount } from "../../http/api";
+import {
+  getAccountByCreatorId,
+  getPlatforms,
+  updateAccount,
+} from "../../http/api";
 import { Account } from "../../types";
 import Footer from "../Footer";
 import Header from "../Header";
@@ -19,9 +23,16 @@ interface FormUser {
 }
 
 const EditAccountPage = () => {
+  const navigate = useNavigate();
+  const { user } = useAuth();
   const params = useParams<"accountId">();
 
-  const { data: account } = getAccount(params.accountId);
+  const { data: account, error } = getAccountByCreatorId(
+    user?.id,
+    params.accountId
+  );
+
+  useEffect(() => error && navigate("/"), [error]);
 
   if (!account) return null;
 

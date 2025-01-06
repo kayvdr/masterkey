@@ -43,6 +43,17 @@ export const getAccount = (id: string | undefined) =>
     fetcher<Account>(opts)
   );
 
+export const getAccountByCreatorId = (
+  creatorId: string | undefined,
+  accountId: string | undefined
+) =>
+  useSWR(
+    creatorId && accountId
+      ? { url: `/creators/${creatorId}/accounts/${accountId}` }
+      : null,
+    (opts) => fetcher<Account>(opts)
+  );
+
 export const getAccountsByCreatorId = (
   id: string | undefined,
   pagination?: Pagination

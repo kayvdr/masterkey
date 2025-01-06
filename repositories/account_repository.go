@@ -81,6 +81,29 @@ func (r AccountRepository) GetCreatorAccounts(ctx context.Context, pagination co
 	return pgx.CollectRows(rows, pgx.RowToStructByName[Account])
 }
 
+func (r AccountRepository) GetCreatorAccount(ctx context.Context, creatorID uuid.UUID, accountID uuid.UUID) (a *Account, err error) {
+	rows, err := r.pool.Query(ctx, `
+	SELECT a.id, a.username, a.password,
+		(SELECT count(v.id) FROM votes AS v WHERE v.account_id = a.id AND v.value = 'up') AS votes_up, 
+		(SELECT count(v.id) FROM votes AS v WHERE v.account_id = a.id AND v.value = 'down') AS votes_down, 
+		a.created_at, a.creator_id, p.id AS platform_id, p.name AS platform_name, p.url as platform_url, 
+		count(*) OVER() AS full_count
+	FROM accounts AS a 
+	INNER JOIN platforms AS p ON a.platform_id = p.id 
+	WHERE a.id = $1 AND a.creator_id = $2
+	`, accountID, creatorID)
+	if err != nil {
+		return
+	}
+
+	a, err = pgx.CollectOneRow(rows, pgx.RowToAddrOfStructByName[Account])
+	if err == pgx.ErrNoRows {
+		return nil, ErrAccountNotFound
+	}
+
+	return
+}
+
 func (r AccountRepository) GetCreatorAccountsVotes(ctx context.Context, pagination common.Pagination, accountID uuid.UUID) ([]Account, error) {
 	params := fmt.Sprintf("ORDER BY %s LIMIT %s OFFSET %s", pagination.Sort() + " " + pagination.Order(), strconv.Itoa(pagination.Limit()), strconv.Itoa(pagination.Offset()))
 	rows, err := r.pool.Query(ctx, `

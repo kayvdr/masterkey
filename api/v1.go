@@ -79,6 +79,7 @@ func (app *Application) Router(env *env.Env) http.Handler {
 		r.Route("/creators/{creatorId}/accounts", func(r chi.Router) {
 			r.Get("/", app.GetCreatorAccounts)
 			r.Get("/votes", app.GetCreatorAccountsVotes)
+			r.Get("/{accountId}", app.GetCreatorAccount)
 			r.Get("/{accountId}/votes", app.GetCreatorAccountVote)
 		})
 

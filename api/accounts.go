@@ -115,6 +115,32 @@ func (app Application) GetAccount(w http.ResponseWriter, r *http.Request) {
 	render.JSON(w, r, domain.NewAccount(*res))
 }
 
+func (app Application) GetCreatorAccount(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	accountID, err := common.GetUUIDParamFromURL(r, "accountId")
+	if err != nil {
+		app.HTTPError.New(w, r, httperror.New(http.StatusBadRequest, err))
+		return
+	}
+	creatorID, err := common.GetUUIDParamFromURL(r, "creatorId")
+	if err != nil {
+		app.HTTPError.New(w, r, httperror.New(http.StatusBadRequest, err))
+		return
+	}
+
+	res, err := app.Repositories.Account.GetCreatorAccount(ctx, creatorID, accountID)
+	if errors.Is(err, repositories.ErrAccountNotFound) {
+		app.HTTPError.New(w, r, httperror.New(http.StatusNotFound, err))
+		return
+	}
+	if err != nil {
+		app.HTTPError.New(w, r, err)
+		return
+	}
+
+	render.JSON(w, r, domain.NewAccount(*res))
+}
+
 func (app Application) CreateAccount(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
