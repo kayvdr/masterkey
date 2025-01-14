@@ -8,10 +8,10 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
 	"github.com/google/uuid"
-	"github.com/kayvdr/shac/common"
-	"github.com/kayvdr/shac/common/httperror"
-	"github.com/kayvdr/shac/domain"
-	"github.com/kayvdr/shac/repositories"
+	"github.com/kayvdr/masterkey/common"
+	"github.com/kayvdr/masterkey/common/httperror"
+	"github.com/kayvdr/masterkey/domain"
+	"github.com/kayvdr/masterkey/repositories"
 )
 
 func (app Application) GetCreatorAccountVote(w http.ResponseWriter, r *http.Request) {

@@ -1,4 +1,4 @@
-module github.com/kayvdr/shac
+module github.com/kayvdr/masterkey
 
 go 1.22
 

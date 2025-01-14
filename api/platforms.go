@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/go-chi/render"
-	"github.com/kayvdr/shac/domain"
+	"github.com/kayvdr/masterkey/domain"
 )
 
 func (app Application) GetPlatforms(w http.ResponseWriter, r *http.Request) {

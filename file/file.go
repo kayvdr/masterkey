@@ -8,7 +8,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	chimiddleware "github.com/go-chi/chi/v5/middleware"
-	"github.com/kayvdr/shac/middleware"
+	"github.com/kayvdr/masterkey/middleware"
 )
 
 type FileServer struct {

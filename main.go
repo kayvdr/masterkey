@@ -8,9 +8,9 @@ import (
 
 	"github.com/go-chi/chi"
 	chimiddleware "github.com/go-chi/chi/v5/middleware"
-	"github.com/kayvdr/shac/api"
-	"github.com/kayvdr/shac/common/env"
-	"github.com/kayvdr/shac/file"
+	"github.com/kayvdr/masterkey/api"
+	"github.com/kayvdr/masterkey/common/env"
+	"github.com/kayvdr/masterkey/file"
 )
 
 //go:embed web/dist

@@ -5,7 +5,7 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/kayvdr/shac/common/env"
+	"github.com/kayvdr/masterkey/common/env"
 	supabase "github.com/lengzuo/supa"
 )
 

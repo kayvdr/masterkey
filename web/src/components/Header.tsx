@@ -17,7 +17,7 @@ const Header = () => {
   return (
     <header className={styles.header}>
       <NavLink className={styles.logo} to="/">
-        Shac
+        Masterkey
       </NavLink>
       {!session ? (
         <NavLink to="/login">Login</NavLink>

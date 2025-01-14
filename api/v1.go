@@ -6,11 +6,11 @@ import (
 
 	"github.com/go-chi/chi"
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/kayvdr/shac/clients/supabase"
-	"github.com/kayvdr/shac/common/env"
-	"github.com/kayvdr/shac/common/httperror"
-	"github.com/kayvdr/shac/common/middleware"
-	"github.com/kayvdr/shac/repositories"
+	"github.com/kayvdr/masterkey/clients/supabase"
+	"github.com/kayvdr/masterkey/common/env"
+	"github.com/kayvdr/masterkey/common/httperror"
+	"github.com/kayvdr/masterkey/common/middleware"
+	"github.com/kayvdr/masterkey/repositories"
 	"github.com/shopspring/decimal"
 )
 
