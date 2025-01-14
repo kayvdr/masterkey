@@ -8,6 +8,7 @@ import { useOnClickOutside } from "../hooks/useOnClickOutside";
 import useToggle from "../hooks/useToggle";
 import styles from "./Header.module.css";
 import SvgAdd from "./icons/Add";
+import SvgLogo from "./icons/Logo";
 import SvgLogout from "./icons/Logout";
 import Icon from "./ui/Icon";
 
@@ -17,6 +18,7 @@ const Header = () => {
   return (
     <header className={styles.header}>
       <NavLink className={styles.logo} to="/">
+        <Icon glyph={SvgLogo} className={styles.logoIcon} />
         Masterkey
       </NavLink>
       {!session ? (
