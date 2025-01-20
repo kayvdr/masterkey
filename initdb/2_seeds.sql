@@ -1,4 +1,4 @@
-INSERT INTO platforms (id, name, url)VALUES 
+INSERT INTO platforms (id, name, url) VALUES 
 ('d6fbba90-4e07-4d2a-906c-9229610c95c4', 'Instagram', 'https://www.instagram.com'),
 ('a8f71f23-8e04-42e5-ab69-5baf7b78aea0', 'Facebook', 'https://www.facebook.com'),
 ('7389c780-86b1-42b7-a118-7f0830109464', 'Snapchat', 'https://www.snapchat.com'),
@@ -55,9 +55,13 @@ INSERT INTO accounts (id, username, password,  creator_id, platform_id) VALUES
 ('3b4c07a4-8ecc-4dac-9b9e-1d92bb9b22d0', '6ix9ineReal', 'hrABqxA=H3', '7af9cfc7-f6fb-4de0-9ffe-1ca60a82bf1b','6056b64e-c72c-4e15-a422-99f4af4f564b'),
 ('a663ef39-93b7-4315-81df-4d3605407aa3', 'felip', 'Z!dpV8TvWJ', '7af9cfc7-f6fb-4de0-9ffe-1ca60a82bf1b','ea191b37-8878-40c8-9a21-01c7722be456');
 
-INSERT INTO votes (id, value, account_id, creator_id)VALUES 
+INSERT INTO votes (id, value, account_id, creator_id) VALUES 
 ('bd467f22-9a7f-44e0-a60c-61301f8071a1', 'up', '88511ad4-ac5d-4732-8901-d593865c2837', '7af9cfc7-f6fb-4de0-9ffe-1ca60a82bf1b'),
 ('c9bbb0cc-a117-4c62-beb1-d4eec93c03f0', 'down', '4f47c4bb-2e55-4988-acc4-6d3c2b905b0d', '7af9cfc7-f6fb-4de0-9ffe-1ca60a82bf1a'),
 ('fb899454-e123-4806-aaab-207a1fd6b60b', 'up', 'f19be2de-bb5c-46f7-a2b3-c5d57996b736', '7af9cfc7-f6fb-4de0-9ffe-1ca60a82bf1a'),
 ('3d1899ed-caf3-4a04-aeec-5d7fb4ed38af', 'up', '88511ad4-ac5d-4732-8901-d593865c2837', '7af9cfc7-f6fb-4de0-9ffe-1ca60a82bf1a'),
 ('ee09987c-afe2-4205-b8ac-b8f4a2ddd495', 'down', 'b23eb4bb-2bed-4496-998a-b4f8c592e51d', '7af9cfc7-f6fb-4de0-9ffe-1ca60a82bf1a');
+
+INSERT INTO user_delete_request (id, user_id) VALUES 
+('bea92b95-7e44-426c-8650-7ff43bce4ed7', 'aff5837a-fc5e-4590-9fa3-5384d9f293a5'),
+('3f7eed6a-e3a7-4a3d-898a-eb665a39fac9', '5db29625-6c62-403d-b33d-0679815c51e9');

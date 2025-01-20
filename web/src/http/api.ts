@@ -6,6 +6,7 @@ import {
   Account,
   AccountPatchBody,
   AccountPostBody,
+  DeleteUserPostBody,
   Pagination,
   Platform,
   Vote,
@@ -122,3 +123,10 @@ export const createVote = (body: VoteBody, token: string) =>
 
 export const deleteVote = (id: string, token: string) =>
   api.url(`/votes/${id}`).headers({ "X-Supabase-Auth": token }).delete().res();
+
+export const deleteUserRequest = (body: DeleteUserPostBody, token: string) =>
+  api
+    .url(`/user/delete`)
+    .headers({ "X-Supabase-Auth": token })
+    .post(body)
+    .json();

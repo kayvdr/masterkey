@@ -25,7 +25,7 @@ type Repositories struct {
 	Account repositories.AccountRepository
 	Vote repositories.VoteRepository
 	Platform repositories.PlatformRepository
-	
+	User repositories.UserRepository
 }
 
 type Clients struct {
@@ -55,6 +55,7 @@ func NewApplication(ctx context.Context, env *env.Env) (*Application, error) {
 			Account: repositories.NewAccountRepository(pool),
 			Vote: repositories.NewVoteRepository(pool),
 			Platform: repositories.NewPlatformRepository(pool),
+			User: repositories.NewUserRepository(pool),
 		},
 		HTTPError: httperror.NewClient(ctx),
 		env:       env,
@@ -90,6 +91,10 @@ func (app *Application) Router(env *env.Env) http.Handler {
 		r.Route("/votes", func(r chi.Router) {
 			r.Post("/", app.CreateVote)
 			r.Delete("/{voteId}", app.DeleteVote)
+		})
+
+		r.Route("/user/delete", func(r chi.Router) {
+			r.Post("/", app.DeleteRequest)
 		})
 	})
 

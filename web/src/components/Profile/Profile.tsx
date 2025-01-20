@@ -7,6 +7,7 @@ import NotificationContext, {
   showSuccessNotification,
 } from "../../context/notificationContext";
 import useToggle from "../../hooks/useToggle";
+import { deleteUserRequest } from "../../http/api";
 import inputStyles from "../Account/Form.module.css";
 import Footer from "../Footer";
 import Header from "../Header";
@@ -19,7 +20,7 @@ interface FormUser {
 }
 
 const Profile = () => {
-  const { user, auth } = useAuth();
+  const { session, user, auth } = useAuth();
   const modal = {
     email: useToggle(),
     password: useToggle(),
@@ -152,21 +153,19 @@ const Profile = () => {
             onClick={async () => {
               setLoading({ ...loading, delete: true });
               const id = user?.id;
-              if (!id) return;
+              if (!id || !session) return;
 
-              console.log(id);
-
-              const { error } = await auth.admin.deleteUser(id);
-
-              if (error) {
-                dispatch(showErrorNotification(error.message));
-                setLoading({ ...loading, delete: false });
-                return;
-              }
-
-              dispatch(showSuccessNotification("Deleted successfully"));
-              setLoading({ ...loading, delete: false });
-              modal.delete.close();
+              deleteUserRequest({ user_id: id }, session.access_token)
+                .then(() => {
+                  dispatch(showSuccessNotification("Deleted successfully"));
+                })
+                .catch((error) => {
+                  dispatch(showErrorNotification(error.message));
+                })
+                .finally(() => {
+                  setLoading({ ...loading, delete: false });
+                  modal.delete.close();
+                });
             }}
           >
             Delete Permanently

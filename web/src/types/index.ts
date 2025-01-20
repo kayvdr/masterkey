@@ -47,3 +47,7 @@ export interface Platform {
   name: string;
   url: string;
 }
+
+export interface DeleteUserPostBody {
+  user_id: string;
+}

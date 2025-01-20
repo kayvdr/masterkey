@@ -26,7 +26,14 @@ CREATE TABLE votes (
   id uuid PRIMARY KEY,
   value votes_values NOT NULL,
   account_id uuid NOT NULL REFERENCES accounts (id) ON DELETE CASCADE,
-  creator_id uuid NOT NULL
+  creator_id uuid NOT NULL,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE TABLE user_delete_request (
+  id uuid NOT NULL,
+  user_id uuid NOT NULL,
+  requested_at timestamptz NOT NULL DEFAULT now()
 );
 
 COMMIT;
