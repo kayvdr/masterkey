@@ -1,0 +1,77 @@
+.notification {
+  position: fixed;
+  right: 1em;
+  top: 6em;
+  box-shadow: hsl(0 0% 0% / 12%) 0.2em 0.2em 0.3em;
+  display: flex;
+  align-items: center;
+  padding: 0.6em 1em;
+  gap: 0.75em;
+  color: white;
+  opacity: 0;
+  transform: translateY(-10em);
+  max-width: 20em;
+  transition: opacity 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+    transform 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  z-index: 403;
+  border-radius: 0.5em;
+}
+
+@media (min-width: 450px) {
+  .notification {
+    max-width: fit-content;
+    right: 0;
+    left: 0;
+    margin: 0 auto;
+    top: 3em;
+  }
+}
+
+.notificationShown {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.notificationSuccess {
+  background-color: green;
+}
+
+.notificationError {
+  background-color: var(--ci-red);
+}
+
+.notification .text {
+  font-size: 0.9em;
+  padding-right: 1.5rem;
+}
+
+.notificationIcon {
+  width: 1.4em;
+  flex-shrink: 0;
+  fill: white;
+}
+
+.notificationIconSuccess {
+  color: var(--ci-green);
+}
+
+.notificationIconError {
+  color: var(--ci-red);
+}
+
+.btnClose {
+  padding: 0;
+  cursor: pointer;
+  display: inline-flex;
+  justify-content: center;
+}
+
+.btnCloseIcon {
+  width: 1.2em;
+  flex-shrink: 0;
+  color: white;
+}
+
+.btnClose:hover .btnCloseIcon {
+  color: var(--ci-light-grey);
+}

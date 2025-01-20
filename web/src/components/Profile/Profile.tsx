@@ -1,13 +1,16 @@
 import classNames from "classnames";
-import { PropsWithChildren, useState } from "react";
+import { PropsWithChildren, useContext, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useAuth } from "../../context/authContext";
+import NotificationContext, {
+  showErrorNotification,
+  showSuccessNotification,
+} from "../../context/notificationContext";
 import useToggle from "../../hooks/useToggle";
 import inputStyles from "../Account/Form.module.css";
 import Footer from "../Footer";
 import Header from "../Header";
 import Button from "../ui/Button";
-import ErrorText from "../ui/ErrorText";
 import Page from "../ui/Page";
 import styles from "./Profile.module.css";
 
@@ -17,18 +20,25 @@ interface FormUser {
 
 const Profile = () => {
   const { user, auth } = useAuth();
-  const emailModal = useToggle();
-  const passworModal = useToggle();
-  const deleteModal = useToggle();
-  const [error, setError] = useState(false);
+  const modal = {
+    email: useToggle(),
+    password: useToggle(),
+    delete: useToggle(),
+  };
+  const [loading, setLoading] = useState({
+    password: false,
+    delete: false,
+  });
+  const dispatch = useContext(NotificationContext);
 
   const closeAllModal = () => {
-    emailModal.close();
-    passworModal.close();
-    deleteModal.close();
+    modal.email.close();
+    modal.password.close();
+    modal.delete.close();
   };
 
   const {
+    reset,
     handleSubmit,
     control,
     formState: { errors, isSubmitting },
@@ -38,12 +48,11 @@ const Profile = () => {
     <>
       <Header />
       <Page title="Profile">
-        {error && <ErrorText text="An unknown error has occurred." />}
         <Item
           label="E-Mail Address"
           value={user?.email ?? ""}
           openValue="Enter your new E-Mail Address"
-          modal={emailModal}
+          modal={modal.email}
           closeAllModal={closeAllModal}
         >
           <form>
@@ -81,12 +90,18 @@ const Profile = () => {
               type="submit"
               isLoading={isSubmitting}
               onClick={handleSubmit(async (body) => {
-                setError(false);
                 const { error } = await auth.updateUser({
                   email: body.email,
                 });
 
-                error ? setError(true) : passworModal.close();
+                if (error) {
+                  dispatch(showErrorNotification(error.message));
+                  return;
+                }
+
+                dispatch(showSuccessNotification("Email send successfully"));
+                reset();
+                modal.email.close();
               })}
             >
               Save
@@ -98,16 +113,27 @@ const Profile = () => {
           value="**********"
           openValue="You need to get a Password Reset Email?"
           editBtnLabel="Change"
-          modal={passworModal}
+          modal={modal.password}
           closeAllModal={closeAllModal}
         >
           <Button
+            isLoading={loading.password}
             onClick={async () => {
+              setLoading({ ...loading, password: true });
               const email = user?.email;
               if (!email) return;
 
               const { error } = await auth.resetPasswordForEmail(email);
-              error ? setError(true) : deleteModal.close();
+
+              if (error) {
+                dispatch(showErrorNotification(error.message));
+                setLoading({ ...loading, delete: false });
+                return;
+              }
+
+              dispatch(showSuccessNotification("Email send successfully"));
+              setLoading({ ...loading, password: false });
+              modal.password.close();
             }}
           >
             Send
@@ -118,16 +144,29 @@ const Profile = () => {
           value="All your Data"
           openValue="Are you sure you want to delete your profile?"
           editBtnLabel="Delete"
-          modal={deleteModal}
+          modal={modal.delete}
           closeAllModal={closeAllModal}
         >
           <Button
+            isLoading={loading.delete}
             onClick={async () => {
+              setLoading({ ...loading, delete: true });
               const id = user?.id;
               if (!id) return;
 
+              console.log(id);
+
               const { error } = await auth.admin.deleteUser(id);
-              error ? setError(true) : deleteModal.close();
+
+              if (error) {
+                dispatch(showErrorNotification(error.message));
+                setLoading({ ...loading, delete: false });
+                return;
+              }
+
+              dispatch(showSuccessNotification("Deleted successfully"));
+              setLoading({ ...loading, delete: false });
+              modal.delete.close();
             }}
           >
             Delete Permanently

@@ -1,12 +1,13 @@
 import classNames from "classnames";
-import { useState } from "react";
+import { useContext } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/authContext";
-import { CustomError } from "../../types";
+import NotificationContext, {
+  showErrorNotification,
+} from "../../context/notificationContext";
 import inputStyles from "../Account/Form.module.css";
 import Button from "../ui/Button";
-import ErrorText from "../ui/ErrorText";
 import styles from "./AuthPage.module.css";
 
 interface FormLogin {
@@ -16,7 +17,7 @@ interface FormLogin {
 
 const LoginPage = () => {
   const { auth } = useAuth();
-  const [error, setError] = useState<CustomError>();
+  const dispatch = useContext(NotificationContext);
   const navigate = useNavigate();
   const {
     reset,
@@ -26,11 +27,10 @@ const LoginPage = () => {
   } = useForm<FormLogin>({ defaultValues: { email: "", password: "" } });
 
   const onSubmit = async (formData: FormLogin) => {
-    setError(undefined);
     const { error } = await auth.signInWithPassword(formData);
 
     if (error?.status) {
-      setError({ code: error.status ?? 400, message: error.message });
+      dispatch(showErrorNotification(error.message));
       return;
     }
 
@@ -43,7 +43,6 @@ const LoginPage = () => {
       <div className={styles.wrapper}>
         <h1 className={styles.title}>Login</h1>
         <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
-          {error && <ErrorText text={error.message} />}
           <div
             className={classNames(inputStyles.field, {
               [inputStyles.fieldError]: errors.email,

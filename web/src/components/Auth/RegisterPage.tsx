@@ -1,12 +1,13 @@
 import classNames from "classnames";
-import { useState } from "react";
+import { useContext } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/authContext";
-import { CustomError } from "../../types";
+import NotificationContext, {
+  showErrorNotification,
+} from "../../context/notificationContext";
 import inputStyles from "../Account/Form.module.css";
 import Button from "../ui/Button";
-import ErrorText from "../ui/ErrorText";
 import styles from "./AuthPage.module.css";
 
 interface FormLogin {
@@ -16,7 +17,7 @@ interface FormLogin {
 }
 
 const RegisterPage = () => {
-  const [error, setError] = useState<CustomError>();
+  const dispatch = useContext(NotificationContext);
   const navigate = useNavigate();
   const { auth } = useAuth();
   const {
@@ -30,10 +31,12 @@ const RegisterPage = () => {
 
   const onSubmit = async (formData: FormLogin) => {
     const { error } = await auth.signUp(formData);
+
     if (error?.status) {
-      setError({ code: error.status, message: error.message });
+      dispatch(showErrorNotification(error.message));
       return;
     }
+
     reset();
     navigate("/login");
   };
@@ -43,7 +46,6 @@ const RegisterPage = () => {
       <div className={styles.wrapper}>
         <h1 className={styles.title}>Register</h1>
         <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
-          {error && <ErrorText text={error.message} />}
           <div
             className={classNames(inputStyles.field, {
               [inputStyles.fieldError]: errors.name,

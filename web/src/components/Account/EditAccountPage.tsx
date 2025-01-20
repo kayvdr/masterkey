@@ -1,8 +1,12 @@
 import classNames from "classnames";
-import { useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../context/authContext";
+import NotificationContext, {
+  showErrorNotification,
+  showSuccessNotification,
+} from "../../context/notificationContext";
 import {
   getAccountByCreatorId,
   getPlatforms,
@@ -12,7 +16,6 @@ import { Account } from "../../types";
 import Footer from "../Footer";
 import Header from "../Header";
 import Button from "../ui/Button";
-import ErrorText from "../ui/ErrorText";
 import Page from "../ui/Page";
 import { default as inputStyles, default as styles } from "./Form.module.css";
 
@@ -56,7 +59,7 @@ interface FormProps {
 
 const EditForm = ({ account }: FormProps) => {
   const { data } = getPlatforms();
-  const [error, setError] = useState(false);
+  const dispatch = useContext(NotificationContext);
   const { session } = useAuth();
   const navigate = useNavigate();
   const {
@@ -73,7 +76,6 @@ const EditForm = ({ account }: FormProps) => {
 
   return (
     <form className={styles.form}>
-      {error && <ErrorText text="An unknown error has occurred." />}
       <div
         className={classNames(inputStyles.field, {
           [inputStyles.fieldError]: errors.platform,
@@ -178,10 +180,10 @@ const EditForm = ({ account }: FormProps) => {
               session.access_token
             )
               .then(() => {
-                setError(false);
+                dispatch(showSuccessNotification("Edited successfully"));
                 navigate("/search");
               })
-              .catch(() => setError(true));
+              .catch((error) => dispatch(showErrorNotification(error)));
           })}
         >
           Edit Account
