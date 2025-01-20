@@ -28,7 +28,7 @@ func (r UserRepository) CreateDeleteRequest(ctx context.Context, userID User) (u
 	err = pgx.BeginFunc(ctx, r.pool, func(tx pgx.Tx) (err error) {
 		var id uuid.UUID
 		err = tx.QueryRow(ctx, `
-			INSERT INTO user_delete_requestaaaa (id, user_id) 
+			INSERT INTO user_delete_request (id, user_id) 
 			VALUES (gen_random_uuid(), $1)
 			RETURNING id`,
 			id,

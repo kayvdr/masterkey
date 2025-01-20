@@ -20,7 +20,7 @@ func AuthMiddleware(realm string, creds map[string]string) func(next http.Handle
 				basicAuthFailed(w, realm)
 				return
 			}
-			
+
 			next.ServeHTTP(w, r)
 		})
 	}

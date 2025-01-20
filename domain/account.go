@@ -42,14 +42,14 @@ func (b *PatchAccountBody) Bind(r *http.Request) error {
 
 func (b *PatchAccountBody) Model() repositories.Account {
 	return repositories.Account{
-		Username: b.Username,
-		Password: b.Password,
+		Username:   b.Username,
+		Password:   b.Password,
 		PlatformID: b.PlatformID,
 	}
 }
 
 type CreateAccountBody struct {
-	CreatorID  uuid.UUID `json:"creator_id"`
+	CreatorID uuid.UUID `json:"creator_id"`
 	PatchAccountBody
 }
 
@@ -67,36 +67,36 @@ func (b *CreateAccountBody) Bind(r *http.Request) error {
 
 func (b *CreateAccountBody) Model() repositories.Account {
 	return repositories.Account{
-		Username: b.Username,
-		Password: b.Password,
-		CreatorID: b.CreatorID,
+		Username:   b.Username,
+		Password:   b.Password,
+		CreatorID:  b.CreatorID,
 		PlatformID: b.PlatformID,
 	}
 }
 
 type Account struct {
-	ID  uuid.UUID `json:"id"`
-	CreatedAt time.Time `json:"created_at"`
-	VotesUp int `json:"votes_up"`
-	VotesDown int `json:"votes_down"`
-	PlatformName   string    `json:"platform_name"`
-	PlatformURL   string    `json:"platform_url"`
+	ID           uuid.UUID `json:"id"`
+	CreatedAt    time.Time `json:"created_at"`
+	VotesUp      int       `json:"votes_up"`
+	VotesDown    int       `json:"votes_down"`
+	PlatformName string    `json:"platform_name"`
+	PlatformURL  string    `json:"platform_url"`
 	CreateAccountBody
 }
 
 func NewAccount(dbItem repositories.Account) Account {
 	return Account{
-		ID: dbItem.ID,
-		VotesUp: dbItem.VotesUp,
-		VotesDown: dbItem.VotesDown,
-		CreatedAt: dbItem.CreatedAt,
+		ID:           dbItem.ID,
+		VotesUp:      dbItem.VotesUp,
+		VotesDown:    dbItem.VotesDown,
+		CreatedAt:    dbItem.CreatedAt,
 		PlatformName: dbItem.PlatformName,
-		PlatformURL: dbItem.PlatformURL,
+		PlatformURL:  dbItem.PlatformURL,
 		CreateAccountBody: CreateAccountBody{
-			CreatorID: dbItem.CreatorID, 
+			CreatorID: dbItem.CreatorID,
 			PatchAccountBody: PatchAccountBody{
-				Username: dbItem.Username, 
-				Password: dbItem.Password,
+				Username:   dbItem.Username,
+				Password:   dbItem.Password,
 				PlatformID: dbItem.PlatformID,
 			},
 		},
@@ -110,7 +110,7 @@ type AccountsResponse struct {
 
 func NewAccountsResponse(accounts []repositories.Account, total int) AccountsResponse {
 	return AccountsResponse{
-		Total: total,
+		Total:    total,
 		Accounts: slices.Map(accounts, NewAccount),
 	}
 }

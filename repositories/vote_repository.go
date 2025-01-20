@@ -13,21 +13,21 @@ import (
 type Value string
 
 const (
-    Up Value = "up"
-    Down Value = "down"
+	Up   Value = "up"
+	Down Value = "down"
 )
 
 type VoteRepository struct {
-	pool  *pgxpool.Pool
+	pool *pgxpool.Pool
 }
 
 type Vote struct {
-	ID  uuid.UUID `db:"id"`
-	Value Value    `db:"value"`
-	Username string    `db:"username"`
+	ID           uuid.UUID `db:"id"`
+	Value        Value     `db:"value"`
+	Username     string    `db:"username"`
 	PlatformName string    `db:"platform_name"`
-	AccountID uuid.UUID    `db:"account_id"`
-	CreatorID uuid.UUID    `db:"creator_id"`
+	AccountID    uuid.UUID `db:"account_id"`
+	CreatorID    uuid.UUID `db:"creator_id"`
 }
 
 var ErrVoteNotFound = errors.New("Vote not found")
@@ -53,7 +53,7 @@ func (r VoteRepository) GetAccountVotes(ctx context.Context, accountID uuid.UUID
 			`,
 			accountID,
 			creatorID,
-		).Scan(&voteID);
+		).Scan(&voteID)
 
 		if err == pgx.ErrNoRows {
 			err = nil
@@ -63,12 +63,11 @@ func (r VoteRepository) GetAccountVotes(ctx context.Context, accountID uuid.UUID
 			return
 		}
 
-		v, err = queryVote(ctx,tx, voteID)
+		v, err = queryVote(ctx, tx, voteID)
 		return
 	})
 
 	return
-
 
 }
 
@@ -82,11 +81,11 @@ func (r VoteRepository) CreateVote(ctx context.Context, vote Vote) (v *Vote, err
 				SELECT * FROM votes WHERE account_id=$2 AND creator_id=$3
 			)
 			RETURNING id
-			`, 
+			`,
 			vote.Value,
 			vote.AccountID,
 			vote.CreatorID,
-		).Scan(&voteID);
+		).Scan(&voteID)
 
 		if err == pgx.ErrNoRows {
 			err = ErrMultipleVotes
@@ -95,7 +94,7 @@ func (r VoteRepository) CreateVote(ctx context.Context, vote Vote) (v *Vote, err
 		if err != nil {
 			return
 		}
-		v, err = queryVote(ctx,tx, voteID)
+		v, err = queryVote(ctx, tx, voteID)
 		return
 	})
 

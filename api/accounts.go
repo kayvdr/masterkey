@@ -32,7 +32,7 @@ func (app Application) GetAccounts(w http.ResponseWriter, r *http.Request) {
 	if len(res) != 0 {
 		total = res[0].FullCount
 	}
-	
+
 	render.JSON(w, r, domain.NewAccountsResponse(res, total))
 }
 
@@ -149,13 +149,13 @@ func (app Application) CreateAccount(w http.ResponseWriter, r *http.Request) {
 		app.HTTPError.New(w, r, httperror.New(http.StatusForbidden, err))
 		return
 	}
-	
+
 	var body domain.CreateAccountBody
 	if err := render.Bind(r, &body); err != nil {
 		app.HTTPError.New(w, r, httperror.New(http.StatusBadRequest, err))
 		return
 	}
-	
+
 	account, err := app.Repositories.Account.CreateAccount(ctx, body.Model())
 	if err != nil {
 		app.HTTPError.New(w, r, err)
@@ -174,7 +174,7 @@ func (app Application) UpdateAccount(w http.ResponseWriter, r *http.Request) {
 		app.HTTPError.New(w, r, httperror.New(http.StatusForbidden, err))
 		return
 	}
-	
+
 	accountID, err := common.GetUUIDParamFromURL(r, "accountId")
 	if err != nil {
 		app.HTTPError.New(w, r, httperror.New(http.StatusBadRequest, err))
@@ -196,7 +196,7 @@ func (app Application) UpdateAccount(w http.ResponseWriter, r *http.Request) {
 		app.HTTPError.New(w, r, httperror.New(http.StatusNotFound, fmt.Errorf("account '%s' not found", accountID)))
 		return
 	}
-	
+
 	account, err := app.Repositories.Account.UpdateAccount(ctx, body.Model(), accountID)
 	if err != nil {
 		app.HTTPError.New(w, r, err)

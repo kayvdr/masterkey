@@ -17,10 +17,10 @@ type Pagination interface {
 
 type pagination struct {
 	searchTerm string
-	page  int
-	limit int
-	sort string
-	order string
+	page       int
+	limit      int
+	sort       string
+	order      string
 }
 
 var ErrPageToSmall = errors.New("page must be greater than 0")

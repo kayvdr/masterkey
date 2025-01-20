@@ -7,16 +7,16 @@ import (
 )
 
 type Platform struct {
-	ID         uuid.UUID `json:"id"`
-	Name   string    `json:"name"`
-	URL   string    `json:"url"`
+	ID   uuid.UUID `json:"id"`
+	Name string    `json:"name"`
+	URL  string    `json:"url"`
 }
 
 func NewPlatform(dbItem repositories.Platform) Platform {
 	return Platform{
-		ID: dbItem.ID,
+		ID:   dbItem.ID,
 		Name: dbItem.Name,
-		URL: dbItem.URL,
+		URL:  dbItem.URL,
 	}
 }
 

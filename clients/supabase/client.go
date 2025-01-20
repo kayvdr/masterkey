@@ -27,9 +27,9 @@ func NewClient(env *env.Env) (*Client, error) {
 	}
 
 	conf := supabase.Config{
-		ApiKey: env.SupabaseKey,
+		ApiKey:     env.SupabaseKey,
 		ProjectRef: env.SupabaseUrl,
-		Debug: !env.IsProduction(),
+		Debug:      !env.IsProduction(),
 	}
 
 	supaClient, err := supabase.New(conf)
@@ -40,7 +40,7 @@ func NewClient(env *env.Env) (*Client, error) {
 	return &Client{supaClient}, nil
 }
 
-func (c *Client) GetUser(ctx context.Context, token string) (error) {
+func (c *Client) GetUser(ctx context.Context, token string) error {
 	// if token == "" {
 	// 	return errors.New("supabase: invalid token")
 	// }

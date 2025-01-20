@@ -9,7 +9,7 @@ import (
 )
 
 type PlatformRepository struct {
-	pool  *pgxpool.Pool
+	pool *pgxpool.Pool
 }
 
 func NewPlatformRepository(pool *pgxpool.Pool) PlatformRepository {
@@ -17,9 +17,9 @@ func NewPlatformRepository(pool *pgxpool.Pool) PlatformRepository {
 }
 
 type Platform struct {
-	ID  uuid.UUID `db:"id"`
+	ID   uuid.UUID `db:"id"`
 	Name string    `db:"name"`
-	URL string    `db:"url"`
+	URL  string    `db:"url"`
 }
 
 func (r PlatformRepository) GetPlatforms(ctx context.Context) ([]Platform, error) {
@@ -28,6 +28,6 @@ func (r PlatformRepository) GetPlatforms(ctx context.Context) ([]Platform, error
 	if err != nil {
 		return nil, err
 	}
-	
+
 	return pgx.CollectRows(rows, pgx.RowToStructByName[Platform])
 }

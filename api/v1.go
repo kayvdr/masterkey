@@ -22,14 +22,14 @@ type Application struct {
 }
 
 type Repositories struct {
-	Account repositories.AccountRepository
-	Vote repositories.VoteRepository
+	Account  repositories.AccountRepository
+	Vote     repositories.VoteRepository
 	Platform repositories.PlatformRepository
-	User repositories.UserRepository
+	User     repositories.UserRepository
 }
 
 type Clients struct {
-	Pool          *pgxpool.Pool
+	Pool           *pgxpool.Pool
 	SupabaseClient supabase.Client
 }
 
@@ -48,14 +48,14 @@ func NewApplication(ctx context.Context, env *env.Env) (*Application, error) {
 
 	return &Application{
 		Clients: Clients{
-			Pool:          pool,
+			Pool:           pool,
 			SupabaseClient: *supabaseClient,
 		},
 		Repositories: Repositories{
-			Account: repositories.NewAccountRepository(pool),
-			Vote: repositories.NewVoteRepository(pool),
+			Account:  repositories.NewAccountRepository(pool),
+			Vote:     repositories.NewVoteRepository(pool),
 			Platform: repositories.NewPlatformRepository(pool),
-			User: repositories.NewUserRepository(pool),
+			User:     repositories.NewUserRepository(pool),
 		},
 		HTTPError: httperror.NewClient(ctx),
 		env:       env,

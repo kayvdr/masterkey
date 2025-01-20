@@ -15,7 +15,7 @@ import (
 )
 
 type AccountRepository struct {
-	pool  *pgxpool.Pool
+	pool *pgxpool.Pool
 }
 
 func NewAccountRepository(pool *pgxpool.Pool) AccountRepository {
@@ -23,17 +23,17 @@ func NewAccountRepository(pool *pgxpool.Pool) AccountRepository {
 }
 
 type Account struct {
-	ID  uuid.UUID `db:"id"`
-	Username   string      `db:"username"`
-	Password string    `db:"password"`
-	VotesUp int    `db:"votes_up"`
-	VotesDown int    `db:"votes_down"`
-	CreatorID uuid.UUID    `db:"creator_id"`
-	CreatedAt time.Time    `db:"created_at"`
-	PlatformID  uuid.UUID    `db:"platform_id"`
-	PlatformName  string    `db:"platform_name"`
+	ID           uuid.UUID `db:"id"`
+	Username     string    `db:"username"`
+	Password     string    `db:"password"`
+	VotesUp      int       `db:"votes_up"`
+	VotesDown    int       `db:"votes_down"`
+	CreatorID    uuid.UUID `db:"creator_id"`
+	CreatedAt    time.Time `db:"created_at"`
+	PlatformID   uuid.UUID `db:"platform_id"`
+	PlatformName string    `db:"platform_name"`
 	PlatformURL  string    `db:"platform_url"`
-	FullCount  int    `db:"full_count"`
+	FullCount    int       `db:"full_count"`
 }
 
 var ErrAccountNotFound = errors.New("account not found")
@@ -43,7 +43,7 @@ func (r AccountRepository) GetAccount(ctx context.Context, accountID uuid.UUID) 
 }
 
 func (r AccountRepository) GetAccounts(ctx context.Context, pagination common.Pagination) ([]Account, error) {
-	params := fmt.Sprintf("ORDER BY %s LIMIT %s OFFSET %s", pagination.Sort() + " " + pagination.Order(), strconv.Itoa(pagination.Limit()), strconv.Itoa(pagination.Offset()))
+	params := fmt.Sprintf("ORDER BY %s LIMIT %s OFFSET %s", pagination.Sort()+" "+pagination.Order(), strconv.Itoa(pagination.Limit()), strconv.Itoa(pagination.Offset()))
 	rows, err := r.pool.Query(ctx, `
 		SELECT a.id, a.username, a.password, 
 			(SELECT count(v.id) FROM votes AS v WHERE v.account_id = a.id AND v.value = 'up') AS votes_up, 
@@ -62,7 +62,7 @@ func (r AccountRepository) GetAccounts(ctx context.Context, pagination common.Pa
 }
 
 func (r AccountRepository) GetCreatorAccounts(ctx context.Context, pagination common.Pagination, accountID uuid.UUID) ([]Account, error) {
-	params := fmt.Sprintf("ORDER BY %s LIMIT %s OFFSET %s", pagination.Sort() + " " + pagination.Order(), strconv.Itoa(pagination.Limit()), strconv.Itoa(pagination.Offset()))
+	params := fmt.Sprintf("ORDER BY %s LIMIT %s OFFSET %s", pagination.Sort()+" "+pagination.Order(), strconv.Itoa(pagination.Limit()), strconv.Itoa(pagination.Offset()))
 	rows, err := r.pool.Query(ctx, `
 		SELECT a.id, a.username, a.password,
 			(SELECT count(v.id) FROM votes AS v WHERE v.account_id = a.id AND v.value = 'up') AS votes_up, 
@@ -105,7 +105,7 @@ func (r AccountRepository) GetCreatorAccount(ctx context.Context, creatorID uuid
 }
 
 func (r AccountRepository) GetCreatorAccountsVotes(ctx context.Context, pagination common.Pagination, accountID uuid.UUID) ([]Account, error) {
-	params := fmt.Sprintf("ORDER BY %s LIMIT %s OFFSET %s", pagination.Sort() + " " + pagination.Order(), strconv.Itoa(pagination.Limit()), strconv.Itoa(pagination.Offset()))
+	params := fmt.Sprintf("ORDER BY %s LIMIT %s OFFSET %s", pagination.Sort()+" "+pagination.Order(), strconv.Itoa(pagination.Limit()), strconv.Itoa(pagination.Offset()))
 	rows, err := r.pool.Query(ctx, `
 	SELECT a.id, a.username, a.password,
 		(SELECT count(v.id) FROM votes AS v WHERE v.account_id = a.id AND v.value = 'up') AS votes_up, 
@@ -131,17 +131,17 @@ func (r AccountRepository) CreateAccount(ctx context.Context, account Account) (
 		err = tx.QueryRow(ctx, `
 			INSERT INTO accounts (id, username, password, platform_id, creator_id) 
 			VALUES (gen_random_uuid(), $1, $2, $3, $4)
-			RETURNING id`, 
-			account.Username, 
+			RETURNING id`,
+			account.Username,
 			account.Password,
 			account.PlatformID,
 			account.CreatorID,
-		).Scan(&accountID);
+		).Scan(&accountID)
 
 		if err != nil {
 			return
 		}
-		a, err = queryAccount(ctx,tx, accountID)
+		a, err = queryAccount(ctx, tx, accountID)
 		return
 	})
 
@@ -161,12 +161,12 @@ func (r AccountRepository) UpdateAccount(ctx context.Context, account Account, a
 			account.Password,
 			account.PlatformID,
 			accountID,
-		);
+		)
 
 		if err != nil {
 			return
 		}
-		a, err = queryAccount(ctx,tx, accountID)
+		a, err = queryAccount(ctx, tx, accountID)
 		return
 	})
 

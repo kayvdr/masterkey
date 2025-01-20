@@ -10,9 +10,9 @@ import (
 )
 
 type CreateVoteBody struct {
-	Value   repositories.Value    `json:"value"`
-	CreatorID  uuid.UUID `json:"creator_id"`
-	AccountID   uuid.UUID    `json:"account_id"`
+	Value     repositories.Value `json:"value"`
+	CreatorID uuid.UUID          `json:"creator_id"`
+	AccountID uuid.UUID          `json:"account_id"`
 }
 
 func (b *CreateVoteBody) Bind(r *http.Request) error {
@@ -33,7 +33,7 @@ func (b *CreateVoteBody) Bind(r *http.Request) error {
 
 func (b *CreateVoteBody) Model() repositories.Vote {
 	return repositories.Vote{
-		Value: b.Value,
+		Value:     b.Value,
 		AccountID: b.AccountID,
 		CreatorID: b.CreatorID,
 	}
@@ -41,20 +41,20 @@ func (b *CreateVoteBody) Model() repositories.Vote {
 
 type Vote struct {
 	CreateVoteBody
-	ID         uuid.UUID `json:"id"`
-	Username string `json:"username"`
-	PlatformName string `json:"platform_name"`
+	ID           uuid.UUID `json:"id"`
+	Username     string    `json:"username"`
+	PlatformName string    `json:"platform_name"`
 }
 
 func NewVote(dbItem repositories.Vote) Vote {
 	return Vote{
 		CreateVoteBody: CreateVoteBody{
-			Value: dbItem.Value,
+			Value:     dbItem.Value,
 			AccountID: dbItem.AccountID,
 			CreatorID: dbItem.CreatorID,
 		},
-		ID: dbItem.ID,
-		Username: dbItem.Username,
+		ID:           dbItem.ID,
+		Username:     dbItem.Username,
 		PlatformName: dbItem.PlatformName,
 	}
 }
