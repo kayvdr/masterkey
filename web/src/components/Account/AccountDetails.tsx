@@ -1,7 +1,10 @@
 import classNames from "classnames";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/authContext";
+import NotificationContext, {
+  showErrorNotification,
+} from "../../context/notificationContext";
 import useToggle from "../../hooks/useToggle";
 import {
   createVote,
@@ -33,6 +36,7 @@ interface Props {
 
 const AccountDetails = ({ account, mutate, setAccount, onClose }: Props) => {
   const popup = useToggle();
+  const dispatch = useContext(NotificationContext);
   const navigate = useNavigate();
   const { session, user } = useAuth();
   const { data: vote, mutate: mutateVote } = getVotesByAccountId(
@@ -51,27 +55,31 @@ const AccountDetails = ({ account, mutate, setAccount, onClose }: Props) => {
         creator_id: user?.id,
       },
       session.access_token
-    ).then((vote) => {
-      mutate();
-      mutateVote(vote);
-      setAccount({
-        ...account,
-        [`votes_${value}`]: account[`votes_${value}`] + 1,
-      });
-    });
+    )
+      .then((vote) => {
+        mutate();
+        mutateVote(vote);
+        setAccount({
+          ...account,
+          [`votes_${value}`]: account[`votes_${value}`] + 1,
+        });
+      })
+      .catch((error) => dispatch(showErrorNotification(error.message)));
   };
 
   const removeVote = (value: VoteValue) => {
     if (!vote || !session) return;
 
-    deleteVote(vote.id, session.access_token).then(() => {
-      mutate();
-      mutateVote(undefined);
-      setAccount({
-        ...account,
-        [`votes_${value}`]: account[`votes_${value}`] - 1,
-      });
-    });
+    deleteVote(vote.id, session.access_token)
+      .then(() => {
+        mutate();
+        mutateVote(undefined);
+        setAccount({
+          ...account,
+          [`votes_${value}`]: account[`votes_${value}`] - 1,
+        });
+      })
+      .catch((error) => dispatch(showErrorNotification(error.message)));
   };
 
   const handleVote = (value: VoteValue) =>
@@ -179,12 +187,18 @@ const AccountDetails = ({ account, mutate, setAccount, onClose }: Props) => {
                   onSubmit={() => {
                     if (!session) return;
 
-                    deleteAccount(account.id, session.access_token).then(() => {
-                      mutate();
-                      popup.close();
-                      setAccount(undefined);
-                      onClose();
-                    });
+                    deleteAccount(account.id, session.access_token)
+                      .then(() => {
+                        mutate();
+                      })
+                      .catch((error) =>
+                        dispatch(showErrorNotification(error.message))
+                      )
+                      .finally(() => {
+                        popup.close();
+                        setAccount(undefined);
+                        onClose();
+                      });
                   }}
                 />
               )}

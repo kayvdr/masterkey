@@ -75,29 +75,8 @@ func (e *Client) New(w http.ResponseWriter, r *http.Request, err error) {
 		}
 	}
 
-	hErr.Render(w, r)
-}
-
-func (e *httpError) Render(w http.ResponseWriter, r *http.Request) error {
-	type errResp struct {
-		Code    int           `json:"code"`
-		Message string        `json:"message"`
-		Details *ErrorDetails `json:"details,omitempty"`
-	}
-
-	resp := struct {
-		Error errResp `json:"error"`
-	}{
-		Error: errResp{Code: e.StatusCode, Message: e.Error(), Details: e.Details},
-	}
-
-	if e.StatusCode >= http.StatusInternalServerError {
-		// Hide server error messages from the end user.
-		resp.Error.Message = http.StatusText(e.StatusCode)
-	}
-	render.Status(r, e.StatusCode)
-	render.JSON(w, r, resp)
-	return nil
+	render.Status(r, hErr.StatusCode)
+	render.PlainText(w, r, hErr.Error())
 }
 
 func asDBError(err error) *pgconn.PgError {

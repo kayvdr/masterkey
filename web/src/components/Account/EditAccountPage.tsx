@@ -183,7 +183,7 @@ const EditForm = ({ account }: FormProps) => {
                 dispatch(showSuccessNotification("Edited successfully"));
                 navigate("/search");
               })
-              .catch((error) => dispatch(showErrorNotification(error)));
+              .catch((error) => dispatch(showErrorNotification(error.message)));
           })}
         >
           Edit Account

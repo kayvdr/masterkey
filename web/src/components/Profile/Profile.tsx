@@ -159,9 +159,9 @@ const Profile = () => {
                 .then(() => {
                   dispatch(showSuccessNotification("Deleted successfully"));
                 })
-                .catch((error) => {
-                  dispatch(showErrorNotification(error.message));
-                })
+                .catch((error) =>
+                  dispatch(showErrorNotification(error.message))
+                )
                 .finally(() => {
                   setLoading({ ...loading, delete: false });
                   modal.delete.close();

@@ -193,7 +193,9 @@ const AddAccountPage = () => {
                       dispatch(showSuccessNotification("Added successfully"));
                       navigate("/search");
                     })
-                    .catch((error) => dispatch(showErrorNotification(error)));
+                    .catch((error) =>
+                      dispatch(showErrorNotification(error.message))
+                    );
                 })}
               >
                 Add Account
