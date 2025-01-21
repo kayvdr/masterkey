@@ -157,7 +157,9 @@ const Profile = () => {
 
               deleteUserRequest({ user_id: id }, session.access_token)
                 .then(() => {
-                  dispatch(showSuccessNotification("Deleted successfully"));
+                  dispatch(
+                    showSuccessNotification("Deletion requested successfully")
+                  );
                 })
                 .catch((error) =>
                   dispatch(showErrorNotification(error.message))
@@ -168,7 +170,7 @@ const Profile = () => {
                 });
             }}
           >
-            Delete Permanently
+            Request deletion
           </Button>
         </Item>
       </Page>

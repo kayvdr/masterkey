@@ -24,14 +24,14 @@ type User struct {
 	RequestedAt time.Time `db:"requested_at"`
 }
 
-func (r UserRepository) CreateDeleteRequest(ctx context.Context, userID User) (u *User, err error) {
+func (r UserRepository) CreateDeleteRequest(ctx context.Context, userID uuid.UUID) (u *User, err error) {
 	err = pgx.BeginFunc(ctx, r.pool, func(tx pgx.Tx) (err error) {
 		var id uuid.UUID
 		err = tx.QueryRow(ctx, `
 			INSERT INTO user_delete_request (id, user_id) 
 			VALUES (gen_random_uuid(), $1)
 			RETURNING id`,
-			id,
+			userID,
 		).Scan(&id)
 
 		if err != nil {
@@ -41,6 +41,11 @@ func (r UserRepository) CreateDeleteRequest(ctx context.Context, userID User) (u
 		return
 	})
 
+	return
+}
+
+func (r UserRepository) ExistsUser(ctx context.Context, userID uuid.UUID) (exists bool, err error) {
+	err = r.pool.QueryRow(ctx, `SELECT EXISTS (SELECT NULL FROM user_delete_request WHERE user_id = $1)`, userID).Scan(&exists)
 	return
 }
 

@@ -8,6 +8,7 @@ services:
       - .:/app
     ports:
       - 60001:8080
+      - 60002:12345
     env_file: .env
     depends_on:
       - db

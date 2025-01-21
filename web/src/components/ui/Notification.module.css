@@ -1,30 +1,18 @@
 .notification {
   position: fixed;
-  right: 1em;
-  top: 6em;
-  box-shadow: hsl(0 0% 0% / 12%) 0.2em 0.2em 0.3em;
-  display: flex;
-  align-items: center;
-  padding: 0.6em 1em;
-  gap: 0.75em;
   color: white;
   opacity: 0;
   transform: translateY(-10em);
-  max-width: 20em;
   transition: opacity 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
     transform 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   z-index: 403;
   border-radius: 0.5em;
-}
-
-@media (min-width: 450px) {
-  .notification {
-    max-width: fit-content;
-    right: 0;
-    left: 0;
-    margin: 0 auto;
-    top: 3em;
-  }
+  max-width: fit-content;
+  right: 0;
+  left: 0;
+  margin: 0 auto;
+  top: 3em;
+  overflow: hidden;
 }
 
 .notificationShown {
@@ -32,11 +20,21 @@
   transform: translateY(0);
 }
 
-.notificationSuccess {
-  background-color: green;
+.wrapper {
+  padding: 0.6em 1em;
+  display: flex;
+  align-items: center;
+  gap: 0.75em;
+  margin: 0 1em;
+  border-radius: 0.5em;
+  box-shadow: hsl(0 0% 0% / 12%) 0.2em 0.2em 0.3em;
 }
 
-.notificationError {
+.notificationSuccess .wrapper {
+  background-color: var(--ci-green);
+}
+
+.notificationError .wrapper {
   background-color: var(--ci-red);
 }
 

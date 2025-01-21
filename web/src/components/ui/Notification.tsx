@@ -40,21 +40,23 @@ const Notification = ({ type, text }: Props) => {
         if (close) dispatch(hideNotification());
       }}
     >
-      <Icon
-        className={classNames(styles.notificationIcon, {
-          [styles.notificationIconSuccess]: type === "success",
-          [styles.notificationIconError]: type === "error",
-        })}
-        glyph={{ error: SvgError, success: SvgCheck }[type]}
-      />
-      <div className={styles.text}>{text}</div>
-      <button
-        type="button"
-        className={styles.btnClose}
-        onClick={() => setClose(true)}
-      >
-        <Icon className={styles.btnCloseIcon} glyph={SvgClose} />
-      </button>
+      <div className={styles.wrapper}>
+        <Icon
+          className={classNames(styles.notificationIcon, {
+            [styles.notificationIconSuccess]: type === "success",
+            [styles.notificationIconError]: type === "error",
+          })}
+          glyph={{ error: SvgError, success: SvgCheck }[type]}
+        />
+        <div className={styles.text}>{text}</div>
+        <button
+          type="button"
+          className={styles.btnClose}
+          onClick={() => setClose(true)}
+        >
+          <Icon className={styles.btnCloseIcon} glyph={SvgClose} />
+        </button>
+      </div>
     </div>
   );
 };
