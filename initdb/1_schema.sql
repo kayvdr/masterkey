@@ -17,6 +17,13 @@ CREATE TABLE accounts (
   platform_id uuid NOT NULL REFERENCES platforms (id)
 );
 
+CREATE TABLE reported_accounts (
+  id uuid NOT NULL,
+  account_id uuid NOT NULL REFERENCES accounts (id) ON DELETE CASCADE,
+  creator_id uuid NOT NULL,
+  reported_at timestamptz NOT NULL DEFAULT now()
+);
+
 CREATE TYPE votes_values AS ENUM
   ( 'up'
   , 'down'

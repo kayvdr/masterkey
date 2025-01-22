@@ -89,6 +89,17 @@ export const deleteAccount = (id: string, token: string) =>
     .delete()
     .res();
 
+export const reportAccount = (
+  accountId: string,
+  creatorId: string,
+  token: string
+) =>
+  api
+    .url(`/creators/${creatorId}/accounts/${accountId}/report`)
+    .headers({ "X-Supabase-Auth": token })
+    .put()
+    .json();
+
 export const getPlatforms = () =>
   useSWR({ url: `/platforms` }, (opts) =>
     fetcher<{ platforms: Platform[] }>(opts)

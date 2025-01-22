@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/authContext";
 import NotificationContext, {
   showErrorNotification,
+  showSuccessNotification,
 } from "../../context/notificationContext";
 import useToggle from "../../hooks/useToggle";
 import {
@@ -11,6 +12,7 @@ import {
   deleteAccount,
   deleteVote,
   getVotesByAccountId,
+  reportAccount,
 } from "../../http/api";
 import { Account, VoteValue } from "../../types";
 import { logoMapping } from "../../utils";
@@ -22,6 +24,7 @@ import SvgCopy from "../icons/Copy";
 import SvgDelete from "../icons/Delete";
 import SvgEdit from "../icons/Edit";
 import SvgKey from "../icons/Key";
+import SvgReport from "../icons/Report";
 import SvgUser from "../icons/User";
 import Icon from "../ui/Icon";
 import Popup from "../ui/Popup";
@@ -35,7 +38,7 @@ interface Props {
 }
 
 const AccountDetails = ({ account, mutate, setAccount, onClose }: Props) => {
-  const popup = useToggle();
+  const popup = { report: useToggle(), delete: useToggle() };
   const dispatch = useContext(NotificationContext);
   const navigate = useNavigate();
   const { session, user } = useAuth();
@@ -158,14 +161,47 @@ const AccountDetails = ({ account, mutate, setAccount, onClose }: Props) => {
             <p className={styles.textSmall}>{account.votes_down}</p>
           </button>
         </div>
-        {account.creator_id === session?.user.id && (
+        {session && (
+          <div>
+            <button className={styles.btn} onClick={popup.report.open}>
+              <Icon glyph={SvgReport} className={styles.iconBtn} />
+              <p className={styles.textSmall}>Report</p>
+            </button>
+            {popup.report.isOpen && (
+              <Popup
+                title="Report this User"
+                text="Are you sure you want to report this user?"
+                submitText="Yes, report"
+                onClose={popup.report.close}
+                onSubmit={() => {
+                  if (!session || !user) return;
+
+                  reportAccount(account.id, user.id, session.access_token)
+                    .then(() => {
+                      mutate();
+                      dispatch(
+                        showSuccessNotification("Reported successfully")
+                      );
+                    })
+                    .catch((error) =>
+                      dispatch(showErrorNotification(error.message))
+                    )
+                    .finally(() => {
+                      popup.report.close();
+                      setAccount(undefined);
+                      onClose();
+                    });
+                }}
+              />
+            )}
+          </div>
+        )}
+        {account.creator_id === user?.id && (
           <>
             <div>
               <button
                 className={styles.btn}
-                onClick={() => {
-                  navigate(`/edit/${account.id}`);
-                }}
+                onClick={() => navigate(`/edit/${account.id}`)}
               >
                 <Icon glyph={SvgEdit} className={styles.iconBtn} />
                 <p className={styles.textSmall}>Edit</p>
@@ -174,28 +210,27 @@ const AccountDetails = ({ account, mutate, setAccount, onClose }: Props) => {
             <div>
               <button
                 className={classNames(styles.btn, styles.deleteBtn)}
-                onClick={() => popup.open()}
+                onClick={popup.delete.open}
               >
                 <Icon glyph={SvgDelete} className={styles.iconBtn} />
                 <p className={styles.textSmall}>Delete</p>
               </button>
-              {popup.isOpen && (
+              {popup.delete.isOpen && (
                 <Popup
                   title="Delete this User"
                   text="Are you sure you want to delete this user?"
-                  onClose={popup.close}
+                  submitText="Yes, delete"
+                  onClose={popup.delete.close}
                   onSubmit={() => {
                     if (!session) return;
 
                     deleteAccount(account.id, session.access_token)
-                      .then(() => {
-                        mutate();
-                      })
+                      .then(() => mutate())
                       .catch((error) =>
                         dispatch(showErrorNotification(error.message))
                       )
                       .finally(() => {
-                        popup.close();
+                        popup.delete.close();
                         setAccount(undefined);
                         onClose();
                       });

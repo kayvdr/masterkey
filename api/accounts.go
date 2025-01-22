@@ -239,3 +239,43 @@ func (app Application) DeleteAccount(w http.ResponseWriter, r *http.Request) {
 
 	render.NoContent(w, r)
 }
+
+func (app Application) ReportAccount(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+
+	token := r.Header.Get("X-Supabase-Auth")
+	if err := app.Clients.SupabaseClient.GetUser(ctx, token); err != nil {
+		app.HTTPError.New(w, r, httperror.New(http.StatusForbidden, err))
+		return
+	}
+
+	accountID, err := common.GetUUIDParamFromURL(r, "accountId")
+	if err != nil {
+		app.HTTPError.New(w, r, httperror.New(http.StatusBadRequest, err))
+		return
+	}
+	creatorID, err := common.GetUUIDParamFromURL(r, "creatorId")
+	if err != nil {
+		app.HTTPError.New(w, r, httperror.New(http.StatusBadRequest, err))
+		return
+	}
+
+	exists, err := app.Repositories.Report.ExistsReport(ctx, accountID, creatorID)
+	if err != nil {
+		app.HTTPError.New(w, r, err)
+		return
+	}
+	if exists {
+		app.HTTPError.New(w, r, httperror.New(http.StatusNotFound, fmt.Errorf("user already reported")))
+		return
+	}
+
+	report, err := app.Repositories.Report.CreateAccountReport(ctx, accountID, creatorID)
+	if err != nil {
+		app.HTTPError.New(w, r, err)
+		return
+	}
+
+	render.Status(r, http.StatusCreated)
+	render.JSON(w, r, domain.NewReport(*report))
+}

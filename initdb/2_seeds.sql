@@ -55,6 +55,13 @@ INSERT INTO accounts (id, username, password,  creator_id, platform_id) VALUES
 ('3b4c07a4-8ecc-4dac-9b9e-1d92bb9b22d0', '6ix9ineReal', 'hrABqxA=H3', '7af9cfc7-f6fb-4de0-9ffe-1ca60a82bf1b','6056b64e-c72c-4e15-a422-99f4af4f564b'),
 ('a663ef39-93b7-4315-81df-4d3605407aa3', 'felip', 'Z!dpV8TvWJ', '7af9cfc7-f6fb-4de0-9ffe-1ca60a82bf1b','ea191b37-8878-40c8-9a21-01c7722be456');
 
+INSERT INTO reported_accounts (id, account_id, creator_id) VALUES 
+('8dda2cb1-763f-43b1-8624-0c0b7f49c255', 'b74f0d2c-8387-4dd5-9679-d006aae680e1', 'f723248f-6b3a-4759-bfc0-57ac18784a21'),
+('36ad836b-a786-46d4-8c18-875bfeb362b4', 'b23eb4bb-2bed-4496-998a-b4f8c592e51d', 'f723248f-6b3a-4759-bfc0-57ac18784a21'),
+('82ed4a4b-7cd9-47df-a00d-6dd75bd44cca', 'b23eb4bb-2bed-4496-998a-b4f8c592e51d', 'a51ab034-9923-4380-98e1-48956560c2b6'),
+('76d38b54-0d62-406a-a0f0-f077493c239f', '88511ad4-ac5d-4732-8901-d593865c2837', '6bb7b0ea-75f0-486f-ad9d-21bdd9816235'),
+('2f89a3e3-464a-4734-85b4-19fdc5172036', 'd2753b6e-8a18-4914-b616-57dde7e048f4', 'e3a91481-ccba-4a2d-964c-24d9f07eda73');
+
 INSERT INTO votes (id, value, account_id, creator_id) VALUES 
 ('bd467f22-9a7f-44e0-a60c-61301f8071a1', 'up', '88511ad4-ac5d-4732-8901-d593865c2837', '7af9cfc7-f6fb-4de0-9ffe-1ca60a82bf1b'),
 ('c9bbb0cc-a117-4c62-beb1-d4eec93c03f0', 'down', '4f47c4bb-2e55-4988-acc4-6d3c2b905b0d', '7af9cfc7-f6fb-4de0-9ffe-1ca60a82bf1a'),

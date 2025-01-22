@@ -4,11 +4,18 @@ import styles from "./Popup.module.css";
 interface Props {
   title: string;
   text: string;
+  submitText?: string;
   onSubmit: () => void;
   onClose: () => void;
 }
 
-const Popup = ({ title, text, onSubmit, onClose }: Props) => (
+const Popup = ({
+  title,
+  text,
+  submitText = "Submit",
+  onSubmit,
+  onClose,
+}: Props) => (
   <div className={styles.popup}>
     <div className={styles.popupOverlay} onClick={onClose}></div>
     <div className={styles.popupContainer}>
@@ -18,7 +25,7 @@ const Popup = ({ title, text, onSubmit, onClose }: Props) => (
         <Button onClick={onClose} scheme="secondary">
           Cancel
         </Button>
-        <Button onClick={onSubmit}>Submit</Button>
+        <Button onClick={onSubmit}>{submitText}</Button>
       </div>
     </div>
   </div>
