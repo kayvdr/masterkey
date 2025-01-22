@@ -18,7 +18,7 @@ func NewClient(env *env.Env) (*Client, error) {
 		return nil, errors.New("environment variables not initialized")
 	}
 
-	if strings.TrimSpace(env.SupabaseUrl) == "" {
+	if strings.TrimSpace(env.SupabaseRef) == "" {
 		return nil, errors.New("supabase: missing URL")
 	}
 
@@ -28,7 +28,7 @@ func NewClient(env *env.Env) (*Client, error) {
 
 	conf := supabase.Config{
 		ApiKey:     env.SupabaseKey,
-		ProjectRef: env.SupabaseUrl,
+		ProjectRef: env.SupabaseRef,
 		Debug:      !env.IsProduction(),
 	}
 
@@ -41,14 +41,14 @@ func NewClient(env *env.Env) (*Client, error) {
 }
 
 func (c *Client) GetUser(ctx context.Context, token string) error {
-	// if token == "" {
-	// 	return errors.New("supabase: invalid token")
-	// }
+	if token == "" {
+		return errors.New("supabase: invalid token")
+	}
 
-	// _, err := c.client.Auth.User(ctx, token)
-	// if err != nil {
-	// 	return errors.New("supabase: access denied")
-	// }
+	_, err := c.client.Auth.User(ctx, token)
+	if err != nil {
+		return errors.New("supabase: access denied")
+	}
 
 	return nil
 }

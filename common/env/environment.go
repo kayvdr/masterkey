@@ -13,7 +13,7 @@ type Env struct {
 	Port        string
 	BasicUser   string
 	BasicPass   string
-	SupabaseUrl string
+	SupabaseRef string
 	SupabaseKey string
 }
 
@@ -33,7 +33,7 @@ func NewEnv() (*Env, error) {
 		Port:        os.Getenv("PORT"),
 		BasicUser:   os.Getenv("VITE_BASIC_USER"),
 		BasicPass:   os.Getenv("VITE_BASIC_PASS"),
-		SupabaseUrl: os.Getenv("VITE_SUPABASE_URL"),
+		SupabaseRef: os.Getenv("SUPABASE_REF"),
 		SupabaseKey: os.Getenv("VITE_SUPABASE_KEY"),
 	}
 
