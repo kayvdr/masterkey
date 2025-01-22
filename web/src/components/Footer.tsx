@@ -10,7 +10,7 @@ const Footer = () => (
     <Container>
       <div className={styles.wrapper}>
         <div className={styles.item}>
-          <h3 className={styles.companyTitle}>Shac</h3>
+          <h3 className={styles.companyTitle}>Masterkey</h3>
           <p>
             We are a platform where people can share their accounts with others.
             The advantage of these accounts is that their privacy is protected

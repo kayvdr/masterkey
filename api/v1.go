@@ -66,7 +66,7 @@ func (app *Application) Router(env *env.Env) http.Handler {
 	r := chi.NewRouter()
 
 	r.Group(func(r chi.Router) {
-		r.Use(middleware.AuthMiddleware("ShacRealm", map[string]string{
+		r.Use(middleware.AuthMiddleware("MasterkeyRealm", map[string]string{
 			env.BasicUser: env.BasicPass,
 		}))
 		r.Route("/accounts", func(r chi.Router) {
