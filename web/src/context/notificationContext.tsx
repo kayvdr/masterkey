@@ -25,10 +25,8 @@ const showNotification = (severity: Severity, message: string): Action => ({
 export const showSuccessNotification = (message: string): Action =>
   showNotification("success", message);
 
-export const showErrorNotification = (message: string): Action => {
-  console.error(message);
-  return showNotification("error", message);
-};
+export const showErrorNotification = (message: string): Action =>
+  showNotification("error", message);
 
 export const hideNotification = (): Action => ({
   type: "HIDE_NOTIFICATION",
