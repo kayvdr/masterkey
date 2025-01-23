@@ -5,6 +5,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/authContext";
 import NotificationContext, {
   showErrorNotification,
+  showSuccessNotification,
 } from "../../context/notificationContext";
 import inputStyles from "../Account/Form.module.css";
 import Button from "../ui/Button";
@@ -37,6 +38,7 @@ const RegisterPage = () => {
       return;
     }
 
+    dispatch(showSuccessNotification("Confirmation Email send successfully"));
     reset();
     navigate("/login");
   };
