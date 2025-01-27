@@ -10,10 +10,18 @@
   max-width: 32em;
 }
 
-.field {
+.field,
+.fieldNoMargin {
   width: 100%;
-  margin-bottom: 0.75em;
   text-align: left;
+}
+
+.fieldMaxWidth {
+  max-width: 25em;
+}
+
+.field {
+  margin-bottom: 0.75em;
 }
 
 .input[type="text"],

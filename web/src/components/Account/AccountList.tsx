@@ -34,7 +34,7 @@ const AccountList = ({
 
   return (
     <div>
-      {total === 0 && <div>No Items found</div>}
+      {total === 0 && <div>No Accounts found</div>}
       {total > 0 && (
         <div className={styles.wrapper}>
           {((matches && !details.isOpen) || !matches) && (

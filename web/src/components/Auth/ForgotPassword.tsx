@@ -5,6 +5,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/authContext";
 import NotificationContext, {
   showErrorNotification,
+  showSuccessNotification,
 } from "../../context/notificationContext";
 import inputStyles from "../Account/Form.module.css";
 import Button from "../ui/Button";
@@ -12,36 +13,34 @@ import styles from "./AuthPage.module.css";
 
 interface FormLogin {
   email: string;
-  password: string;
 }
 
-const LoginPage = () => {
+const ForgotPassword = () => {
   const { auth } = useAuth();
   const dispatch = useContext(NotificationContext);
   const navigate = useNavigate();
   const {
-    reset,
     handleSubmit,
     control,
     formState: { isSubmitting, errors },
-  } = useForm<FormLogin>({ defaultValues: { email: "", password: "" } });
+  } = useForm<FormLogin>({ defaultValues: { email: "" } });
 
   const onSubmit = async (formData: FormLogin) => {
-    const { error } = await auth.signInWithPassword(formData);
+    const { error } = await auth.resetPasswordForEmail(formData.email);
 
-    if (error?.status) {
+    if (error) {
       dispatch(showErrorNotification(error.message));
       return;
     }
 
-    reset();
-    navigate("/profile");
+    dispatch(showSuccessNotification("Email send successfully"));
+    navigate("/");
   };
 
   return (
     <section className={styles.loginSection}>
       <div className={styles.wrapper}>
-        <h1 className={styles.title}>Welcome back!</h1>
+        <h1 className={styles.title}>Forgot Password</h1>
         <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
           <div
             className={classNames(inputStyles.field, {
@@ -73,70 +72,20 @@ const LoginPage = () => {
               </div>
             )}
           </div>
-          <div
-            className={classNames(inputStyles.fieldNoMargin, {
-              [inputStyles.fieldError]: errors.password,
-            })}
-          >
-            <Controller
-              name="password"
-              control={control}
-              rules={{
-                required: "Password cannot be empty.",
-              }}
-              render={({ field }) => (
-                <input
-                  type="password"
-                  placeholder="Password"
-                  className={inputStyles.input}
-                  {...field}
-                />
-              )}
-            />
-            {errors.password && (
-              <div className={inputStyles.inputError}>
-                {errors.password.message}
-              </div>
-            )}
-          </div>
-          <div className={styles.resetContainer}>
-            <NavLink to="/password/forgot" className={styles.resetBtn}>
-              Forgot password?
-            </NavLink>
-          </div>
           <div className={styles.field}>
             <Button type="submit" fullWidth={true} isLoading={isSubmitting}>
-              Sign in
+              Send password reset link
             </Button>
           </div>
         </form>
-        <div className={styles.or}>
-          <hr />
-          OR
-          <hr />
-        </div>
-        <div className={styles.list}>
-          <NavLink className={styles.btn} to="/register">
-            No Account? Register here!
+        <div className={styles.listMargin}>
+          <NavLink className={styles.btn} to="/login">
+            Go Back
           </NavLink>
-          {/* TODO: Delete or add those login possibilities */}
-          {/* <button className={styles.btn}>
-            <Icon glyph={SvgGoogle} className={styles.provider} /> Login with
-            Google
-          </button>
-          <button className={styles.btn}>
-            <Icon glyph={SvgFacebookBlack} className={styles.provider} />
-            Login with Facebook
-          </button> */}
         </div>
-        <p className={styles.footer}>
-          <NavLink to="/privacy">Privacy</NavLink>
-          <span className={styles.separator}>•</span>
-          <NavLink to="/imprint">Imprint</NavLink>
-        </p>
       </div>
     </section>
   );
 };
 
-export default LoginPage;
+export default ForgotPassword;

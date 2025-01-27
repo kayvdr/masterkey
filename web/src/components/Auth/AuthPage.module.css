@@ -29,6 +29,16 @@
   color: var(--ci-dark-grey);
 }
 
+.resetContainer {
+  text-align: right;
+  margin-bottom: 1em;
+}
+
+.resetBtn {
+  font-size: 0.8em;
+  text-decoration: underline;
+}
+
 .or {
   font-size: 0.8em;
   margin-top: 1.25em;
@@ -47,9 +57,14 @@
   margin: 0;
 }
 
-.list {
+.list,
+.listMargin {
   display: flex;
   flex-direction: column;
+}
+
+.listMargin {
+  margin-top: 0.5em;
 }
 
 .btn {

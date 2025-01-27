@@ -3,6 +3,7 @@ import { useAuth } from "../context/authContext";
 import AddAccountPage from "./Account/AddAccountPage";
 import EditAccountPage from "./Account/EditAccountPage";
 import Accounts from "./Accounts/AccountsPage";
+import ForgotPassword from "./Auth/ForgotPassword";
 import LoginPage from "./Auth/LoginPage";
 import RegisterPage from "./Auth/RegisterPage";
 import HomePage from "./Home/HomePage";
@@ -44,6 +45,7 @@ const SessionRouter = () => {
         </Routes>
       ) : (
         <Routes>
+          <Route path="password/forgot" element={<ForgotPassword />} />
           <Route path="register" element={<RegisterPage />} />
           <Route path="login" element={<LoginPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />

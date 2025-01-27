@@ -1,6 +1,4 @@
-import classNames from "classnames";
 import { PropsWithChildren, useContext, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
 import { useAuth } from "../../context/authContext";
 import NotificationContext, {
   showErrorNotification,
@@ -8,26 +6,22 @@ import NotificationContext, {
 } from "../../context/notificationContext";
 import useToggle from "../../hooks/useToggle";
 import { deleteUserRequest } from "../../http/api";
-import inputStyles from "../Account/Form.module.css";
 import Footer from "../Footer";
 import Header from "../Header";
 import Button from "../ui/Button";
 import Page from "../ui/Page";
+import ChangeEmail from "./ChangeEmail";
+import ChangePassword from "./ChangePassword";
 import styles from "./Profile.module.css";
 
-interface FormUser {
-  email: string;
-}
-
 const Profile = () => {
-  const { session, user, auth } = useAuth();
+  const { session, user } = useAuth();
   const modal = {
     email: useToggle(),
     password: useToggle(),
     delete: useToggle(),
   };
   const [loading, setLoading] = useState({
-    password: false,
     delete: false,
   });
   const dispatch = useContext(NotificationContext);
@@ -37,13 +31,6 @@ const Profile = () => {
     modal.password.close();
     modal.delete.close();
   };
-
-  const {
-    reset,
-    handleSubmit,
-    control,
-    formState: { errors, isSubmitting },
-  } = useForm<FormUser>({ defaultValues: { email: "" } });
 
   return (
     <>
@@ -56,89 +43,17 @@ const Profile = () => {
           modal={modal.email}
           closeAllModal={closeAllModal}
         >
-          <form>
-            <div
-              className={classNames(inputStyles.field, {
-                [inputStyles.fieldError]: errors.email,
-              })}
-            >
-              <Controller
-                name="email"
-                control={control}
-                rules={{
-                  required: "Email cannot be empty.",
-                  pattern: {
-                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                    message: "The email is not a valid email address.",
-                  },
-                }}
-                render={({ field }) => (
-                  <input
-                    type="email"
-                    placeholder="Email"
-                    className={inputStyles.input}
-                    {...field}
-                  />
-                )}
-              />
-              {errors.email && (
-                <div className={inputStyles.inputError}>
-                  {errors.email.message}
-                </div>
-              )}
-            </div>
-            <Button
-              type="submit"
-              isLoading={isSubmitting}
-              onClick={handleSubmit(async (body) => {
-                const { error } = await auth.updateUser({
-                  email: body.email,
-                });
-
-                if (error) {
-                  dispatch(showErrorNotification(error.message));
-                  return;
-                }
-
-                dispatch(showSuccessNotification("Email send successfully"));
-                reset();
-                modal.email.close();
-              })}
-            >
-              Save
-            </Button>
-          </form>
+          <ChangeEmail onClose={modal.email.close} />
         </Item>
         <Item
           label="Password"
           value="**********"
-          openValue="You need to get a Password Reset Email?"
+          openValue="Enter your new Password"
           editBtnLabel="Change"
           modal={modal.password}
           closeAllModal={closeAllModal}
         >
-          <Button
-            isLoading={loading.password}
-            onClick={async () => {
-              setLoading({ ...loading, password: true });
-              const email = user?.email;
-              if (!email) return;
-
-              const { error } = await auth.resetPasswordForEmail(email);
-
-              if (error) {
-                dispatch(showErrorNotification(error.message));
-                setLoading({ ...loading, delete: false });
-                return;
-              }
-
-              dispatch(showSuccessNotification("Email send successfully"));
-              setLoading({ ...loading, password: false });
-              modal.password.close();
-            }}
-          >
-            Send
-          </Button>
+          <ChangePassword onClose={modal.password.close} />
         </Item>
         <Item
           label="Delete Account"

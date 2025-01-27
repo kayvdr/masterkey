@@ -46,7 +46,7 @@ const RegisterPage = () => {
   return (
     <section className={styles.loginSection}>
       <div className={styles.wrapper}>
-        <h1 className={styles.title}>Register</h1>
+        <h1 className={styles.title}>Create an Account</h1>
         <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
           <div
             className={classNames(inputStyles.field, {
@@ -132,7 +132,7 @@ const RegisterPage = () => {
           </div>
           <div className={styles.field}>
             <Button type="submit" fullWidth={true} isLoading={isSubmitting}>
-              Submit
+              Sign up
             </Button>
           </div>
         </form>
