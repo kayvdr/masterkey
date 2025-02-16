@@ -1,4 +1,3 @@
-import classNames from "classnames";
 import { useState } from "react";
 import useMatchMedia from "../../hooks/useMatchMedia";
 import { UsePaginationReturn } from "../../hooks/usePagination";
@@ -29,8 +28,6 @@ const AccountList = ({
   const details = useToggle();
   const [account, setAccount] = useState<Account>();
   const matches = useMatchMedia("(max-width: 768px)");
-
-  const pages = total && Math.ceil(total / pagination.state.limit);
 
   return (
     <div>
@@ -68,23 +65,10 @@ const AccountList = ({
           >
             <Icon glyph={SvgArrowLeft} className={styles.iconPagination} />
           </button>
-          {[...Array(pages).keys()].map((p) => (
-            <button
-              className={classNames(styles.paginationBtn, {
-                [styles.paginationActive]: pagination.state.page === p + 1,
-              })}
-              onClick={() => pagination.setPage(p + 1)}
-              key={p}
-            >
-              {p + 1}
-            </button>
-          ))}
           <button
             className={styles.paginationNext}
             onClick={pagination.nextPage}
-            disabled={
-              pagination.state.limit * pagination.state.page >= (total ?? 0)
-            }
+            disabled={pagination.state.limit * pagination.state.page >= total}
           >
             <Icon glyph={SvgArrowRight} className={styles.iconPagination} />
           </button>
