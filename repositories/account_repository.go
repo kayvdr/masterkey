@@ -104,7 +104,7 @@ func (r AccountRepository) GetCreatorAccount(ctx context.Context, creatorID uuid
 	return
 }
 
-func (r AccountRepository) GetCreatorAccountsVotes(ctx context.Context, pagination common.Pagination, accountID uuid.UUID) ([]Account, error) {
+func (r AccountRepository) GetCreatorAccountsVotes(ctx context.Context, pagination common.Pagination, creatorID uuid.UUID) ([]Account, error) {
 	params := fmt.Sprintf("ORDER BY %s LIMIT %s OFFSET %s", pagination.Sort()+" "+pagination.Order(), strconv.Itoa(pagination.Limit()), strconv.Itoa(pagination.Offset()))
 	rows, err := r.pool.Query(ctx, `
 		SELECT a.id, a.username, a.password,
@@ -116,7 +116,7 @@ func (r AccountRepository) GetCreatorAccountsVotes(ctx context.Context, paginati
 		INNER JOIN platforms AS p ON a.platform_id = p.id
 		INNER JOIN votes v ON v.account_id = a.id
 		WHERE v.creator_id = $1
-	`+params, accountID)
+	`+params, creatorID)
 
 	if err != nil {
 		return nil, err

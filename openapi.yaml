@@ -11,7 +11,7 @@ paths:
       description: Returns all Accounts
       responses:
         "200":
-          description: ""
+          description: Successful operation
           content:
             application/json:
               schema:
@@ -32,7 +32,7 @@ paths:
               $ref: "#/components/schemas/AccountPostBody"
       responses:
         "200":
-          description: ""
+          description: Successful operation
           content:
             application/json:
               schema:
@@ -44,9 +44,11 @@ paths:
     get:
       operationId: GetAccounts
       description: Returns single Account by id
+      parameters:
+        - $ref: "#/components/parameters/AccountId"
       responses:
         "200":
-          description: ""
+          description: Successful operation
           content:
             application/json:
               schema:
@@ -67,7 +69,7 @@ paths:
               $ref: "#/components/schemas/AccountPatchBody"
       responses:
         "200":
-          description: ""
+          description: Successful operation
           content:
             application/json:
               schema:
@@ -90,9 +92,11 @@ paths:
     get:
       operationId: GetCreatorAccounts
       description: Returns all Accounts by creator id
+      parameters:
+        - $ref: "#/components/parameters/CreatorId"
       responses:
         "200":
-          description: ""
+          description: Successful operation
           content:
             application/json:
               schema:
@@ -107,9 +111,11 @@ paths:
     get:
       operationId: GetCreatorAccountVote
       description: Returns all accounts where creator voted
+      parameters:
+        - $ref: "#/components/parameters/CreatorId"
       responses:
         "200":
-          description: ""
+          description: Successful operation
           content:
             application/json:
               schema:
@@ -120,13 +126,29 @@ paths:
                     items:
                       $ref: "#/components/schemas/Account"
 
-  /creators/{creatorId}//accounts/{accountId}/votes:
+  /creators/{creatorId}/accounts/{accountId}/report:
+    get:
+      operationId: ReportAccount
+      description: Report an account
+      parameters:
+        - $ref: "#/components/parameters/CreatorId"
+        - $ref: "#/components/parameters/AccountId"
+      responses:
+        "201":
+          description: Successful operation
+        "404":
+          description: Returns an error if the provided account ID was not found.
+
+  /creators/{creatorId}/accounts/{accountId}/votes:
     get:
       operationId: GetCreatorAccountVote
       description: Return votes of Account
+      parameters:
+        - $ref: "#/components/parameters/CreatorId"
+        - $ref: "#/components/parameters/AccountId"
       responses:
         "200":
-          description: ""
+          description: Successful operation
           content:
             application/json:
               schema:
@@ -142,7 +164,7 @@ paths:
       description: Return all platforms
       responses:
         "200":
-          description: ""
+          description: Successful operation
           content:
             application/json:
               schema:
@@ -184,9 +206,26 @@ paths:
         "404":
           description: Vote not found
 
+  /user/delete:
+    post:
+      operationId: DeleteRequest
+      description: Delete User and their Data
+      responses:
+        "204":
+          description: Successful operation
+        "400":
+          description: Deletion already in process
+
 components:
   parameters:
     AccountId:
+      name: account_id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    CreatorId:
       name: account_id
       in: path
       required: true
