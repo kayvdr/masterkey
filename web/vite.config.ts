@@ -1,9 +1,12 @@
-import react from "@vitejs/plugin-react-swc";
+import { vitePlugin as remix } from "@remix-run/dev";
+import dotenv from "dotenv";
 import { defineConfig } from "vite";
+
+dotenv.config({ path: "../.env" });
 
 // https://vitejs.dev/config/
 export default defineConfig(() => ({
-  build: { sourcemap: true },
+  build: { sourcemap: false },
   envDir: "..",
   css: {
     devSourcemap: true,
@@ -21,5 +24,5 @@ export default defineConfig(() => ({
       },
     },
   },
-  plugins: [react()],
+  plugins: [remix()],
 }));

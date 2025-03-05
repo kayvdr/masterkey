@@ -13,7 +13,7 @@ The name is not fix yet, but currently this is the working name.
 ## Development
 
 1. `docker compose up -d`
-2. `cd web && npm start`
+2. `npm run dev`
 3. Go to `http://localhost:60000/`
 
 ## Deployment

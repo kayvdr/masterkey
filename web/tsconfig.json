@@ -8,10 +8,10 @@
     "noFallthroughCasesInSwitch": true,
     "noImplicitOverride": true,
     "noImplicitReturns": true,
-    "noPropertyAccessFromIndexSignature": true,
+    // "noPropertyAccessFromIndexSignature": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noUncheckedIndexedAccess": true,
+    // "noUncheckedIndexedAccess": true,
     "sourceMap": true,
     "strict": true,
     "target": "es2021",
@@ -20,11 +20,19 @@
     "forceConsistentCasingInFileNames": true,
     "moduleResolution": "node",
     "plugins": [{ "name": "typescript-plugin-css-modules" }],
+    "types": ["@remix-run/node", "vite/client"],
     "skipLibCheck": true,
     "isolatedModules": true,
     "useDefineForClassFields": true,
     "noEmit": true
   },
 
-  "include": ["src"]
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "**/.server/**/*.ts",
+    "**/.server/**/*.tsx",
+    "**/.client/**/*.ts",
+    "**/.client/**/*.tsx"
+  ]
 }

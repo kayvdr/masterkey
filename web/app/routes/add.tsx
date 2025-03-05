@@ -1,0 +1,229 @@
+import { MetaFunction } from "@remix-run/react";
+import classNames from "classnames";
+import { useContext } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import {
+  default as inputStyles,
+  default as styles,
+} from "../components/Account/Form.module.css";
+import Footer from "../components/Footer";
+import Header from "../components/Header";
+import Button from "../components/ui/Button";
+import Page from "../components/ui/Page";
+import { useAuth } from "../context/authContext";
+import NotificationContext, {
+  showErrorNotification,
+  showSuccessNotification,
+} from "../context/notificationContext";
+import { createAccount, getPlatforms } from "../http/api";
+
+export const meta: MetaFunction = () => [
+  { title: "Add a Shared Account – Contribute to the Community" },
+  {
+    name: "description",
+    content:
+      "Help others by adding shared accounts for various platforms. Improve accessibility and grow the community!",
+  },
+];
+
+interface FormUser {
+  platform: string;
+  username: string;
+  password: string;
+  privacy: boolean;
+}
+
+const AddAccountPage = () => {
+  const { data } = getPlatforms();
+  const dispatch = useContext(NotificationContext);
+  const { session } = useAuth();
+  const navigate = useNavigate();
+  const {
+    handleSubmit,
+    control,
+    formState: { errors, isSubmitting },
+  } = useForm<FormUser>({
+    defaultValues: {
+      platform: "",
+      username: "",
+      password: "",
+      privacy: false,
+    },
+  });
+
+  if (session === null) {
+    navigate("/login");
+    return;
+  }
+
+  if (!data) return null;
+
+  return (
+    <>
+      <Header />
+      <Page title="Share your Account with us!" titleCenter={true}>
+        <div className={styles.formWrapper}>
+          <h2>Please enter the following data.</h2>
+          <form className={styles.form}>
+            <div
+              className={classNames(inputStyles.field, {
+                [inputStyles.fieldError]: errors.platform,
+              })}
+            >
+              <Controller
+                name="platform"
+                control={control}
+                rules={{
+                  required: "Platform cannot be empty.",
+                  validate: (value) =>
+                    value.trim() !== "" || "Platform cannot be empty.",
+                }}
+                render={({ field }) => (
+                  <select {...field}>
+                    <option value="">Choose platform...</option>
+                    {data?.platforms.map((p) => (
+                      <option key={p.id} value={p.id}>
+                        {p.name}
+                      </option>
+                    ))}
+                  </select>
+                )}
+              />
+              {errors.platform && (
+                <div className={styles.inputError}>
+                  {errors.platform.message}
+                </div>
+              )}
+            </div>
+            <div
+              className={classNames(inputStyles.field, {
+                [inputStyles.fieldError]: errors.username,
+              })}
+            >
+              <Controller
+                name="username"
+                control={control}
+                rules={{
+                  required: "Username cannot be empty.",
+                  validate: (value) =>
+                    value.trim() !== "" || "Username cannot be empty.",
+                }}
+                render={({ field }) => (
+                  <input
+                    type="text"
+                    placeholder="Username or Email"
+                    className={inputStyles.input}
+                    {...field}
+                  />
+                )}
+              />
+              {errors.username && (
+                <div className={inputStyles.inputError}>
+                  {errors.username.message}
+                </div>
+              )}
+            </div>
+            <div
+              className={classNames(inputStyles.field, {
+                [inputStyles.fieldError]: errors.password,
+              })}
+            >
+              <Controller
+                name="password"
+                control={control}
+                rules={{
+                  required: "Password cannot be empty.",
+                  minLength: {
+                    value: 8,
+                    message: "Password must be at least 8 characters long.",
+                  },
+                }}
+                render={({ field }) => (
+                  <input
+                    type="text"
+                    placeholder="Password"
+                    className={inputStyles.input}
+                    {...field}
+                  />
+                )}
+              />
+              {errors.password && (
+                <div className={inputStyles.inputError}>
+                  {errors.password.message}
+                </div>
+              )}
+            </div>
+            <div
+              className={classNames(inputStyles.field, {
+                [inputStyles.fieldError]: errors.privacy,
+              })}
+            >
+              <label>
+                <Controller
+                  name="privacy"
+                  control={control}
+                  rules={{
+                    required: "Checkbox must be accepted.",
+                  }}
+                  render={({ field }) => (
+                    <input
+                      type="checkbox"
+                      className={styles.input}
+                      {...field}
+                      value="privacy"
+                    />
+                  )}
+                />
+                <span
+                  className={classNames(styles.label, {
+                    [styles.checkBoxError]: errors.privacy,
+                  })}
+                >
+                  I agree that this data will be stored and further disseminated
+                </span>
+              </label>
+              {errors.privacy && (
+                <div className={inputStyles.inputError}>
+                  {errors.privacy.message}
+                </div>
+              )}
+            </div>
+            <div className={inputStyles.field}>
+              <Button
+                type="submit"
+                fullWidth={true}
+                isLoading={isSubmitting}
+                onClick={handleSubmit((body) => {
+                  if (!session) return;
+
+                  createAccount(
+                    {
+                      username: body.username,
+                      password: body.password,
+                      platform_id: body.platform,
+                      creator_id: session.user.id,
+                    },
+                    session.access_token
+                  )
+                    .then(() => {
+                      dispatch(showSuccessNotification("Added successfully"));
+                      navigate("/search");
+                    })
+                    .catch((error) =>
+                      dispatch(showErrorNotification(error.message))
+                    );
+                })}
+              >
+                Add Account
+              </Button>
+            </div>
+          </form>
+        </div>
+      </Page>
+      <Footer />
+    </>
+  );
+};
+
+export default AddAccountPage;

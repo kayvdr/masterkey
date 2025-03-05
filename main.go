@@ -13,7 +13,7 @@ import (
 	"github.com/kayvdr/masterkey/file"
 )
 
-//go:embed web/dist
+//go:embed web/build
 var staticFiles embed.FS
 
 func main() {
